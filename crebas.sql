@@ -58,8 +58,6 @@ drop table IF EXISTS INTERNAUTE CASCADE;
 
 drop table IF EXISTS MENU CASCADE;
 
-drop table IF EXISTS MODIFICATION CASCADE;
-
 drop table IF EXISTS NOTES CASCADE;
 
 drop table IF EXISTS NUTRITION CASCADE;
@@ -71,14 +69,15 @@ drop table IF EXISTS RECETTE_DE_CUISINE CASCADE;
 /*==============================================================*/
 DROP TYPE IF EXISTS unite;
 
-CREATE TYPE unite AS ENUM ('cuillère à café', 
-                           'cuillère à soupe',
+CREATE TYPE unite AS ENUM ('c. à café', 
+                           'c. à soupe',
                            'L',
                            'dL',
                            'cL',
                            'g',
                            'kg',
-                           'pincée',
+                           'pincée(s)',
+                           'gousse(s)',
                            '');
 
 
@@ -212,12 +211,13 @@ ID_RECETTE
 create table HISTORIQUE_MODIFICATION (
 ID_MODIFICATION              SERIAL                     not null,
 ID_INTERNAUTE                INT4                       not null,
+ID_RECETTE                   INT4                       not null,
 "DATE D'ECRITURE"            timestamp with time zone   not null   default current_timestamp,
 "DATE DE DEBUT DE VALIDITE"  timestamp with time zone   not null   default current_timestamp,
 "DATE DE FIN DE VALIDITE"    timestamp with time zone   null,
 "TEXTE CONCERNE"             TEXT                       not null,
-constraint validity_date CHECK ("DATE D'ECRITURE" < "DATE DE DEBUT DE VALIDITE" AND 
-                                "DATE DE DEBUT DE VALIDITE" < "DATE DE FIN DE VALIDITE"),
+constraint validity_date CHECK ("DATE D'ECRITURE" <= "DATE DE DEBUT DE VALIDITE" AND 
+                                "DATE DE DEBUT DE VALIDITE" <= "DATE DE FIN DE VALIDITE"),
 constraint PK_HISTORIQUE_MODIFICATION primary key (ID_MODIFICATION)
 );
 
@@ -226,6 +226,13 @@ constraint PK_HISTORIQUE_MODIFICATION primary key (ID_MODIFICATION)
 /*==============================================================*/
 create  index MODIFIER_FK on HISTORIQUE_MODIFICATION (
 ID_INTERNAUTE
+);
+
+/*==============================================================*/
+/* Index : MODIFICATION_FK                                      */
+/*==============================================================*/
+create  index MODIFICATION_FK on HISTORIQUE_MODIFICATION (
+ID_RECETTE
 );
 
 /*==============================================================*/
@@ -264,36 +271,13 @@ ID_INTERNAUTE
 );
 
 /*==============================================================*/
-/* Table : MODIFICATION                                         */
-/*==============================================================*/
-create table MODIFICATION (
-ID_MODIFICATION      INT4                 not null,
-ID_RECETTE           INT4                 not null,
-constraint PK_MODIFICATION primary key (ID_MODIFICATION, ID_RECETTE)
-);
-
-/*==============================================================*/
-/* Index : RECETTE_MODIFIE_FK                                   */
-/*==============================================================*/
-create  index RECETTE_MODIFIE_FK on MODIFICATION (
-ID_MODIFICATION
-);
-
-/*==============================================================*/
-/* Index : RECETTE_MODIFIE2_FK                                  */
-/*==============================================================*/
-create  index RECETTE_MODIFIE2_FK on MODIFICATION (
-ID_RECETTE
-);
-
-/*==============================================================*/
 /* Table : NOTES                                                */
 /*==============================================================*/
 create table NOTES (
 ID_RECETTE           INT4                 not null,
 ID_INTERNAUTE        INT4                 not null,
 NOTE                 INT4                 not null,
-constraint note_between_one_and_three CHECK (NOTE > 1 AND NOTE < 3),
+constraint note_between_one_and_three CHECK (NOTE >= 1 AND NOTE <= 3),
 constraint PK_NOTES primary key (ID_RECETTE, ID_INTERNAUTE)
 );
 
@@ -395,6 +379,11 @@ alter table COMPOSITION
       on delete restrict on update restrict;
 
 alter table HISTORIQUE_MODIFICATION
+   add constraint FK_HISTORIQ_MODIFICAT_RECETTE_ foreign key (ID_RECETTE)
+      references RECETTE_DE_CUISINE (ID_RECETTE)
+      on delete restrict on update restrict;
+
+alter table HISTORIQUE_MODIFICATION
    add constraint FK_HISTORIQ_MODIFIER_INTERNAU foreign key (ID_INTERNAUTE)
       references INTERNAUTE (ID_INTERNAUTE)
       on delete restrict on update restrict;
@@ -402,16 +391,6 @@ alter table HISTORIQUE_MODIFICATION
 alter table MENU
    add constraint FK_MENU_CREER_INTERNAU foreign key (ID_INTERNAUTE)
       references INTERNAUTE (ID_INTERNAUTE)
-      on delete restrict on update restrict;
-
-alter table MODIFICATION
-   add constraint FK_MODIFICA_RECETTE_M_HISTORIQ foreign key (ID_MODIFICATION)
-      references HISTORIQUE_MODIFICATION (ID_MODIFICATION)
-      on delete restrict on update restrict;
-
-alter table MODIFICATION
-   add constraint FK_MODIFICA_RECETTE_M_RECETTE_ foreign key (ID_RECETTE)
-      references RECETTE_DE_CUISINE (ID_RECETTE)
       on delete restrict on update restrict;
 
 alter table NOTES
