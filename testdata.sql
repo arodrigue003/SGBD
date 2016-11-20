@@ -22,9 +22,9 @@ delete from CARACTERISTIQUE_NUTRITIONNEL;
 
 delete from INGREDIENT;
 
-delete from RECETTE_DE_CUISINE;
+delete from RECETTE;
 
-insert into RECETTE_DE_CUISINE (ID_RECETTE, "NOM RECETTE", "DATE D'AJOUT DANS LA BASE", "TEMPS DE PREPARATION", "TEMPS DE CUISSON", "NOMBRE DE PERSONNES", PREPARATION) values 
+insert into RECETTE (ID_RECETTE, NOM_RECETTE, DATE_CREATION, TEMPS_PREPARATION, TEMPS_CUISSON, NOMBRE_PERSONNES, PREPARATION) values 
 	(0, 'Gigot d''agneau aux épices', '2015-11-20', '0:0:25', '0:0:45', 8, 'ÉTAPE 1
 			Pelez l''ail et coupez-le en fines lamelles.
 			ÉTAPE 2
@@ -50,7 +50,7 @@ insert into RECETTE_DE_CUISINE (ID_RECETTE, "NOM RECETTE", "DATE D'AJOUT DANS LA
 			ÉTAPE 12
 			Servez votre gigot d''agneau aux épices nappé de sa sauce.');
 
-insert into INGREDIENT (ID_INGREDIENT, "NOM INGREDIENT") values 
+insert into INGREDIENT (ID_INGREDIENT, NOM_INGREDIENT) values 
 	(0, 'Gigot d''agneau'),
 	(1, 'piment'),
 	(2, 'ail'),
@@ -61,7 +61,7 @@ insert into INGREDIENT (ID_INGREDIENT, "NOM INGREDIENT") values
 	(7, 'miel'),
 	(8, 'Sel');
 
-insert into CARACTERISTIQUE_NUTRITIONNEL (ID_CARACTERISTIQUE, "NOM CARACTERISTIQUE") values 
+insert into CARACTERISTIQUE_NUTRITIONNEL (ID_CARACTERISTIQUE, NOM_CARACTERISTIQUE) values 
 	(0, 'a');
 
 insert into INTERNAUTE (ID_INTERNAUTE, PSEUDONYME) values 
@@ -69,17 +69,17 @@ insert into INTERNAUTE (ID_INTERNAUTE, PSEUDONYME) values
 	(1, 'Bibiche'),
 	(2, 'Sami61');
 
-insert into MENU (ID_MENU, ID_INTERNAUTE, "NOM MENU") values 
+insert into MENU (ID_MENU, ID_INTERNAUTE, NOM_MENU) values 
 	(0, 0, 'Repas de Noël');
 
-insert into HISTORIQUE_MODIFICATION (ID_MODIFICATION, ID_INTERNAUTE, ID_RECETTE, "DATE D'ECRITURE", "DATE DE DEBUT DE VALIDITE", "DATE DE FIN DE VALIDITE", "TEXTE CONCERNE") values 
+insert into HISTORIQUE_MODIFICATION (ID_MODIFICATION, ID_INTERNAUTE, ID_RECETTE, DATE_CREATION, DATE_DEBUT_VALIDITE, DATE_FIN_VALIDITE, TEXTE_CONCERNE) values 
 	(0, 0, 0, DEFAULT, DEFAULT, NULL, 'Un diff à priories');
 
-insert into COMMENTAIRE (ID_COMMENTAIRE, ID_INTERNAUTE, ID_RECETTE, TEXTE, "DATE DE CREATION") values 
+insert into COMMENTAIRE (ID_COMMENTAIRE, ID_INTERNAUTE, ID_RECETTE, TEXTE, DATE_CREATION) values 
 	(0, 1, 0, 'Idéal pour les grands repas. Facile à préparer. Rien à redire sur la recette : un régal !', '2015-12-16 15:50:18+01'),
 	(1, 2, 0, 'Très bonne recette d''autant plus que j''ai des invités ce soir !', '2015-12-23 18:40:18+01');
 
-insert into CATEGORIE_RECETTE (ID_CATEGORIE, "NOM CATEGORIE") values 
+insert into CATEGORIE_RECETTE (ID_CATEGORIE, NOM_CATEGORIE) values 
 	(0, 'Gigot'),
 	(1, 'agneau'),
 	(2, 'Plat');
@@ -94,10 +94,10 @@ insert into COMPOSITION (ID_INGREDIENT, ID_RECETTE, QUANTITE, UNITE) values
 	(6, 0, 2, ''),
 	(7, 0, 4, 'c. à soupe');
 
-insert into NUTRITION (ID_CARACTERISTIQUE, ID_INGREDIENT, "QUANTITE NUTRITIONNEL") values 
+insert into NUTRITION (ID_CARACTERISTIQUE, ID_INGREDIENT, QUANTITE_NUTRITIONNELLE) values 
 	(0, 0, 0);
 
-insert into APPARTENIR (ID_MENU, ID_RECETTE, ID_CATEGORIE, "DATE D'AJOUT") values 
+insert into APPARTENIR (ID_MENU, ID_RECETTE, ID_CATEGORIE, DATE_CREATION) values 
 	(0, 0, 2, '2016-11-19');
 
 insert into NOTES (ID_RECETTE, ID_INTERNAUTE, NOTE) values 

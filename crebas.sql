@@ -62,7 +62,7 @@ drop table IF EXISTS NOTES CASCADE;
 
 drop table IF EXISTS NUTRITION CASCADE;
 
-drop table IF EXISTS RECETTE_DE_CUISINE CASCADE;
+drop table IF EXISTS RECETTE CASCADE;
 
 /*==============================================================*/
 /* Types                                                        */
@@ -88,7 +88,7 @@ create table APPARTENIR (
 ID_MENU              INT4                 not null,
 ID_RECETTE           INT4                 not null,
 ID_CATEGORIE         INT4                 not null,
-"DATE D'AJOUT"       DATE                 not null default current_date,
+DATE_CREATION        DATE                 not null default current_date,
 constraint PK_APPARTENIR primary key (ID_MENU, ID_RECETTE, ID_CATEGORIE)
 );
 
@@ -118,7 +118,7 @@ ID_CATEGORIE
 /*==============================================================*/
 create table CARACTERISTIQUE_NUTRITIONNEL (
 ID_CARACTERISTIQUE    SERIAL               not null,
-"NOM CARACTERISTIQUE" CHAR(255)            not null,
+NOM_CARACTERISTIQUE   CHAR(255)            not null,
 constraint PK_CARACTERISTIQUE_NUTRITIONNE primary key (ID_CARACTERISTIQUE)
 );
 
@@ -150,7 +150,7 @@ ID_CATEGORIE
 /*==============================================================*/
 create table CATEGORIE_RECETTE (
 ID_CATEGORIE         SERIAL               not null,
-"NOM CATEGORIE"      CHAR(255)            not null,
+NOM_CATEGORIE        CHAR(255)            not null,
 constraint PK_CATEGORIE_RECETTE primary key (ID_CATEGORIE)
 );
 
@@ -162,7 +162,7 @@ ID_COMMENTAIRE       SERIAL               not null,
 ID_INTERNAUTE        INT4                 not null,
 ID_RECETTE           INT4                 not null,
 TEXTE                TEXT                 not null,
-"DATE DE CREATION"   timestamp with time zone not null        default current_timestamp,
+DATE_CREATION        timestamp with time zone not null        default current_timestamp,
 constraint PK_COMMENTAIRE primary key (ID_COMMENTAIRE)
 );
 
@@ -212,12 +212,12 @@ create table HISTORIQUE_MODIFICATION (
 ID_MODIFICATION              SERIAL                     not null,
 ID_INTERNAUTE                INT4                       not null,
 ID_RECETTE                   INT4                       not null,
-"DATE D'ECRITURE"            timestamp with time zone   not null   default current_timestamp,
-"DATE DE DEBUT DE VALIDITE"  timestamp with time zone   not null   default current_timestamp,
-"DATE DE FIN DE VALIDITE"    timestamp with time zone   null,
-"TEXTE CONCERNE"             TEXT                       not null,
-constraint validity_date CHECK ("DATE D'ECRITURE" <= "DATE DE DEBUT DE VALIDITE" AND 
-                                "DATE DE DEBUT DE VALIDITE" <= "DATE DE FIN DE VALIDITE"),
+DATE_CREATION                timestamp with time zone   not null   default current_timestamp,
+DATE_DEBUT_VALIDITE  	     timestamp with time zone   not null   default current_timestamp,
+DATE_FIN_VALIDITE    	     timestamp with time zone   null,
+TEXTE_CONCERNE               TEXT                       not null,
+constraint validity_date CHECK (DATE_CREATION <= DATE_DEBUT_VALIDITE AND 
+                                DATE_DEBUT_VALIDITE <= DATE_FIN_VALIDITE),
 constraint PK_HISTORIQUE_MODIFICATION primary key (ID_MODIFICATION)
 );
 
@@ -240,7 +240,7 @@ ID_RECETTE
 /*==============================================================*/
 create table INGREDIENT (
 ID_INGREDIENT        SERIAL               not null,
-"NOM INGREDIENT"     CHAR(255)            not null,
+NOM_INGREDIENT       CHAR(255)            not null,
 constraint PK_INGREDIENT primary key (ID_INGREDIENT)
 );
 
@@ -259,7 +259,7 @@ constraint PK_INTERNAUTE primary key (ID_INTERNAUTE)
 create table MENU (
 ID_MENU              SERIAL               not null,
 ID_INTERNAUTE        INT4                 not null,
-"NOM MENU"           CHAR(255)            not null,
+NOM_MENU             CHAR(255)            not null,
 constraint PK_MENU primary key (ID_MENU)
 );
 
@@ -301,7 +301,7 @@ ID_INTERNAUTE
 create table NUTRITION (
 ID_CARACTERISTIQUE       INT4                 not null,
 ID_INGREDIENT            INT4                 not null,
-"QUANTITE NUTRITIONNEL"  INT4                 not null,
+QUANTITE_NUTRITIONNELLE  INT4                 not null,
 constraint PK_NUTRITION primary key (ID_CARACTERISTIQUE, ID_INGREDIENT)
 );
 
@@ -320,17 +320,17 @@ ID_INGREDIENT
 );
 
 /*==============================================================*/
-/* Table : RECETTE_DE_CUISINE                                   */
+/* Table : RECETTE                                   */
 /*==============================================================*/
-create table RECETTE_DE_CUISINE (
-ID_RECETTE                  SERIAL                     not null,
-"NOM RECETTE"               CHAR(255)                  not null,
-"DATE D'AJOUT DANS LA BASE" timestamp with time zone   not null    default current_timestamp,
-"TEMPS DE PREPARATION"      TIME                       null,
-"TEMPS DE CUISSON"          TIME                       null,
-"NOMBRE DE PERSONNES"       INT4                       null,
-PREPARATION                 TEXT                       not null,
-constraint PK_RECETTE_DE_CUISINE primary key (ID_RECETTE)
+create table RECETTE (
+ID_RECETTE   	     SERIAL                     not null,
+NOM_RECETTE          CHAR(255)                  not null,
+DATE_CREATION 	     timestamp with time zone   not null    default current_timestamp,
+TEMPS_PREPARATION    TIME                       null,
+TEMPS_CUISSON        TIME                       null,
+NOMBRE_PERSONNES     INT4                       null,
+PREPARATION          TEXT                       not null,
+constraint PK_RECETTE primary key (ID_RECETTE)
 );
 
 alter table APPARTENIR
@@ -340,7 +340,7 @@ alter table APPARTENIR
 
 alter table APPARTENIR
    add constraint FK_APPARTEN_APP_RECET_RECETTE_ foreign key (ID_RECETTE)
-      references RECETTE_DE_CUISINE (ID_RECETTE)
+      references RECETTE (ID_RECETTE)
       on delete restrict on update restrict;
 
 alter table APPARTENIR
@@ -350,7 +350,7 @@ alter table APPARTENIR
 
 alter table CATEGORIE
    add constraint FK_CATEGORI_APP_CAT_RECETTE_ foreign key (ID_RECETTE)
-      references RECETTE_DE_CUISINE (ID_RECETTE)
+      references RECETTE (ID_RECETTE)
       on delete restrict on update restrict;
 
 alter table CATEGORIE
@@ -360,7 +360,7 @@ alter table CATEGORIE
 
 alter table COMMENTAIRE
    add constraint FK_COMMENTA_CONCERNER_RECETTE_ foreign key (ID_RECETTE)
-      references RECETTE_DE_CUISINE (ID_RECETTE)
+      references RECETTE (ID_RECETTE)
       on delete restrict on update restrict;
 
 alter table COMMENTAIRE
@@ -375,12 +375,12 @@ alter table COMPOSITION
 
 alter table COMPOSITION
    add constraint FK_COMPOSIT_INGR_RECE_RECETTE_ foreign key (ID_RECETTE)
-      references RECETTE_DE_CUISINE (ID_RECETTE)
+      references RECETTE (ID_RECETTE)
       on delete restrict on update restrict;
 
 alter table HISTORIQUE_MODIFICATION
    add constraint FK_HISTORIQ_MODIFICAT_RECETTE_ foreign key (ID_RECETTE)
-      references RECETTE_DE_CUISINE (ID_RECETTE)
+      references RECETTE (ID_RECETTE)
       on delete restrict on update restrict;
 
 alter table HISTORIQUE_MODIFICATION
@@ -395,7 +395,7 @@ alter table MENU
 
 alter table NOTES
    add constraint FK_NOTES_NOTER_REC_RECETTE_ foreign key (ID_RECETTE)
-      references RECETTE_DE_CUISINE (ID_RECETTE)
+      references RECETTE (ID_RECETTE)
       on delete restrict on update restrict;
 
 alter table NOTES
