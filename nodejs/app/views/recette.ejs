@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= nom_recette %></title>
+    <link rel='stylesheet' href='/css/style.css' />
+</head>
+<body>
+<h1><%= nom_recette %></h1>
+<h2>
+    Pour <%= nombre_personnes %> <%if (nombre_personnes <= 1) { %> personne <% } else { %> personnes <% } %> -
+    Temps de préparation: <%= temps_preparation %> min -
+    Temps de cuisson: <%= temps_cuisson %> min
+</h2>
+
+<p><%= preparation %></p>
+
+<p>Ajouté le <%= date_creation %></p>
+
+</body>
+</html>
