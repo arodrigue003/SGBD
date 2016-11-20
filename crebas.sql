@@ -4,67 +4,83 @@
 /*==============================================================*/
 
 
-drop index APP_RECETTE2_FK;
+drop index IF EXISTS APP_RECETTE2_FK;
 
-drop index APP_RECETTE3_FK;
+drop index IF EXISTS APP_RECETTE3_FK;
 
-drop index APP_RECETTE_FK;
+drop index IF EXISTS APP_RECETTE_FK;
 
-drop index APP_CAT2_FK;
+drop index IF EXISTS APP_CAT2_FK;
 
-drop index APP_CAT_FK;
+drop index IF EXISTS APP_CAT_FK;
 
-drop index CONCERNER_FK;
+drop index IF EXISTS CONCERNER_FK;
 
-drop index ECRIRE_FK;
+drop index IF EXISTS ECRIRE_FK;
 
-drop index INGR_RECETTE2_FK;
+drop index IF EXISTS INGR_RECETTE2_FK;
 
-drop index INGR_RECETTE_FK;
+drop index IF EXISTS INGR_RECETTE_FK;
 
-drop index MODIFIER_FK;
+drop index IF EXISTS MODIFIER_FK;
 
-drop index CREER_FK;
+drop index IF EXISTS CREER_FK;
 
-drop index RECETTE_MODIFIE2_FK;
+drop index IF EXISTS RECETTE_MODIFIE2_FK;
 
-drop index RECETTE_MODIFIE_FK;
+drop index IF EXISTS RECETTE_MODIFIE_FK;
 
-drop index NOTER_RECETTE2_FK;
+drop index IF EXISTS NOTER_RECETTE2_FK;
 
-drop index NOTER_RECETTE_FK;
+drop index IF EXISTS NOTER_RECETTE_FK;
 
-drop index POSSEDER_CARAC2_FK;
+drop index IF EXISTS POSSEDER_CARAC2_FK;
 
-drop index POSSEDER_CARAC_FK;
+drop index IF EXISTS POSSEDER_CARAC_FK;
 
-drop table APPARTENIR;
+drop table IF EXISTS APPARTENIR CASCADE;
 
-drop table CARACTERISTIQUE_NUTRITIONNEL;
+drop table IF EXISTS CARACTERISTIQUE_NUTRITIONNEL CASCADE;
 
-drop table CATEGORIE;
+drop table IF EXISTS CATEGORIE CASCADE;
 
-drop table CATEGORIE_RECETTE;
+drop table IF EXISTS CATEGORIE_RECETTE CASCADE;
 
-drop table COMMENTAIRE;
+drop table IF EXISTS COMMENTAIRE CASCADE;
 
-drop table COMPOSITION;
+drop table IF EXISTS COMPOSITION CASCADE;
 
-drop table HISTORIQUE_MODIFICATION;
+drop table IF EXISTS HISTORIQUE_MODIFICATION CASCADE;
 
-drop table INGREDIENT;
+drop table IF EXISTS INGREDIENT CASCADE;
 
-drop table INTERNAUTE;
+drop table IF EXISTS INTERNAUTE CASCADE;
 
-drop table MENU;
+drop table IF EXISTS MENU CASCADE;
 
-drop table MODIFICATION;
+drop table IF EXISTS MODIFICATION CASCADE;
 
-drop table NOTES;
+drop table IF EXISTS NOTES CASCADE;
 
-drop table NUTRITION;
+drop table IF EXISTS NUTRITION CASCADE;
 
-drop table RECETTE_DE_CUISINE;
+drop table IF EXISTS RECETTE_DE_CUISINE CASCADE;
+
+/*==============================================================*/
+/* Types                                                        */
+/*==============================================================*/
+DROP TYPE IF EXISTS unite;
+
+CREATE TYPE unite AS ENUM ('cuillère à café', 
+                           'cuillère à soupe',
+                           'L',
+                           'dL',
+                           'cL',
+                           'g',
+                           'kg',
+                           'pincée',
+                           '');
+
 
 /*==============================================================*/
 /* Table : APPARTENIR                                           */
@@ -73,8 +89,7 @@ create table APPARTENIR (
 ID_MENU              INT4                 not null,
 ID_RECETTE           INT4                 not null,
 ID_CATEGORIE         INT4                 not null,
-"DATE D'AJOUT"       DATE                 null,
-PLACE                CHAR(255)            null,
+"DATE D'AJOUT"       DATE                 not null default current_date,
 constraint PK_APPARTENIR primary key (ID_MENU, ID_RECETTE, ID_CATEGORIE)
 );
 
@@ -103,8 +118,8 @@ ID_CATEGORIE
 /* Table : CARACTERISTIQUE_NUTRITIONNEL                         */
 /*==============================================================*/
 create table CARACTERISTIQUE_NUTRITIONNEL (
-ID_CARACTERISTIQUE   INT4                 not null,
-"NOM CARACTERISTIQUE" CHAR(255)            null,
+ID_CARACTERISTIQUE    SERIAL               not null,
+"NOM CARACTERISTIQUE" CHAR(255)            not null,
 constraint PK_CARACTERISTIQUE_NUTRITIONNE primary key (ID_CARACTERISTIQUE)
 );
 
@@ -135,8 +150,8 @@ ID_CATEGORIE
 /* Table : CATEGORIE_RECETTE                                    */
 /*==============================================================*/
 create table CATEGORIE_RECETTE (
-ID_CATEGORIE         INT4                 not null,
-"NOM CATEGORIE"      CHAR(255)            null,
+ID_CATEGORIE         SERIAL               not null,
+"NOM CATEGORIE"      CHAR(255)            not null,
 constraint PK_CATEGORIE_RECETTE primary key (ID_CATEGORIE)
 );
 
@@ -144,11 +159,11 @@ constraint PK_CATEGORIE_RECETTE primary key (ID_CATEGORIE)
 /* Table : COMMENTAIRE                                          */
 /*==============================================================*/
 create table COMMENTAIRE (
-ID_COMMENTAIRE       INT4                 not null,
+ID_COMMENTAIRE       SERIAL               not null,
 ID_INTERNAUTE        INT4                 not null,
 ID_RECETTE           INT4                 not null,
-TEXTE                TEXT                 null,
-"DATE DE CREATION"   DATE                 null,
+TEXTE                TEXT                 not null,
+"DATE DE CREATION"   timestamp with time zone not null        default current_timestamp,
 constraint PK_COMMENTAIRE primary key (ID_COMMENTAIRE)
 );
 
@@ -172,8 +187,8 @@ ID_RECETTE
 create table COMPOSITION (
 ID_INGREDIENT        INT4                 not null,
 ID_RECETTE           INT4                 not null,
-QUANTITE             DECIMAL              null,
-UNITE                CHAR(64)             null,
+QUANTITE             DECIMAL              not null,
+UNITE                unite                not null,
 constraint PK_COMPOSITION primary key (ID_INGREDIENT, ID_RECETTE)
 );
 
@@ -195,12 +210,14 @@ ID_RECETTE
 /* Table : HISTORIQUE_MODIFICATION                              */
 /*==============================================================*/
 create table HISTORIQUE_MODIFICATION (
-ID_MODIFICATION      INT4                 not null,
-ID_INTERNAUTE        INT4                 not null,
-"DATE D'ECRITURE"    DATE                 null,
-"DATE DE DEBUT DE VALIDITE" DATE                 null,
-"DATE DE FIN DE VALIDITE" DATE                 null,
-"TEXTE CONCERNE"     TEXT                 null,
+ID_MODIFICATION              SERIAL                     not null,
+ID_INTERNAUTE                INT4                       not null,
+"DATE D'ECRITURE"            timestamp with time zone   not null   default current_timestamp,
+"DATE DE DEBUT DE VALIDITE"  timestamp with time zone   not null   default current_timestamp,
+"DATE DE FIN DE VALIDITE"    timestamp with time zone   null,
+"TEXTE CONCERNE"             TEXT                       not null,
+constraint validity_date CHECK ("DATE D'ECRITURE" < "DATE DE DEBUT DE VALIDITE" AND 
+                                "DATE DE DEBUT DE VALIDITE" < "DATE DE FIN DE VALIDITE"),
 constraint PK_HISTORIQUE_MODIFICATION primary key (ID_MODIFICATION)
 );
 
@@ -215,8 +232,8 @@ ID_INTERNAUTE
 /* Table : INGREDIENT                                           */
 /*==============================================================*/
 create table INGREDIENT (
-ID_INGREDIENT        INT4                 not null,
-"NOM INGREDIENT"     CHAR(255)            null,
+ID_INGREDIENT        SERIAL               not null,
+"NOM INGREDIENT"     CHAR(255)            not null,
 constraint PK_INGREDIENT primary key (ID_INGREDIENT)
 );
 
@@ -224,8 +241,8 @@ constraint PK_INGREDIENT primary key (ID_INGREDIENT)
 /* Table : INTERNAUTE                                           */
 /*==============================================================*/
 create table INTERNAUTE (
-ID_INTERNAUTE        INT4                 not null,
-PSEUDONYME           CHAR(63)             null,
+ID_INTERNAUTE        SERIAL               not null,
+PSEUDONYME           CHAR(63)             not null,
 constraint PK_INTERNAUTE primary key (ID_INTERNAUTE)
 );
 
@@ -233,9 +250,9 @@ constraint PK_INTERNAUTE primary key (ID_INTERNAUTE)
 /* Table : MENU                                                 */
 /*==============================================================*/
 create table MENU (
-ID_MENU              INT4                 not null,
+ID_MENU              SERIAL               not null,
 ID_INTERNAUTE        INT4                 not null,
-"NOM MENU"           CHAR(255)            null,
+"NOM MENU"           CHAR(255)            not null,
 constraint PK_MENU primary key (ID_MENU)
 );
 
@@ -275,7 +292,8 @@ ID_RECETTE
 create table NOTES (
 ID_RECETTE           INT4                 not null,
 ID_INTERNAUTE        INT4                 not null,
-NOTE                 INT4                 null constraint note_between_one_and_three CHECK (NOTE > 1 AND NOTE < 3),
+NOTE                 INT4                 not null,
+constraint note_between_one_and_three CHECK (NOTE > 1 AND NOTE < 3),
 constraint PK_NOTES primary key (ID_RECETTE, ID_INTERNAUTE)
 );
 
@@ -297,9 +315,9 @@ ID_INTERNAUTE
 /* Table : NUTRITION                                            */
 /*==============================================================*/
 create table NUTRITION (
-ID_CARACTERISTIQUE   INT4                 not null,
-ID_INGREDIENT        INT4                 not null,
-"QUANTITE NUTRITIONNEL" INT4                 null,
+ID_CARACTERISTIQUE       INT4                 not null,
+ID_INGREDIENT            INT4                 not null,
+"QUANTITE NUTRITIONNEL"  INT4                 not null,
 constraint PK_NUTRITION primary key (ID_CARACTERISTIQUE, ID_INGREDIENT)
 );
 
@@ -321,13 +339,13 @@ ID_INGREDIENT
 /* Table : RECETTE_DE_CUISINE                                   */
 /*==============================================================*/
 create table RECETTE_DE_CUISINE (
-ID_RECETTE           INT4                 not null,
-"NOM RECETTE"        CHAR(255)            null,
-"DATE D'AJOUT DANS LA BASE" DATE                 null,
-"TEMPS DE PREPARATION" TIME                 null,
-"TEMPS DE CUISSON"   TIME                 null,
-"NOMBRE DE PERSONNES" INT4                 null,
-PREPARATION          TEXT                 null,
+ID_RECETTE                  SERIAL                     not null,
+"NOM RECETTE"               CHAR(255)                  not null,
+"DATE D'AJOUT DANS LA BASE" timestamp with time zone   not null    default current_timestamp,
+"TEMPS DE PREPARATION"      TIME                       null,
+"TEMPS DE CUISSON"          TIME                       null,
+"NOMBRE DE PERSONNES"       INT4                       null,
+PREPARATION                 TEXT                       not null,
 constraint PK_RECETTE_DE_CUISINE primary key (ID_RECETTE)
 );
 
