@@ -413,3 +413,18 @@ alter table NUTRITION
       references INGREDIENT (ID_INGREDIENT)
       on delete restrict on update restrict;
 
+
+
+CREATE OR REPLACE VIEW INGREDIENTS_RECETTE AS
+   SELECT recette.id_recette AS id_recette, 
+      composition.quantite AS quantite, 
+      composition.unite AS eunite, 
+      ingredient.nom_ingredient AS ingredient
+   FROM ((recette NATURAL JOIN composition) NATURAL JOIN ingredient) 
+   ORDER BY recette.id_recette, ingredient.nom_ingredient;
+   
+CREATE OR REPLACE VIEW CATEGORIES_RECETTE AS
+   SELECT recette.id_recette,
+      categorie_recette.nom_categorie
+   FROM ((recette NATURAL JOIN categorie) NATURAL JOIN categorie_recette)
+   ORDER BY recette.id_recette, categorie_recette.nom_categorie;
