@@ -38,17 +38,17 @@ drop index IF EXISTS POSSEDER_CARAC2_FK;
 
 drop index IF EXISTS POSSEDER_CARAC_FK;
 
-drop table IF EXISTS APPARTENIR CASCADE;
+drop table IF EXISTS appartenir_menu CASCADE;
 
-drop table IF EXISTS CARACTERISTIQUE_NUTRITIONNEL CASCADE;
+drop table IF EXISTS CARAC_NUTRITIONNELLE CASCADE;
+
+drop table IF EXISTS APPARTENIR_CATEGORIE CASCADE;
 
 drop table IF EXISTS CATEGORIE CASCADE;
 
-drop table IF EXISTS CATEGORIE_RECETTE CASCADE;
-
 drop table IF EXISTS COMMENTAIRE CASCADE;
 
-drop table IF EXISTS COMPOSITION CASCADE;
+drop table IF EXISTS composition_recette CASCADE;
 
 drop table IF EXISTS HISTORIQUE_MODIFICATION CASCADE;
 
@@ -58,18 +58,18 @@ drop table IF EXISTS INTERNAUTE CASCADE;
 
 drop table IF EXISTS MENU CASCADE;
 
-drop table IF EXISTS NOTES CASCADE;
+drop table IF EXISTS NOTE CASCADE;
 
-drop table IF EXISTS NUTRITION CASCADE;
+drop table IF EXISTS POSSEDER_CARAC CASCADE;
 
 drop table IF EXISTS RECETTE CASCADE;
 
 /*==============================================================*/
 /* Types                                                        */
 /*==============================================================*/
-DROP TYPE IF EXISTS unite;
+DROP TYPE IF EXISTS unite CASCADE;
 
-CREATE TYPE unite AS ENUM ('c. à café', 
+CREATE TYPE unite AS ENUM ('c. à café',
                            'c. à soupe',
                            'L',
                            'dL',
@@ -80,11 +80,17 @@ CREATE TYPE unite AS ENUM ('c. à café',
                            'gousse(s)',
                            '');
 
+DROP TYPE IF EXISTS unite_nutrition CASCADE;
+
+CREATE TYPE unite_nutrition AS ENUM ('g',
+                                     'mg',
+                                     'Kcal');
+
 
 /*==============================================================*/
-/* Table : APPARTENIR                                           */
+/* Table : appartenir_menu                                           */
 /*==============================================================*/
-create table APPARTENIR (
+create table appartenir_menu (
 ID_MENU              INT4                 not null,
 ID_RECETTE           INT4                 not null,
 ID_CATEGORIE         INT4                 not null,
@@ -95,63 +101,63 @@ constraint PK_APPARTENIR primary key (ID_MENU, ID_RECETTE, ID_CATEGORIE)
 /*==============================================================*/
 /* Index : APP_RECETTE_FK                                       */
 /*==============================================================*/
-create  index APP_RECETTE_FK on APPARTENIR (
+create  index APP_RECETTE_FK on appartenir_menu (
 ID_MENU
 );
 
 /*==============================================================*/
 /* Index : APP_RECETTE2_FK                                      */
 /*==============================================================*/
-create  index APP_RECETTE2_FK on APPARTENIR (
+create  index APP_RECETTE2_FK on appartenir_menu (
 ID_RECETTE
 );
 
 /*==============================================================*/
 /* Index : APP_RECETTE3_FK                                      */
 /*==============================================================*/
-create  index APP_RECETTE3_FK on APPARTENIR (
+create  index APP_RECETTE3_FK on appartenir_menu (
 ID_CATEGORIE
 );
 
 /*==============================================================*/
-/* Table : CARACTERISTIQUE_NUTRITIONNEL                         */
+/* Table : CARAC_NUTRITIONNELLE                         */
 /*==============================================================*/
-create table CARACTERISTIQUE_NUTRITIONNEL (
-ID_CARACTERISTIQUE    SERIAL               not null,
-NOM_CARACTERISTIQUE   CHAR(255)            not null,
-constraint PK_CARACTERISTIQUE_NUTRITIONNE primary key (ID_CARACTERISTIQUE)
+create table CARAC_NUTRITIONNELLE (
+ID_CARAC_NUTRITIONNELLE    SERIAL               not null,
+NOM_CARACTERISTIQUE   VARCHAR(255)            not null,
+constraint PK_CARACTERISTIQUE_NUTRITIONNE primary key (ID_CARAC_NUTRITIONNELLE)
 );
 
 /*==============================================================*/
-/* Table : CATEGORIE                                            */
+/* Table : appartenir_categorie                                            */
 /*==============================================================*/
-create table CATEGORIE (
+create table appartenir_categorie (
 ID_RECETTE           INT4                 not null,
 ID_CATEGORIE         INT4                 not null,
-constraint PK_CATEGORIE primary key (ID_RECETTE, ID_CATEGORIE)
+constraint PK_APPARTENIR_CATEGORIE primary key (ID_RECETTE, ID_CATEGORIE)
 );
 
 /*==============================================================*/
 /* Index : APP_CAT_FK                                           */
 /*==============================================================*/
-create  index APP_CAT_FK on CATEGORIE (
+create  index APP_CAT_FK on appartenir_categorie (
 ID_RECETTE
 );
 
 /*==============================================================*/
 /* Index : APP_CAT2_FK                                          */
 /*==============================================================*/
-create  index APP_CAT2_FK on CATEGORIE (
+create  index APP_CAT2_FK on appartenir_categorie (
 ID_CATEGORIE
 );
 
 /*==============================================================*/
-/* Table : CATEGORIE_RECETTE                                    */
+/* Table : CATEGORIE                                    */
 /*==============================================================*/
-create table CATEGORIE_RECETTE (
+create table CATEGORIE (
 ID_CATEGORIE         SERIAL               not null,
-NOM_CATEGORIE        CHAR(255)            not null,
-constraint PK_CATEGORIE_RECETTE primary key (ID_CATEGORIE)
+NOM_CATEGORIE        VARCHAR(255)            not null,
+constraint PK_CATEGORIE primary key (ID_CATEGORIE)
 );
 
 /*==============================================================*/
@@ -181,9 +187,9 @@ ID_RECETTE
 );
 
 /*==============================================================*/
-/* Table : COMPOSITION                                          */
+/* Table : composition_recette                                          */
 /*==============================================================*/
-create table COMPOSITION (
+create table composition_recette (
 ID_INGREDIENT        INT4                 not null,
 ID_RECETTE           INT4                 not null,
 QUANTITE             DECIMAL              not null,
@@ -194,14 +200,14 @@ constraint PK_COMPOSITION primary key (ID_INGREDIENT, ID_RECETTE)
 /*==============================================================*/
 /* Index : INGR_RECETTE_FK                                      */
 /*==============================================================*/
-create  index INGR_RECETTE_FK on COMPOSITION (
+create  index INGR_RECETTE_FK on composition_recette (
 ID_INGREDIENT
 );
 
 /*==============================================================*/
 /* Index : INGR_RECETTE2_FK                                     */
 /*==============================================================*/
-create  index INGR_RECETTE2_FK on COMPOSITION (
+create  index INGR_RECETTE2_FK on composition_recette (
 ID_RECETTE
 );
 
@@ -209,16 +215,12 @@ ID_RECETTE
 /* Table : HISTORIQUE_MODIFICATION                              */
 /*==============================================================*/
 create table HISTORIQUE_MODIFICATION (
-ID_MODIFICATION              SERIAL                     not null,
+ID_HISTORIQUE_MODIFICATION              SERIAL                     not null,
 ID_INTERNAUTE                INT4                       not null,
 ID_RECETTE                   INT4                       not null,
 DATE_CREATION                timestamp with time zone   not null   default current_timestamp,
-DATE_DEBUT_VALIDITE  	     timestamp with time zone   not null   default current_timestamp,
-DATE_FIN_VALIDITE    	     timestamp with time zone   null,
 TEXTE_CONCERNE               TEXT                       not null,
-constraint validity_date CHECK (DATE_CREATION <= DATE_DEBUT_VALIDITE AND 
-                                DATE_DEBUT_VALIDITE <= DATE_FIN_VALIDITE),
-constraint PK_HISTORIQUE_MODIFICATION primary key (ID_MODIFICATION)
+constraint PK_HISTORIQUE_MODIFICATION primary key (ID_HISTORIQUE_MODIFICATION)
 );
 
 /*==============================================================*/
@@ -240,7 +242,7 @@ ID_RECETTE
 /*==============================================================*/
 create table INGREDIENT (
 ID_INGREDIENT        SERIAL               not null,
-NOM_INGREDIENT       CHAR(255)            not null,
+NOM_INGREDIENT       VARCHAR(255)            not null,
 constraint PK_INGREDIENT primary key (ID_INGREDIENT)
 );
 
@@ -249,7 +251,8 @@ constraint PK_INGREDIENT primary key (ID_INGREDIENT)
 /*==============================================================*/
 create table INTERNAUTE (
 ID_INTERNAUTE        SERIAL               not null,
-PSEUDONYME           CHAR(63)             not null,
+PSEUDONYME           VARCHAR(63)          not null,
+MOT_DE_PASSE         VARCHAR(256)         not null,
 constraint PK_INTERNAUTE primary key (ID_INTERNAUTE)
 );
 
@@ -259,7 +262,7 @@ constraint PK_INTERNAUTE primary key (ID_INTERNAUTE)
 create table MENU (
 ID_MENU              SERIAL               not null,
 ID_INTERNAUTE        INT4                 not null,
-NOM_MENU             CHAR(255)            not null,
+NOM_MENU             VARCHAR(255)            not null,
 constraint PK_MENU primary key (ID_MENU)
 );
 
@@ -271,51 +274,52 @@ ID_INTERNAUTE
 );
 
 /*==============================================================*/
-/* Table : NOTES                                                */
+/* Table : NOTE                                                */
 /*==============================================================*/
-create table NOTES (
+create table NOTE (
 ID_RECETTE           INT4                 not null,
 ID_INTERNAUTE        INT4                 not null,
-NOTE                 INT4                 not null,
-constraint note_between_one_and_three CHECK (NOTE >= 1 AND NOTE <= 3),
+VALEUR               INT4                 not null,
+constraint note_between_one_and_three CHECK (VALEUR >= 1 AND VALEUR <= 3),
 constraint PK_NOTES primary key (ID_RECETTE, ID_INTERNAUTE)
 );
 
 /*==============================================================*/
 /* Index : NOTER_RECETTE_FK                                     */
 /*==============================================================*/
-create  index NOTER_RECETTE_FK on NOTES (
+create  index NOTER_RECETTE_FK on NOTE (
 ID_RECETTE
 );
 
 /*==============================================================*/
 /* Index : NOTER_RECETTE2_FK                                    */
 /*==============================================================*/
-create  index NOTER_RECETTE2_FK on NOTES (
+create  index NOTER_RECETTE2_FK on NOTE (
 ID_INTERNAUTE
 );
 
 /*==============================================================*/
-/* Table : NUTRITION                                            */
+/* Table : POSSEDER_CARAC                                            */
 /*==============================================================*/
-create table NUTRITION (
-ID_CARACTERISTIQUE       INT4                 not null,
+create table POSSEDER_CARAC (
+ID_CARAC_NUTRITIONNELLE       INT4                 not null,
 ID_INGREDIENT            INT4                 not null,
-QUANTITE_NUTRITIONNELLE  INT4                 not null,
-constraint PK_NUTRITION primary key (ID_CARACTERISTIQUE, ID_INGREDIENT)
+QUANTITE_NUTRITION       INT4                 not null,
+UNITE_NUTRITION          unite_nutrition      not null,
+constraint PK_POSSEDER_CARAC primary key (ID_CARAC_NUTRITIONNELLE, ID_INGREDIENT)
 );
 
 /*==============================================================*/
 /* Index : POSSEDER_CARAC_FK                                    */
 /*==============================================================*/
-create  index POSSEDER_CARAC_FK on NUTRITION (
-ID_CARACTERISTIQUE
+create  index POSSEDER_CARAC_FK on POSSEDER_CARAC (
+ID_CARAC_NUTRITIONNELLE
 );
 
 /*==============================================================*/
 /* Index : POSSEDER_CARAC2_FK                                   */
 /*==============================================================*/
-create  index POSSEDER_CARAC2_FK on NUTRITION (
+create  index POSSEDER_CARAC2_FK on POSSEDER_CARAC (
 ID_INGREDIENT
 );
 
@@ -323,39 +327,39 @@ ID_INGREDIENT
 /* Table : RECETTE                                   */
 /*==============================================================*/
 create table RECETTE (
-ID_RECETTE   	     SERIAL                     not null,
-NOM_RECETTE          CHAR(255)                  not null,
+ID_RECETTE     	     SERIAL                     not null,
+NOM_RECETTE          VARCHAR(255)                  not null,
 DATE_CREATION 	     timestamp with time zone   not null    default current_timestamp,
 TEMPS_PREPARATION    TIME                       null,
 TEMPS_CUISSON        TIME                       null,
 NOMBRE_PERSONNES     INT4                       null,
-PREPARATION          TEXT                       not null,
+TEXTE_PREPARATION    TEXT                       not null,
 constraint PK_RECETTE primary key (ID_RECETTE)
 );
 
-alter table APPARTENIR
+alter table appartenir_menu
    add constraint FK_APPARTEN_APP_RECET_MENU foreign key (ID_MENU)
       references MENU (ID_MENU)
       on delete restrict on update restrict;
 
-alter table APPARTENIR
+alter table appartenir_menu
    add constraint FK_APPARTEN_APP_RECET_RECETTE_ foreign key (ID_RECETTE)
       references RECETTE (ID_RECETTE)
       on delete restrict on update restrict;
 
-alter table APPARTENIR
+alter table appartenir_menu
    add constraint FK_APPARTEN_APP_RECET_CATEGORI foreign key (ID_CATEGORIE)
-      references CATEGORIE_RECETTE (ID_CATEGORIE)
+      references CATEGORIE (ID_CATEGORIE)
       on delete restrict on update restrict;
 
-alter table CATEGORIE
+alter table appartenir_categorie
    add constraint FK_CATEGORI_APP_CAT_RECETTE_ foreign key (ID_RECETTE)
       references RECETTE (ID_RECETTE)
       on delete restrict on update restrict;
 
-alter table CATEGORIE
+alter table appartenir_categorie
    add constraint FK_CATEGORI_APP_CAT2_CATEGORI foreign key (ID_CATEGORIE)
-      references CATEGORIE_RECETTE (ID_CATEGORIE)
+      references CATEGORIE (ID_CATEGORIE)
       on delete restrict on update restrict;
 
 alter table COMMENTAIRE
@@ -368,12 +372,12 @@ alter table COMMENTAIRE
       references INTERNAUTE (ID_INTERNAUTE)
       on delete restrict on update restrict;
 
-alter table COMPOSITION
+alter table composition_recette
    add constraint FK_COMPOSIT_INGR_RECE_INGREDIE foreign key (ID_INGREDIENT)
       references INGREDIENT (ID_INGREDIENT)
       on delete restrict on update restrict;
 
-alter table COMPOSITION
+alter table composition_recette
    add constraint FK_COMPOSIT_INGR_RECE_RECETTE_ foreign key (ID_RECETTE)
       references RECETTE (ID_RECETTE)
       on delete restrict on update restrict;
@@ -393,22 +397,22 @@ alter table MENU
       references INTERNAUTE (ID_INTERNAUTE)
       on delete restrict on update restrict;
 
-alter table NOTES
+alter table NOTE
    add constraint FK_NOTES_NOTER_REC_RECETTE_ foreign key (ID_RECETTE)
       references RECETTE (ID_RECETTE)
       on delete restrict on update restrict;
 
-alter table NOTES
+alter table NOTE
    add constraint FK_NOTES_NOTER_REC_INTERNAU foreign key (ID_INTERNAUTE)
       references INTERNAUTE (ID_INTERNAUTE)
       on delete restrict on update restrict;
 
-alter table NUTRITION
-   add constraint FK_NUTRITIO_POSSEDER__CARACTER foreign key (ID_CARACTERISTIQUE)
-      references CARACTERISTIQUE_NUTRITIONNEL (ID_CARACTERISTIQUE)
+alter table POSSEDER_CARAC
+   add constraint FK_NUTRITIO_POSSEDER__CARACTER foreign key (ID_CARAC_NUTRITIONNELLE)
+      references CARAC_NUTRITIONNELLE (ID_CARAC_NUTRITIONNELLE)
       on delete restrict on update restrict;
 
-alter table NUTRITION
+alter table POSSEDER_CARAC
    add constraint FK_NUTRITIO_POSSEDER__INGREDIE foreign key (ID_INGREDIENT)
       references INGREDIENT (ID_INGREDIENT)
       on delete restrict on update restrict;
@@ -417,14 +421,14 @@ alter table NUTRITION
 
 CREATE OR REPLACE VIEW INGREDIENTS_RECETTE AS
    SELECT recette.id_recette AS id_recette, 
-      composition.quantite AS quantite, 
-      composition.unite AS eunite, 
+      composition_recette.quantite AS quantite,
+      composition_recette.unite AS unite,
       ingredient.nom_ingredient AS ingredient
-   FROM ((recette NATURAL JOIN composition) NATURAL JOIN ingredient) 
-   ORDER BY recette.id_recette, ingredient.nom_ingredient;
+   FROM ((recette NATURAL JOIN composition_recette) NATURAL JOIN ingredient)
+   ORDER BY recette.id_recette, ingredient;
    
 CREATE OR REPLACE VIEW CATEGORIES_RECETTE AS
    SELECT recette.id_recette,
-      categorie_recette.nom_categorie
-   FROM ((recette NATURAL JOIN categorie) NATURAL JOIN categorie_recette)
-   ORDER BY recette.id_recette, categorie_recette.nom_categorie;
+      CATEGORIE.nom_categorie
+   FROM ((recette NATURAL JOIN appartenir_categorie) NATURAL JOIN CATEGORIE)
+   ORDER BY recette.id_recette, CATEGORIE.nom_categorie;

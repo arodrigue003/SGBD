@@ -1,14 +1,14 @@
+delete from APPARTENIR_CATEGORIE;
+
+delete from note;
+
+delete from appartenir_menu;
+
+delete from POSSEDER_CARAC;
+
+delete from COMPOSITION_RECETTE;
+
 delete from CATEGORIE;
-
-delete from NOTES;
-
-delete from APPARTENIR;
-
-delete from NUTRITION;
-
-delete from COMPOSITION;
-
-delete from CATEGORIE_RECETTE;
 
 delete from COMMENTAIRE;
 
@@ -18,13 +18,13 @@ delete from MENU;
 
 delete from INTERNAUTE;
 
-delete from CARACTERISTIQUE_NUTRITIONNEL;
+delete from CARAC_NUTRITIONNELLE;
 
 delete from INGREDIENT;
 
 delete from RECETTE;
 
-insert into RECETTE (ID_RECETTE, NOM_RECETTE, DATE_CREATION, TEMPS_PREPARATION, TEMPS_CUISSON, NOMBRE_PERSONNES, PREPARATION) values 
+insert into RECETTE (ID_RECETTE, NOM_RECETTE, DATE_CREATION, TEMPS_PREPARATION, TEMPS_CUISSON, NOMBRE_PERSONNES, TEXTE_PREPARATION) values
 	(0, 'Gigot d''agneau aux épices', '2015-11-20', '0:0:25', '0:0:45', 8, 'ÉTAPE 1
 		Pelez l''ail et coupez-le en fines lamelles.
 		ÉTAPE 2
@@ -93,7 +93,7 @@ insert into INGREDIENT (ID_INGREDIENT, NOM_INGREDIENT) values
 	(3, 'piment oiseau'),
 	(4, 'étoile de badiane'),
 	(5, 'clou de girofle'),
-	(6, 'bâton de cabbelles émiettés'),
+	(6, 'bâton de cannelles émiettés'),
 	(7, 'miel'),
 	(8, 'Sel'),
 	(9, 'bloc de foie gras'),
@@ -111,25 +111,25 @@ insert into INGREDIENT (ID_INGREDIENT, NOM_INGREDIENT) values
 	(21, 'pot de fromage fouetté nature'),
 	(22, 'mayonnaise');
 
-insert into CARACTERISTIQUE_NUTRITIONNEL (ID_CARACTERISTIQUE, NOM_CARACTERISTIQUE) values 
+insert into CARAC_NUTRITIONNELLE (ID_CARAC_NUTRITIONNELLE, NOM_CARACTERISTIQUE) values
 	(0, 'a');
 
-insert into INTERNAUTE (ID_INTERNAUTE, PSEUDONYME) values 
-	(0, 'CuisineAZ'),
-	(1, 'Bibiche'),
-	(2, 'Sami61'),
-	(3, 'Valerie'),
-	(4, 'Adrien'),
-	(5, 'Mouustik'),
-	(6, 'Elisa'),
-	(7, 'Chantal'),
-	(8, 'Nathalie');
+insert into INTERNAUTE (ID_INTERNAUTE, PSEUDONYME, MOT_DE_PASSE) values
+	(0, 'CuisineAZ', ''),
+	(1, 'Bibiche', ''),
+	(2, 'Sami61', ''),
+	(3, 'Valerie', ''),
+	(4, 'Adrien', ''),
+	(5, 'Mouustik', ''),
+	(6, 'Elisa', ''),
+	(7, 'Chantal', ''),
+	(8, 'Nathalie', '');
 
 insert into MENU (ID_MENU, ID_INTERNAUTE, NOM_MENU) values 
 	(0, 0, 'Repas de Noël');
 
-insert into HISTORIQUE_MODIFICATION (ID_MODIFICATION, ID_INTERNAUTE, ID_RECETTE, DATE_CREATION, DATE_DEBUT_VALIDITE, DATE_FIN_VALIDITE, TEXTE_CONCERNE) values 
-	(0, 0, 0, DEFAULT, DEFAULT, NULL, 'La version précédente de la recette du coup');
+insert into HISTORIQUE_MODIFICATION (ID_HISTORIQUE_MODIFICATION, ID_INTERNAUTE, ID_RECETTE, DATE_CREATION, TEXTE_CONCERNE) values
+	(0, 0, 0, DEFAULT, 'La version précédente de la recette du coup');
 
 insert into COMMENTAIRE (ID_COMMENTAIRE, ID_INTERNAUTE, ID_RECETTE, TEXTE, DATE_CREATION) values 
 	(0, 1, 0, 'Idéal pour les grands repas. Facile à préparer. Rien à redire sur la recette : un régal !', '2015-12-16 15:50:18+01'),
@@ -141,7 +141,7 @@ insert into COMMENTAIRE (ID_COMMENTAIRE, ID_INTERNAUTE, ID_RECETTE, TEXTE, DATE_
 	(6, 7, 2, 'Les faire aussi avec un mélange de tarama et fromage fouetté puis les décorez de saumon fumé et oeufs de lump, un petit brin d''aneth ou petit quartier de citron, délicieux !', '2016-10-21 15:00:00+01'),
 	(7, 8, 2, 'Ajouter un peu d''aneth et de poudre de gingembre avec une décoration de radis noir. Sinon les petits choux avec un dé de foie gras et décoré avec un glaçage au confit d''oignons ou de figues maison, c''est très bien aussi !', '2016-10-15 08:14:55+01');
 
-insert into CATEGORIE_RECETTE (ID_CATEGORIE, NOM_CATEGORIE) values 
+insert into CATEGORIE (ID_CATEGORIE, NOM_CATEGORIE) values 
 	(0, 'Gigot'),
 	(1, 'Agneau'),
 	(2, 'Plat'),
@@ -151,7 +151,7 @@ insert into CATEGORIE_RECETTE (ID_CATEGORIE, NOM_CATEGORIE) values
 	(6, 'Crevettes'),
 	(7, 'Saumon');
 
-insert into COMPOSITION (ID_INGREDIENT, ID_RECETTE, QUANTITE, UNITE) values 
+insert into composition_recette (ID_INGREDIENT, ID_RECETTE, QUANTITE, UNITE) values
 	(0, 0, 1.5, 'kg'),
 	(1, 0, 4, 'pincée(s)'),
 	(2, 0, 6, 'gousse(s)'),
@@ -180,15 +180,15 @@ insert into COMPOSITION (ID_INGREDIENT, ID_RECETTE, QUANTITE, UNITE) values
 	(14, 2, 0, '');
 	
 
-insert into NUTRITION (ID_CARACTERISTIQUE, ID_INGREDIENT, QUANTITE_NUTRITIONNELLE) values 
-	(0, 0, 0);
+insert into POSSEDER_CARAC (ID_CARAC_NUTRITIONNELLE, ID_INGREDIENT, QUANTITE_NUTRITION, UNITE_NUTRITION) values
+	(0, 0, 0, 'g');
 
-insert into APPARTENIR (ID_MENU, ID_RECETTE, ID_CATEGORIE, DATE_CREATION) values 
+insert into appartenir_menu (ID_MENU, ID_RECETTE, ID_CATEGORIE, DATE_CREATION) values
 	(0, 0, 2, '2016-11-19'),
 	(0, 1, 3, '2016-11-20'),
 	(0, 2, 5, '2016-11-11');
 
-insert into NOTES (ID_RECETTE, ID_INTERNAUTE, NOTE) values 
+insert into NOTE (ID_RECETTE, ID_INTERNAUTE, VALEUR) values
 	(0, 1, 2),
 	(0, 2, 3),
 	(1, 1, 2),
@@ -200,7 +200,7 @@ insert into NOTES (ID_RECETTE, ID_INTERNAUTE, NOTE) values
 	(2, 6, 3),
 	(2, 3, 3);
 
-insert into CATEGORIE (ID_RECETTE, ID_CATEGORIE) values 
+insert into appartenir_categorie (ID_RECETTE, ID_CATEGORIE) values
 	(0, 0),
 	(0, 1),
 	(0, 2),
