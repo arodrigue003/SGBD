@@ -98,7 +98,7 @@ insert into INGREDIENT (ID_INGREDIENT, NOM_INGREDIENT) values
 	(5, 'clou de girofle'),
 	(6, 'bâton de cannelles émiettés'),
 	(7, 'miel'),
-	(8, 'Sel'),
+	(8, 'sel'),
 	(9, 'bloc de foie gras'),
 	(10, 'beurre'),
 	(11, 'oignons'),
@@ -143,8 +143,7 @@ insert into HISTORIQUE_MODIF (ID_HISTORIQUE_MODIF, ID_INTERNAUTE, ID_RECETTE, DA
 
 ALTER SEQUENCE historique_modif_id_historique_modif_seq RESTART WITH 1;
 
-insert into COMMENTAIRE (ID_COMMENTAIRE, ID_INTERNAUTE, ID_RECETTE, TEXTE, DATE_CREATION_COMMENTAIRE) values
-
+insert into COMMENTAIRE (ID_COMMENTAIRE, ID_INTERNAUTE, ID_RECETTE, TEXTE_COMMENTAIRE, DATE_CREATION_COMMENTAIRE) values
 	(0, 1, 0, 'Idéal pour les grands repas. Facile à préparer. Rien à redire sur la recette : un régal !', '2015-12-16 15:50:18+01'),
 	(1, 2, 0, 'Très bonne recette d''autant plus que j''ai des invités ce soir !', '2015-12-23 18:40:18+01'),
 	(2, 3, 1, 'Délicieux', '2014-12-25 18:05:04+01'),
