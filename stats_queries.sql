@@ -35,39 +35,65 @@ WHERE menu.id_internaute = 0
 GROUP BY id_recette;
 
 -- le classement des ingrédients
-SELECT id_ingredient, (moyenne_recette * ratio_calories * nb_calories)
-FROM ingredient
-ORDER BY classement;
-
---moyenne des notes des recettes enregistrées utilisant l'ingrédient
-SELECT AVG(note.valeur) as moyenne_recette
+SELECT id_ingredient, nom_ingredient, (moyenne_recette * ratio_calories * somme_commentaires) as classement
+FROM ingredient INNER JOIN
+  (SELECT id_ingredient as i1, AVG(note.valeur) as moyenne_recette
 FROM note
   NATURAL JOIN recette
   NATURAL JOIN composition_recette
-WHERE composition_recette.id_ingredient = 0;
-
---Pour un ingrédient i, le ratio de calories R cal (i) est égal au nombre de calories de l’ingrédient
---divisé par la moyenne de l’ensemble des calories des ingrédients.
-SELECT (quantite_nutrition / moyenne_ensemble_calories) as ratio_calories
+GROUP BY id_ingredient) AS moy_recette_tab ON id_ingredient = i1
+  INNER JOIN (SELECT i2, (quantite_nutrition / moyenne_ensemble_calories) as ratio_calories
 FROM (
-SELECT quantite_nutrition as qte_nutrition, id_ingredient as id_ingr, AVG(quantite_nutrition) as moyenne_ensemble_calories
+SELECT quantite_nutrition, id_ingredient as i2, AVG(quantite_nutrition) as moyenne_ensemble_calories
 FROM posseder_carac
   NATURAL JOIN carac_nutritionnelle
   NATURAL JOIN ingredient
 WHERE nom_caracteristique = 'calorie'
-GROUP BY quantite_nutrition, id_ingredient) AS moy_tab
-WHERE id_ingredient = 0;
+GROUP BY quantite_nutrition, id_ingredient) AS moy_tab) AS ratio_cal_tab ON i1 = i2
+  INNER JOIN
+  (SELECT id_ingredient as i3, SUM(coeff_commentaire) AS somme_commentaires
+   FROM
+     (SELECT id_ingredient, CASE
+      WHEN COUNT(id_commentaire) <= 3 THEN 1
+      WHEN COUNT(id_commentaire) > 4 AND COUNT(id_commentaire) <= 10 THEN 2
+      WHEN COUNT(id_commentaire) > 10 THEN 3
+      END as coeff_commentaire
+      FROM commentaire
+      NATURAL JOIN recette
+      NATURAL JOIN composition_recette
+      GROUP BY id_ingredient) AS coeff_comm_tab
+   GROUP BY id_ingredient) AS somm_comm_tab ON i2 = i3
+WHERE id_ingredient = i1 AND i1 = i2 AND i1 = i3
+ORDER BY classement;
+
+--moyenne des notes des recettes enregistrées utilisant l'ingrédient
+SELECT id_ingredient as i1, AVG(note.valeur) as moyenne_recette
+FROM note
+  NATURAL JOIN recette
+  NATURAL JOIN composition_recette;
+
+--Pour un ingrédient i, le ratio de calories R cal (i) est égal au nombre de calories de l’ingrédient
+--divisé par la moyenne de l’ensemble des calories des ingrédients.
+SELECT i2, (quantite_nutrition / moyenne_ensemble_calories) as ratio_calories
+FROM (
+SELECT quantite_nutrition, id_ingredient as i2, AVG(quantite_nutrition) as moyenne_ensemble_calories
+FROM posseder_carac
+  NATURAL JOIN carac_nutritionnelle
+  NATURAL JOIN ingredient
+WHERE nom_caracteristique = 'calorie'
+GROUP BY quantite_nutrition, id_ingredient) AS moy_tab;
 
 -- r (C com (r)) : la somme, pour toutes les recettes utilisant l’ingrédient du coefficient de commentaire :
 -- 1 jusqu’à 3 commentaires,
 -- 2 jusqu’à 10 commentaires,
 -- 3 si il y a plus de 10 commentaires.
-SELECT
-  CASE
+SELECT id_ingredient as i3,
+  SUM(CASE
     WHEN COUNT(id_commentaire) <= 3 THEN 1
     WHEN COUNT(id_commentaire) > 4 AND COUNT(id_commentaire) <= 10 THEN 2
     WHEN COUNT(id_commentaire) > 10 THEN 3
-  END
+  END)
 FROM commentaire
   NATURAL JOIN recette
-  NATURAL JOIN composition_recette;
+  NATURAL JOIN composition_recette
+GROUP BY id_ingredient;
