@@ -25,7 +25,7 @@ delete from INGREDIENT;
 delete from RECETTE;
 
 insert into RECETTE (ID_RECETTE, NOM_RECETTE, DATE_CREATION_RECETTE, TEMPS_PREPARATION, TEMPS_CUISSON, NOMBRE_PERSONNES, TEXTE_PREPARATION) values
-	(0, 'Gigot d''agneau aux épices', '2015-11-20', '0:0:25', '0:0:45', 8, 'ÉTAPE 1
+	(0, 'Gigot d''agneau aux épices', '2015-11-20', '0:25:00', '0:45:00', 8, 'ÉTAPE 1
 		Pelez l''ail et coupez-le en fines lamelles.
 		ÉTAPE 2
 		Faites des entailles dans la chair du gigot pour y glisser les lamelles d''ail.
@@ -49,7 +49,7 @@ insert into RECETTE (ID_RECETTE, NOM_RECETTE, DATE_CREATION_RECETTE, TEMPS_PREPA
 		Découpez-le gigot.
 		ÉTAPE 12
 		Servez votre gigot d''agneau aux épices nappé de sa sauce.'),
-	(1, 'Foie gras au confit d''oignons', '2014-12-20', '0:0:15', '0:0:50', 4, 'ÉTAPE 1
+	(1, 'Foie gras au confit d''oignons', '2014-12-20', '0:15:00', '0:50:00', 4, 'ÉTAPE 1
 		Préparez le confit d''oignons :
 		ÉTAPE 2
 		Pelez et coupez en tranches les oignons en prenant bien soin de séparer séparer les anneaux.
@@ -67,7 +67,7 @@ insert into RECETTE (ID_RECETTE, NOM_RECETTE, DATE_CREATION_RECETTE, TEMPS_PREPA
 		Disposez un peu de confit d''oignons dans des cuillères apéritives et déposez par-dessus un cube de foie gras.
 		ÉTAPE 9
 		Servez bien frais.'),
-	(2, 'petits choux fourrés aux crevettes, saumon et avocat', '2015-08-05', '0:0:20', '0:0:25', 6, 'ÉTAPE 1
+	(2, 'petits choux fourrés aux crevettes, saumon et avocat', '2015-08-05', '0:20:00', '0:25:00', 6, 'ÉTAPE 1
 		Préchauffez le four th.6 (180°C).
 		ÉTAPE 2
 		Dans une casserole, faites fondre le beurre coupé en morceaux avec le sel.
@@ -114,8 +114,12 @@ insert into INGREDIENT (ID_INGREDIENT, NOM_INGREDIENT) values
 	(21, 'pot de fromage fouetté nature'),
 	(22, 'mayonnaise');
 
+ALTER SEQUENCE ingredient_id_ingredient_seq RESTART WITH 23;
+
 insert into CARAC_NUTRITIONNELLE (ID_CARAC_NUTRITIONNELLE, NOM_CARACTERISTIQUE) values
 	(0, 'a');
+
+ALTER SEQUENCE carac_nutritionnelle_id_carac_nutritionnelle_seq RESTART WITH 1;
 
 insert into INTERNAUTE (ID_INTERNAUTE, PSEUDONYME, MOT_DE_PASSE) values
 	(0, 'CuisineAZ', ''),
@@ -128,13 +132,19 @@ insert into INTERNAUTE (ID_INTERNAUTE, PSEUDONYME, MOT_DE_PASSE) values
 	(7, 'Chantal', ''),
 	(8, 'Nathalie', '');
 
+ALTER SEQUENCE internaute_id_internaute_seq RESTART WITH 9;
+
 insert into MENU (ID_MENU, ID_INTERNAUTE, NOM_MENU) values 
 	(0, 0, 'Repas de Noël');
+ALTER SEQUENCE menu_id_menu_seq RESTART WITH 1;
 
 insert into HISTORIQUE_MODIF (ID_HISTORIQUE_MODIF, ID_INTERNAUTE, ID_RECETTE, DATE_CREATION_HISTORIQUE_MODIF, TEXTE_CONCERNE) values
 	(0, 0, 0, DEFAULT, 'La version précédente de la recette du coup');
 
-insert into COMMENTAIRE (ID_COMMENTAIRE, ID_INTERNAUTE, ID_RECETTE, TEXTE_COMMENTAIRE, DATE_CREATION_COMMENTAIRE) values
+ALTER SEQUENCE historique_modif_id_historique_modif_seq RESTART WITH 1;
+
+insert into COMMENTAIRE (ID_COMMENTAIRE, ID_INTERNAUTE, ID_RECETTE, TEXTE, DATE_CREATION_COMMENTAIRE) values
+
 	(0, 1, 0, 'Idéal pour les grands repas. Facile à préparer. Rien à redire sur la recette : un régal !', '2015-12-16 15:50:18+01'),
 	(1, 2, 0, 'Très bonne recette d''autant plus que j''ai des invités ce soir !', '2015-12-23 18:40:18+01'),
 	(2, 3, 1, 'Délicieux', '2014-12-25 18:05:04+01'),
@@ -143,6 +153,8 @@ insert into COMMENTAIRE (ID_COMMENTAIRE, ID_INTERNAUTE, ID_RECETTE, TEXTE_COMMEN
 	(5, 6, 2, 'Pate liquide, mauvaise quantité de farine.', '2015-11-12 05:05:05+01'),
 	(6, 7, 2, 'Les faire aussi avec un mélange de tarama et fromage fouetté puis les décorez de saumon fumé et oeufs de lump, un petit brin d''aneth ou petit quartier de citron, délicieux !', '2016-10-21 15:00:00+01'),
 	(7, 8, 2, 'Ajouter un peu d''aneth et de poudre de gingembre avec une décoration de radis noir. Sinon les petits choux avec un dé de foie gras et décoré avec un glaçage au confit d''oignons ou de figues maison, c''est très bien aussi !', '2016-10-15 08:14:55+01');
+
+ALTER SEQUENCE commentaire_id_commentaire_seq RESTART WITH 8;
 
 insert into CATEGORIE (ID_CATEGORIE, NOM_CATEGORIE) values 
 	(0, 'Gigot'),
@@ -153,6 +165,8 @@ insert into CATEGORIE (ID_CATEGORIE, NOM_CATEGORIE) values
 	(5, 'Entrée'),
 	(6, 'Crevettes'),
 	(7, 'Saumon');
+
+ALTER SEQUENCE categorie_id_categorie_seq RESTART WITH 8;
 
 insert into composition_recette (ID_INGREDIENT, ID_RECETTE, QUANTITE, UNITE) values
 	(0, 0, 1.5, 'kg'),
