@@ -424,6 +424,7 @@ CREATE OR REPLACE VIEW INGREDIENTS_RECETTE AS
       recette.nom_recette AS nom_recette,
       composition_recette.quantite AS quantite,
       composition_recette.unite AS unite,
+      ingredient.id_ingredient AS id_ingredient,
       ingredient.nom_ingredient AS ingredient
    FROM ((recette NATURAL JOIN composition_recette) NATURAL JOIN ingredient)
    ORDER BY recette.id_recette, ingredient;
