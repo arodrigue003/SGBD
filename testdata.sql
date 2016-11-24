@@ -12,7 +12,7 @@ delete from CATEGORIE;
 
 delete from COMMENTAIRE;
 
-delete from HISTORIQUE_MODIFICATION;
+delete from HISTORIQUE_MODIF;
 
 delete from MENU;
 
@@ -24,7 +24,7 @@ delete from INGREDIENT;
 
 delete from RECETTE;
 
-insert into RECETTE (ID_RECETTE, NOM_RECETTE, DATE_CREATION, TEMPS_PREPARATION, TEMPS_CUISSON, NOMBRE_PERSONNES, TEXTE_PREPARATION) values
+insert into RECETTE (ID_RECETTE, NOM_RECETTE, DATE_CREATION_RECETTE, TEMPS_PREPARATION, TEMPS_CUISSON, NOMBRE_PERSONNES, TEXTE_PREPARATION) values
 	(0, 'Gigot d''agneau aux épices', '2015-11-20', '0:0:25', '0:0:45', 8, 'ÉTAPE 1
 		Pelez l''ail et coupez-le en fines lamelles.
 		ÉTAPE 2
@@ -131,10 +131,10 @@ insert into INTERNAUTE (ID_INTERNAUTE, PSEUDONYME, MOT_DE_PASSE) values
 insert into MENU (ID_MENU, ID_INTERNAUTE, NOM_MENU) values 
 	(0, 0, 'Repas de Noël');
 
-insert into HISTORIQUE_MODIFICATION (ID_HISTORIQUE_MODIFICATION, ID_INTERNAUTE, ID_RECETTE, DATE_CREATION, TEXTE_CONCERNE) values
+insert into HISTORIQUE_MODIF (ID_HISTORIQUE_MODIF, ID_INTERNAUTE, ID_RECETTE, DATE_CREATION_HISTORIQUE_MODIF, TEXTE_CONCERNE) values
 	(0, 0, 0, DEFAULT, 'La version précédente de la recette du coup');
 
-insert into COMMENTAIRE (ID_COMMENTAIRE, ID_INTERNAUTE, ID_RECETTE, TEXTE, DATE_CREATION) values 
+insert into COMMENTAIRE (ID_COMMENTAIRE, ID_INTERNAUTE, ID_RECETTE, TEXTE_COMMENTAIRE, DATE_CREATION_COMMENTAIRE) values
 	(0, 1, 0, 'Idéal pour les grands repas. Facile à préparer. Rien à redire sur la recette : un régal !', '2015-12-16 15:50:18+01'),
 	(1, 2, 0, 'Très bonne recette d''autant plus que j''ai des invités ce soir !', '2015-12-23 18:40:18+01'),
 	(2, 3, 1, 'Délicieux', '2014-12-25 18:05:04+01'),
@@ -186,7 +186,7 @@ insert into composition_recette (ID_INGREDIENT, ID_RECETTE, QUANTITE, UNITE) val
 insert into POSSEDER_CARAC (ID_CARAC_NUTRITIONNELLE, ID_INGREDIENT, QUANTITE_NUTRITION, UNITE_NUTRITION) values
 	(0, 0, 0, 'g');
 
-insert into appartenir_menu (ID_MENU, ID_RECETTE, ID_CATEGORIE, DATE_CREATION) values
+insert into appartenir_menu (ID_MENU, ID_RECETTE, ID_CATEGORIE, DATE_CREATION_APPARTENIR_MENU) values
 	(0, 0, 2, '2016-11-19'),
 	(0, 1, 3, '2016-11-20'),
 	(0, 2, 5, '2016-11-11');
