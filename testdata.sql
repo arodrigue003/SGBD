@@ -85,7 +85,10 @@ insert into RECETTE (ID_RECETTE, NOM_RECETTE, DATE_CREATION, TEMPS_PREPARATION, 
 		Coupez le chapeau des choux. Fourrez avec une cuillère de crème, quelques dés de saumon, d’avocat et de crevettes, puis replacez le chapeau.
 		ÉTAPE 9
 		Servez vos petits choux fourrés aux crevettes, saumon et avocat !');
-		
+
+
+ALTER SEQUENCE recette_id_recette_seq RESTART WITH 3;
+
 insert into INGREDIENT (ID_INGREDIENT, NOM_INGREDIENT) values 
 	(0, 'Gigot d''agneau'),
 	(1, 'piment'),
