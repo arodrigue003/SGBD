@@ -62,4 +62,4 @@ drop TYPE IF EXISTS unite_nutrition;
 
 DROP TYPE IF EXISTS unite;
 
-drop FUNCTION date_commentaire();
+drop FUNCTION IF EXISTS date_commentaire();

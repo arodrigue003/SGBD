@@ -420,7 +420,8 @@ alter table POSSEDER_CARAC
 
 
 CREATE OR REPLACE VIEW INGREDIENTS_RECETTE AS
-   SELECT recette.id_recette AS id_recette, 
+   SELECT recette.id_recette AS id_recette,
+      recette.nom_recette AS nom_recette,
       composition_recette.quantite AS quantite,
       composition_recette.unite AS unite,
       ingredient.nom_ingredient AS ingredient
@@ -429,6 +430,7 @@ CREATE OR REPLACE VIEW INGREDIENTS_RECETTE AS
    
 CREATE OR REPLACE VIEW CATEGORIES_RECETTE AS
    SELECT recette.id_recette,
+     CATEGORIE.ID_CATEGORIE,
       CATEGORIE.nom_categorie
    FROM ((recette NATURAL JOIN appartenir_categorie) NATURAL JOIN CATEGORIE)
    ORDER BY recette.id_recette, CATEGORIE.nom_categorie;
