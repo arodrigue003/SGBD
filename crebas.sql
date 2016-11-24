@@ -50,7 +50,7 @@ drop table IF EXISTS COMMENTAIRE CASCADE;
 
 drop table IF EXISTS composition_recette CASCADE;
 
-drop table IF EXISTS HISTORIQUE_MODIFICATION CASCADE;
+drop table IF EXISTS HISTORIQUE_MODIF CASCADE;
 
 drop table IF EXISTS INGREDIENT CASCADE;
 
@@ -91,10 +91,10 @@ CREATE TYPE unite_nutrition AS ENUM ('g',
 /* Table : appartenir_menu                                           */
 /*==============================================================*/
 create table appartenir_menu (
-ID_MENU              INT4                 not null,
-ID_RECETTE           INT4                 not null,
-ID_CATEGORIE         INT4                 not null,
-DATE_CREATION        DATE                 not null default current_date,
+ID_MENU                          INT4                 not null,
+ID_RECETTE                       INT4                 not null,
+ID_CATEGORIE                     INT4                 not null,
+DATE_CREATION_APPARTENIR_MENU    DATE                 not null default current_date,
 constraint PK_APPARTENIR primary key (ID_MENU, ID_RECETTE, ID_CATEGORIE)
 );
 
@@ -164,11 +164,11 @@ constraint PK_CATEGORIE primary key (ID_CATEGORIE)
 /* Table : COMMENTAIRE                                          */
 /*==============================================================*/
 create table COMMENTAIRE (
-ID_COMMENTAIRE       SERIAL               not null,
-ID_INTERNAUTE        INT4                 not null,
-ID_RECETTE           INT4                 not null,
-TEXTE                TEXT                 not null,
-DATE_CREATION        timestamp with time zone not null        default current_timestamp,
+ID_COMMENTAIRE                   SERIAL               not null,
+ID_INTERNAUTE                    INT4                 not null,
+ID_RECETTE                       INT4                 not null,
+TEXTE_COMMENTAIRE                TEXT                 not null,
+DATE_CREATION_COMMENTAIRE        timestamp with time zone not null        default current_timestamp,
 constraint PK_COMMENTAIRE primary key (ID_COMMENTAIRE)
 );
 
@@ -212,28 +212,28 @@ ID_RECETTE
 );
 
 /*==============================================================*/
-/* Table : HISTORIQUE_MODIFICATION                              */
+/* Table : HISTORIQUE_MODIF                              */
 /*==============================================================*/
-create table HISTORIQUE_MODIFICATION (
-ID_HISTORIQUE_MODIFICATION              SERIAL                     not null,
-ID_INTERNAUTE                INT4                       not null,
-ID_RECETTE                   INT4                       not null,
-DATE_CREATION                timestamp with time zone   not null   default current_timestamp,
-TEXTE_CONCERNE               TEXT                       not null,
-constraint PK_HISTORIQUE_MODIFICATION primary key (ID_HISTORIQUE_MODIFICATION)
+create table HISTORIQUE_MODIF (
+ID_HISTORIQUE_MODIF                 SERIAL                     not null,
+ID_INTERNAUTE                       INT4                       not null,
+ID_RECETTE                          INT4                       not null,
+DATE_CREATION_HISTORIQUE_MODIF      timestamp with time zone   not null   default current_timestamp,
+TEXTE_CONCERNE                      TEXT                       not null,
+constraint PK_HISTORIQUE_MODIF primary key (ID_HISTORIQUE_MODIF)
 );
 
 /*==============================================================*/
 /* Index : MODIFIER_FK                                          */
 /*==============================================================*/
-create  index MODIFIER_FK on HISTORIQUE_MODIFICATION (
+create  index MODIFIER_FK on HISTORIQUE_MODIF (
 ID_INTERNAUTE
 );
 
 /*==============================================================*/
 /* Index : MODIFICATION_FK                                      */
 /*==============================================================*/
-create  index MODIFICATION_FK on HISTORIQUE_MODIFICATION (
+create  index MODIFICATION_FK on HISTORIQUE_MODIF (
 ID_RECETTE
 );
 
@@ -327,13 +327,13 @@ ID_INGREDIENT
 /* Table : RECETTE                                   */
 /*==============================================================*/
 create table RECETTE (
-ID_RECETTE     	     SERIAL                     not null,
-NOM_RECETTE          VARCHAR(255)                  not null,
-DATE_CREATION 	     timestamp with time zone   not null    default current_timestamp,
-TEMPS_PREPARATION    TIME                       null,
-TEMPS_CUISSON        TIME                       null,
-NOMBRE_PERSONNES     INT4                       null,
-TEXTE_PREPARATION    TEXT                       not null,
+ID_RECETTE     	              SERIAL                     not null,
+NOM_RECETTE                   VARCHAR(255)               not null,
+DATE_CREATION_RECETTE 	      timestamp with time zone   not null    default current_timestamp,
+TEMPS_PREPARATION             TIME                       null,
+TEMPS_CUISSON                 TIME                       null,
+NOMBRE_PERSONNES              INT4                       null,
+TEXTE_PREPARATION             TEXT                       not null,
 constraint PK_RECETTE primary key (ID_RECETTE)
 );
 
@@ -382,12 +382,12 @@ alter table composition_recette
       references RECETTE (ID_RECETTE)
       on delete restrict on update restrict;
 
-alter table HISTORIQUE_MODIFICATION
+alter table HISTORIQUE_MODIF
    add constraint FK_HISTORIQ_MODIFICAT_RECETTE_ foreign key (ID_RECETTE)
       references RECETTE (ID_RECETTE)
       on delete restrict on update restrict;
 
-alter table HISTORIQUE_MODIFICATION
+alter table HISTORIQUE_MODIF
    add constraint FK_HISTORIQ_MODIFIER_INTERNAU foreign key (ID_INTERNAUTE)
       references INTERNAUTE (ID_INTERNAUTE)
       on delete restrict on update restrict;
@@ -420,7 +420,8 @@ alter table POSSEDER_CARAC
 
 
 CREATE OR REPLACE VIEW INGREDIENTS_RECETTE AS
-   SELECT recette.id_recette AS id_recette, 
+   SELECT recette.id_recette AS id_recette,
+      recette.nom_recette AS nom_recette,
       composition_recette.quantite AS quantite,
       composition_recette.unite AS unite,
       ingredient.nom_ingredient AS ingredient
@@ -429,6 +430,7 @@ CREATE OR REPLACE VIEW INGREDIENTS_RECETTE AS
    
 CREATE OR REPLACE VIEW CATEGORIES_RECETTE AS
    SELECT recette.id_recette,
+     CATEGORIE.ID_CATEGORIE,
       CATEGORIE.nom_categorie
    FROM ((recette NATURAL JOIN appartenir_categorie) NATURAL JOIN CATEGORIE)
    ORDER BY recette.id_recette, CATEGORIE.nom_categorie;
