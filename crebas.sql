@@ -84,7 +84,7 @@ DROP TYPE IF EXISTS unite_nutrition CASCADE;
 
 CREATE TYPE unite_nutrition AS ENUM ('g',
                                      'mg',
-                                     'Kcal');
+                                     'kcal');
 
 
 /*==============================================================*/
