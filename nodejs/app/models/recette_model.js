@@ -73,6 +73,49 @@ module.exports = {
                         parallel_done();
                     });
                 });
+            },
+            function (parallel_done) {
+                pool.connect(function (err, client, done) {
+                    if (err) {
+                        return cb(err);
+                    }
+                    client.query('SELECT quantite, unite, id_ingredient, ingredient \
+                            FROM ingredients_recette \
+                            WHERE id_recette = $1::int \
+                            ORDER BY ingredient ASC;', [id], function (err2, result) {
+                        done();
+
+                        if (err2) {
+                            return parallel_done(err2);
+                        }
+                        return_data.ingredients = result.rows;
+                        console.log(result.rows);
+                        parallel_done();
+                    });
+                });
+            },
+            function (parallel_done) {
+                pool.connect(function (err, client, done) {
+                    if (err) {
+                        return cb(err);
+                    }
+                    client.query('SELECT categorie.nom_categorie AS nom_categorie, \
+                            categorie.id_categorie AS id_categorie \
+                            FROM recette \
+                            NATURAL JOIN appartenir_categorie \
+                            NATURAL JOIN categorie \
+                            WHERE id_recette = $1::int \
+                            ORDER BY nom_categorie ASC;', [id], function (err2, result) {
+                        done();
+
+                        if (err2) {
+                            return parallel_done(err2);
+                        }
+                        return_data.categories = result.rows;
+                        console.log(result.rows);
+                        parallel_done();
+                    });
+                });
             }
         ], function(err) {
             pool.end();

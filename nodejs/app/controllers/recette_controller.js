@@ -10,11 +10,10 @@ module.exports = {
             }
 
             if (recette.recette == undefined || recette.note == undefined) {
-                return res.status(404).render('error', {
-                    message: 'Not Found',
+                return res.status(404).render('404', {
                     error: {
                         status: 404,
-                        stack: 'Recette ' + id + ' not found'
+                        stack: 'Some informations about recette ' + id + ' couldn\'t be find'
                     }
                 });
             }

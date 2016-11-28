@@ -9,14 +9,6 @@
 <div class="container">
 
     <div class="row">
-        <div class="col-md-3">
-            <p class="lead">Shop Name</p>
-            <div class="list-group">
-                <a href="#" class="list-group-item active">Category 1</a>
-                <a href="#" class="list-group-item">Category 2</a>
-                <a href="#" class="list-group-item">Category 3</a>
-            </div>
-        </div>
 
         <div class="col-md-9">
 
@@ -83,10 +75,43 @@
 
         </div>
 
+        <div class="col-md-3">
+            <table class="table table-bordered table-striped table-condensed table-responsive">
+                <caption>
+                    <h3> Liste des ingrédients</h3>
+                </caption>
+                <thead>
+                    <tr>
+                        <th>Nom ingrédient</th>
+                        <th>Quantité</th>
+                        <th>Unité</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% for (var i in ingredients) { %>
+                    <tr>
+                        <td><%= ingredients[i].ingredient %></td>
+                        <td><%= (ingredients[i].quantite != 0) ? ingredients[i].quantite : ""; %></td>
+                        <td><%= ingredients[i].unite %></td>
+                    </tr>
+                    <% } %>
+                </tbody>
+            </table>
+
+            <h3> Catégories</h3>
+            <div class="list-group">
+                <% for (var i in categories) { %>
+                <a href="#" class="list-group-item"><%= categories[i].nom_categorie%></a>
+                <% } %>
+            </div>
+        </div>
+
     </div>
 
 </div>
 <!-- /.container -->
+
+<% include footer.ejs%>
 
 </body>
 </html>
