@@ -21,6 +21,18 @@ SELECT AVG(valeur)
 FROM note
 WHERE id_recette = 2;
 
+/* Commentaires d'une recette */
+SELECT commentaire.date_creation_commentaire AS date_creation,
+  recette.id_recette AS id_recette,
+  commentaire.texte_commentaire AS text,
+  internaute.pseudonyme AS pseudo,
+  note.valeur AS note
+FROM commentaire
+NATURAL JOIN recette
+NATURAL JOIN internaute
+NATURAL JOIN note
+WHERE id_recette=2;
+
 /* Contenu d'un menu */
 SELECT menu.nom_menu AS nom_menu,
   recette.id_recette AS id_recette,

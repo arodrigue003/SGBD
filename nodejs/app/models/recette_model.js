@@ -39,16 +39,44 @@ module.exports = {
                         done();
 
                         if (err2) {
-                            return cb(err2);
+                            return parallel_done(err2);
                         }
                         return_data.note = result.rows[0];
                         console.log(result.rows[0]);
                         parallel_done();
                     });
                 });
+            },
+            function (parallel_done) {
+                pool.connect(function (err, client, done) {
+                    if (err) {
+                        return cb(err);
+                    }
+                    client.query('SELECT commentaire.date_creation_commentaire AS date_creation, \
+                            recette.id_recette AS id_recette, \
+                                commentaire.texte_commentaire AS text, \
+                                internaute.pseudonyme AS pseudo, \
+                                note.valeur AS note \
+                            FROM commentaire \
+                            NATURAL JOIN recette \
+                            NATURAL JOIN internaute \
+                            NATURAL JOIN note \
+                            WHERE id_recette = $1::int \
+                            ORDER BY date_creation DESC;', [id], function (err2, result) {
+                        done();
+
+                        if (err2) {
+                            return parallel_done(err2);
+                        }
+                        return_data.comments = result.rows;
+                        console.log(result.rows);
+                        parallel_done();
+                    });
+                });
             }
         ], function(err) {
             pool.end();
+            if (err) return cb(err);
             cb(null, return_data);
         });
 
