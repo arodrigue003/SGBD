@@ -11,7 +11,7 @@ WHERE id_recette = 1
 ORDER BY nom_recette ASC;
 
 /* Ingredients d'une recette */
-SELECT *
+SELECT quantite, unite, id_ingredient, ingredient
 FROM ingredients_recette
 WHERE id_recette = 1
 ORDER BY ingredient ASC;
@@ -20,6 +20,16 @@ ORDER BY ingredient ASC;
 SELECT AVG(valeur)
 FROM note
 WHERE id_recette = 2;
+
+/* Catégories d'une recette */
+SELECT categorie.nom_categorie AS nom_categorie,
+  categorie.id_categorie AS id_categorie
+FROM recette
+NATURAL JOIN appartenir_categorie
+NATURAL JOIN categorie
+WHERE id_recette = 2
+ORDER BY nom_categorie ASC;
+
 
 /* Commentaires d'une recette */
 SELECT commentaire.date_creation_commentaire AS date_creation,
@@ -31,7 +41,8 @@ FROM commentaire
 NATURAL JOIN recette
 NATURAL JOIN internaute
 NATURAL JOIN note
-WHERE id_recette=2;
+WHERE id_recette=2
+ORDER BY date_creation DESC;
 
 /* Contenu d'un menu */
 SELECT menu.nom_menu AS nom_menu,
