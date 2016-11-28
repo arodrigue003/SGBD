@@ -2,11 +2,66 @@
 <html lang="fr">
 
 <html>
-  <% include header.ejs%>
-  <body>
-    <% include navigation.ejs%>
+    <% title = "Home" %>
+    <% include header.ejs %>
+    <body>
+    <% include navigation.ejs %>
 
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-  </body>
+    <!-- Page Content -->
+    <div class="container">
+
+        <div class="row">
+
+            <div class="col-md-3">
+                <p class="lead">Shop Name</p>
+                <div class="list-group">
+                    <a href="#" class="list-group-item">Category 1</a>
+                    <a href="#" class="list-group-item">Category 2</a>
+                    <a href="#" class="list-group-item">Category 3</a>
+                </div>
+            </div>
+
+            <div class="col-md-9">
+
+                <div class="row carousel-holder">
+
+                    <div class="col-md-12">
+                        <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+                            <ol class="carousel-indicators">
+                                <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+                                <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+                                <li data-target="#carousel-example-generic" data-slide-to="2"></li>
+                            </ol>
+                            <div class="carousel-inner">
+                                <% var first = 0; for (var i in recettes) { %>
+                                <div class="item <%= (first == 0) ? "active" : ""%> <% if (first == 0) first=1 %>">
+                                    <div class="carousel-caption">
+                                        <h3><%= recettes[i].nom_recette %></h3>
+                                    </div>
+                                    <a href="/recette/<%= recettes[i].id_recette %>">
+                                        <img class="slide-image" src="/images/<%= recettes[i].id_recette %>.jpg" alt="<%= recettes[i].nom_recette %>">
+                                    </a>
+                                </div>
+                                <% } %>
+                            </div>
+                            <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">
+                                <span class="glyphicon glyphicon-chevron-left"></span>
+                            </a>
+                            <a class="right carousel-control" href="#carousel-example-generic" data-slide="next">
+                                <span class="glyphicon glyphicon-chevron-right"></span>
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+    <!-- /.container -->
+
+    <% include footer.ejs %>
+</body>
 </html>

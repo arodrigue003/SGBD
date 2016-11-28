@@ -4,6 +4,7 @@
 /*==============================================================*/
 
 
+
 /* Informations sur une recette */
 SELECT *
 FROM recette
@@ -129,3 +130,7 @@ NATURAL JOIN
 GROUP BY P2.id_recette, P2.nom_recette
 HAVING  count(menu.nom_menu) >= 1
 ORDER BY nom_recette;
+
+
+/* Selection de certaines recettes de manière aléatoire pour le caroussel d'acceuil */
+SELECT * FROM recette ORDER BY random() LIMIT 3;
