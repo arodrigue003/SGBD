@@ -16,6 +16,11 @@ FROM ingredients_recette
 WHERE id_recette = 1
 ORDER BY ingredient ASC;
 
+/* Note moyenne d'une recette */
+SELECT AVG(valeur)
+FROM note
+WHERE id_recette = 2;
+
 /* Contenu d'un menu */
 SELECT menu.nom_menu AS nom_menu,
   recette.id_recette AS id_recette,

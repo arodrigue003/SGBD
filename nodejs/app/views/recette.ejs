@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
-    <% title = nom_recette %>
+    <% title = recette.nom_recette %>
     <% include header.ejs %>
 <body>
     <% include navigation.ejs %>
@@ -21,40 +21,38 @@
         <div class="col-md-9">
 
             <div class="thumbnail">
-                <img class="img-responsive img-thumbnail" src="/images/<%= id_recette%>.jpg" alt="">
+                <img class="img-responsive img-thumbnail" src="/images/<%= recette.id_recette%>.jpg" alt="">
                 <div class="caption-full">
-                    <p class="pull-right"> Crée le <%= date_creation_recette%></p>
-                    <h4><a href="#"><%= nom_recette %></a></h4>
+                    <p class="pull-right"> Crée le <%= recette.date_creation_recette%></p>
+                    <h4><a href="#"><%= recette.nom_recette %></a></h4>
                     <div class="row infos-recette">
                         <div class="col-xs-3 col-xs-push-4 col-sm-2 col-sm-push-7">
                             <p class="pull-right">
-                                <span class="glyphicon glyphicon-time"></span> <%= temps_preparation %>
+                                <span class="glyphicon glyphicon-time"></span> <%= recette.temps_preparation %>
                             </p>
                         </div>
                         <div class="col-xs-3 col-xs-push-4 col-sm-2 col-sm-push-7">
                             <p class="pull-right">
-                                <span class="glyphicon glyphicon-fire"></span> <%= temps_cuisson %>
+                                <span class="glyphicon glyphicon-fire"></span> <%= recette.temps_cuisson %>
                             </p>
                         </div>
                         <div class="col-xs-2 col-xs-push-4 col-sm-1 col-sm-push-7">
                             <p class="pull-right">
-                                <span class="glyphicon glyphicon-user"></span> <%= nombre_personnes %>
+                                <span class="glyphicon glyphicon-user"></span> <%= recette.nombre_personnes %>
                             </p>
                         </div>
                     </div>
 
-                    <p><%= texte_preparation %></p>
+                    <p><%= recette.texte_preparation %></p>
                 </div>
 
                 <div class="ratings">
                     <p class="pull-right">3 reviews</p>
                     <p>
-                        <span class="glyphicon glyphicon-star"></span>
-                        <span class="glyphicon glyphicon-star"></span>
-                        <span class="glyphicon glyphicon-star"></span>
-                        <span class="glyphicon glyphicon-star"></span>
-                        <span class="glyphicon glyphicon-star-empty"></span>
-                        4.0 stars
+                        <span class="glyphicon <%= (note.moyenne >= 1) ? "glyphicon-star" : "glyphicon-star-empty";%>"></span>
+                        <span class="glyphicon <%= (note.moyenne >= 2) ? "glyphicon-star" : "glyphicon-star-empty";%>"></span>
+                        <span class="glyphicon <%= (note.moyenne >= 3) ? "glyphicon-star" : "glyphicon-star-empty";%>"></span>
+                        <%= Number(note.moyenne).toFixed(2) %> stars
                     </p>
                 </div>
             </div>
@@ -118,24 +116,6 @@
 
 </div>
 <!-- /.container -->
-
-
-<h1><%= nom_recette %></h1>
-<h2>
-    Pour <%= nombre_personnes %>
-    <% if (nombre_personnes <= 1) { %>
-    personne
-    <% } else { %>
-    personnes
-    <% } %>
-    -
-    Temps de préparation: <%= temps_preparation %> min -
-    Temps de cuisson: <%= temps_cuisson %> min
-</h2>
-
-<p><%= texte_preparation %></p>
-
-<p>Ajouté le <%= date_creation_recette %></p>
 
 </body>
 </html>

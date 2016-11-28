@@ -9,7 +9,7 @@ module.exports = {
                 return res.status(500).json(err);
             }
 
-            if (recette == undefined) {
+            if (recette.recette == undefined || recette.note == undefined) {
                 return res.status(404).render('error', {
                     message: 'Not Found',
                     error: {
