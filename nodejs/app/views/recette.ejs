@@ -1,17 +1,14 @@
 <!DOCTYPE html>
 <html lang="fr">
-
-<html>
-<% title = nom_recette %>
-<% include header.ejs %>
+    <% title = nom_recette %>
+    <% include header.ejs %>
 <body>
-<% include navigation.ejs %>
+    <% include navigation.ejs %>
 
 <!-- Page Content -->
 <div class="container">
 
     <div class="row">
-
         <div class="col-md-3">
             <p class="lead">Shop Name</p>
             <div class="list-group">
@@ -24,7 +21,7 @@
         <div class="col-md-9">
 
             <div class="thumbnail">
-                <img class="img-responsive" src="http://placehold.it/800x300" alt="">
+                <img class="img-responsive img-thumbnail" src="/images/<%= id_recette%>.jpg" alt="">
                 <div class="caption-full">
                     <p class="pull-right"> Crée le <%= date_creation_recette%></p>
                     <h4><a href="#"><%= nom_recette %></a></h4>
