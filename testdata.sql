@@ -117,9 +117,10 @@ insert into INGREDIENT (ID_INGREDIENT, NOM_INGREDIENT) values
 ALTER SEQUENCE ingredient_id_ingredient_seq RESTART WITH 23;
 
 insert into CARAC_NUTRITIONNELLE (ID_CARAC_NUTRITIONNELLE, NOM_CARACTERISTIQUE) values
-	(0, 'a');
+	(0, 'a'),
+	(1, 'énergie');
 
-ALTER SEQUENCE carac_nutritionnelle_id_carac_nutritionnelle_seq RESTART WITH 1;
+ALTER SEQUENCE carac_nutritionnelle_id_carac_nutritionnelle_seq RESTART WITH 2;
 
 insert into INTERNAUTE (ID_INTERNAUTE, PSEUDONYME, MOT_DE_PASSE) values
 	(0, 'CuisineAZ', ''),
@@ -197,7 +198,30 @@ insert into composition_recette (ID_INGREDIENT, ID_RECETTE, QUANTITE, UNITE) val
 	
 
 insert into POSSEDER_CARAC (ID_CARAC_NUTRITIONNELLE, ID_INGREDIENT, QUANTITE_NUTRITION, UNITE_NUTRITION) values
-	(0, 0, 0, 'g');
+	(0, 0, 0, 'g'),
+	(1, 0, 500, 'kcal'),
+	(1, 1, 10, 'kcal'),
+	(1, 2, 10, 'kcal'),
+	(1, 3, 20, 'kcal'),
+	(1, 4, 30, 'kcal'),
+	(1, 5, 30, 'kcal'),
+	(1, 6, 10, 'kcal'),
+	(1, 7, 100, 'kcal'),
+	(1, 8, 5, 'kcal'),
+	(1, 9, 1000, 'kcal'),
+	(1, 10, 300, 'kcal'),
+	(1, 11, 50, 'kcal'),
+	(1, 12, 100, 'kcal'),
+	(1, 13, 50, 'kcal'),
+	(1, 14, 10, 'kcal'),
+	(1, 15, 50, 'kcal'),
+	(1, 16, 0, 'kcal'),
+	(1, 17, 130, 'kcal'),
+	(1, 18, 70, 'kcal'),
+	(1, 19, 20, 'kcal'),
+	(1, 20, 15, 'kcal'),
+	(1, 21, 10, 'kcal'),
+	(1, 22, 20, 'kcal');
 
 insert into appartenir_menu (ID_MENU, ID_RECETTE, ID_CATEGORIE, DATE_CREATION_APPARTENIR_MENU) values
 	(0, 0, 2, '2016-11-19'),
