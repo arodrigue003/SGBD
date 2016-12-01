@@ -34,15 +34,15 @@ ORDER BY nom_categorie ASC;
 
 /* Commentaires d'une recette */
 SELECT commentaire.date_creation_commentaire AS date_creation,
-  recette.id_recette AS id_recette,
+  commentaire.id_recette AS id_recette,
   commentaire.texte_commentaire AS text,
   internaute.pseudonyme AS pseudo,
   note.valeur AS note
 FROM commentaire
-NATURAL JOIN recette
 NATURAL JOIN internaute
-NATURAL JOIN note
-WHERE id_recette=2
+LEFT JOIN note ON note.id_recette = commentaire.id_recette AND
+    internaute.id_internaute = note.id_internaute
+WHERE commentaire.id_recette=2
 ORDER BY date_creation DESC;
 
 /* Contenu d'un menu */
@@ -134,3 +134,6 @@ ORDER BY nom_recette;
 
 /* Selection de certaines recettes de manière aléatoire pour le caroussel d'acceuil */
 SELECT * FROM recette ORDER BY random() LIMIT 3;
+
+/* get user's id */
+SELECT internaute.id_internaute FROM internaute WHERE pseudonyme = 'Mouustik';

@@ -1,5 +1,7 @@
 var recette_model = require('../models/recette_model');
 
+
+
 module.exports = {
     /** VIEWS **/
     index_view: function (req, res) {
@@ -22,6 +24,17 @@ module.exports = {
     },
 
     /** OPERATIONS **/
+    add_comment: function (req, res) {
+        var pseudo = req.body.pseudonyme;
+        var text = req.body.comment;
+        recette_model.add_comment(pseudo, text, function (err, comment) {
+            if (err) {
+                return res.status(500).json(err);
+            }
+            res.status(500).end();
+        });
+    },
+
     create: function (req, res) {
         res.status(201).end('CREATE');
     },

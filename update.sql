@@ -38,3 +38,8 @@ DELETE FROM menu
 SELECT *
 FROM appartenir_menu
 INNER JOIN recette ON appartenir_menu.id_recette = recette.id_recette;
+
+
+/* COMMENTAIRE */
+INSERT INTO commentaire(id_internaute, id_recette, texte_commentaire, date_creation_commentaire)
+    VALUES (2, 2, 'lol', now());

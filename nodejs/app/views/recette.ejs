@@ -76,8 +76,8 @@
 
             <h3> Catégories</h3>
             <div class="list-group">
-                <% for (var i in categories) { %>
-                <a href="#" class="list-group-item"><%= categories[i].nom_categorie%></a>
+                <% for (var j in categories) { %>
+                <a href="/categorie/<%= categories[j].id_categorie %>" class="list-group-item"><%= categories[j].nom_categorie%></a>
                 <% } %>
             </div>
         </div>
@@ -89,27 +89,30 @@
         <div class="col-md-9">
             <div class="well">
 
-                <form>
+                <form action="/recette/add_comment" method="post">
                     <label for="textarea"> Laisser un commentaire : </label>
-                    <textarea id="textarea" class="form-control" rows="3"></textarea>
+                    <textarea id="textarea" name="comment" class="form-control" rows="3"></textarea>
                     <p class="help-block">Vous pouvez agrandir la fenêtre</p>
-                    <div class="text-right">
-                        <button class="btn btn-primary" type="submit"> Envoyer</button>
+                    <div class="input-group">
+                        <input placeholder="Pseudonyme" id="pseudonyme" name="pseudonyme" class="form-control"/>
+                        <span class="input-group-btn">
+                            <button class="btn btn-primary" type="submit"> Envoyer</button>
+                        </span>
                     </div>
 
                 </form>
 
-                <% for (var i in comments) { %>
+                <% for (var k in comments) { %>
                 <hr>
 
                 <div class="row">
                     <div class="col-md-12">
-                        <span class="glyphicon <%= (comments[i].note >= 1) ? "glyphicon-star" : "glyphicon-star-empty";%>"></span>
-                        <span class="glyphicon <%= (comments[i].note >= 2) ? "glyphicon-star" : "glyphicon-star-empty";%>"></span>
-                        <span class="glyphicon <%= (comments[i].note >= 3) ? "glyphicon-star" : "glyphicon-star-empty";%>"></span>
-                        <%= comments[i].pseudo %>
-                        <span class="pull-right"><%= comments[i].date_creation %></span>
-                        <p><%= comments[i].text %></p>
+                        <span class="glyphicon <%= (comments[k].note >= 1) ? "glyphicon-star" : "glyphicon-star-empty";%>"></span>
+                        <span class="glyphicon <%= (comments[k].note >= 2) ? "glyphicon-star" : "glyphicon-star-empty";%>"></span>
+                        <span class="glyphicon <%= (comments[k].note >= 3) ? "glyphicon-star" : "glyphicon-star-empty";%>"></span>
+                        <%= comments[k].pseudo %>
+                        <span class="pull-right"><%= comments[k].date_creation %></span>
+                        <p><%= comments[k].text %></p>
                     </div>
                 </div>
 

@@ -6,8 +6,6 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var app = express();
-
-
 /** CONFIG & CORE MIDDLEWARES **/
 
 // view engine setup
@@ -19,7 +17,7 @@ app.set('view engine', 'ejs');
 
 app.use(logger('dev')); // logger
 app.use(bodyParser.json()); // enables HTTP body to be parsed and stored in req.body
-app.use(bodyParser.urlencoded({ extended: false })); // HTTP body parser config
+app.use(bodyParser.urlencoded({ extended: true })); // HTTP body parser config
 app.use(cookieParser()); // enables HTTP cookies to be parsed and stored in req.cookies
 app.use(express.static(path.join(__dirname, 'assets'))); // enables the app to serve every file inside ./assets
 

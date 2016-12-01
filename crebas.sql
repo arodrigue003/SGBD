@@ -251,7 +251,7 @@ constraint PK_INGREDIENT primary key (ID_INGREDIENT)
 /*==============================================================*/
 create table INTERNAUTE (
 ID_INTERNAUTE        SERIAL               not null,
-PSEUDONYME           VARCHAR(63)          not null,
+PSEUDONYME           VARCHAR(63)          unique not null,
 MOT_DE_PASSE         VARCHAR(256)         not null,
 constraint PK_INTERNAUTE primary key (ID_INTERNAUTE)
 );
