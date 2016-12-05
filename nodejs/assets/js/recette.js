@@ -2,23 +2,22 @@
  * Created by adrien on 01/12/16.
  */
 
-/*$('#submit-comment').click(function (e) {
-    e.preventDefault();
-    e.stopPropagation();
-    var url = $('#form-content').attr('action');
-    alert(url);
-    $.ajax({
-        url: url,
-        type: 'post',
-        success: function(res, status) {
-            alert(res);
+function create_notification(icon, type, message) {
+    $.notify({
+        icon: icon,
+        message: message,
+    }, {
+        type: type,
+        delay: 1500,
+        placement: {
+            from: 'bottom'
         },
-        error : function(resultat, statut, erreur){
-            alert('error');
+        animate: {
+            enter: 'animated fadeInUp',
+            exit: 'animated fadeOutDown'
         }
     });
-});*/
-
+}
 
 $("#form-content").on("submit", function( event ) {
     event.preventDefault();
@@ -30,24 +29,13 @@ $("#form-content").on("submit", function( event ) {
         type: 'post',
         success: function(res, status) {
             $(object).after(res);
+            create_notification('glyphicon glyphicon-ok', 'success', 'Commentaire rajouté avec succès');
         },
         error : function(resultat, statut, erreur){
+            create_notification('glyphicon glyphicon-warning-sign', 'danger', 'Impossible de rajouter le commentaire')
 
-            $.notify({
-                icon: 'glyphicon glyphicon-warning-sign',
-                message: 'Impossible de rajouter le commentaire',
-            }, {
-                type: 'danger',
-                delay: 1500,
-                placement: {
-                    from: 'bottom'
-                },
-                animate: {
-                    enter: 'animated fadeInUp',
-                    exit: 'animated fadeOutDown'
-                }
-            });
         }
     });
 
 });
+
