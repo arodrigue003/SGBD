@@ -59,16 +59,16 @@ module.exports = {
                         return cb(err);
                     }
                     client.query('SELECT commentaire.date_creation_commentaire AS date_creation, \
-                                commentaire.id_recette AS id_recette, \
-                                commentaire.texte_commentaire AS text, \
-                                internaute.pseudonyme AS pseudo, \
-                                note.valeur AS note \
-                            FROM commentaire \
-                            NATURAL JOIN internaute \
-                            LEFT JOIN note ON note.id_recette = commentaire.id_recette AND \
-                                internaute.id_internaute = note.id_internaute \
-                            WHERE commentaire.id_recette = $1::int \
-                            ORDER BY date_creation DESC;', [id], function (err2, result) {
+                                    commentaire.id_recette AS id_recette, \
+                                    commentaire.texte_commentaire AS text, \
+                                    internaute.pseudonyme AS pseudo, \
+                                    note.valeur AS note \
+                                FROM commentaire \
+                                NATURAL JOIN internaute \
+                                LEFT JOIN note ON note.id_recette = commentaire.id_recette AND \
+                                    internaute.id_internaute = note.id_internaute \
+                                WHERE commentaire.id_recette = $1::int \
+                                ORDER BY date_creation DESC;', [id], function (err2, result) {
                         done();
 
                         if (err2) {
@@ -199,18 +199,31 @@ module.exports = {
 
                 //add the comment
                 connect = await(pool.connect(defers('client', 'done')));
-                // TODO : Pour l'instant ajout à la recette 2 pour tester. A finir
                 await(connect.client.query('INSERT INTO commentaire(id_internaute, id_recette, texte_commentaire, date_creation_commentaire) \
                                             VALUES ($1::int, $2::int, $3::text, now());', [id_internaute, id, text],defer()));
                 connect.done();
 
                 console.log('success');
+
+                //return the comment in order to view it
+                connect = await(pool.connect(defers('client', 'done')));
+                results = await(connect.client.query('SELECT commentaire.date_creation_commentaire AS date_creation, \
+                                    commentaire.id_recette AS id_recette, \
+                                    commentaire.texte_commentaire AS text, \
+                                    internaute.pseudonyme AS pseudo, \
+                                    note.valeur AS note \
+                                FROM commentaire \
+                                NATURAL JOIN internaute \
+                                LEFT JOIN note ON note.id_recette = commentaire.id_recette AND \
+                                    internaute.id_internaute = note.id_internaute \
+                                WHERE commentaire.id_recette = $1::int \
+                                ORDER BY date_creation DESC LIMIT 1;', [id], defer()));
+                connect.done();
+                console.log(results.rows[0]);
+
+
                 pool.end();
-                cb(null, {
-                    text: text,
-                    id: id_internaute,
-                    pseudonyme: pseudonyme
-                });
+                cb(null, {comments : results.rows});
 
                 pool.on('error', function (err, client) {
                     // if an error is encountered by a client while it sits idle in the pool
