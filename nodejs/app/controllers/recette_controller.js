@@ -27,7 +27,8 @@ module.exports = {
     add_comment: function (req, res) {
         var pseudo = req.body.pseudonyme;
         var text = req.body.comment;
-        recette_model.add_comment(pseudo, text, function (err, comment) {
+        var id = req.params.id || 0;
+        recette_model.add_comment(pseudo, text, id, function (err, comment) {
             if (err) {
                 return res.status(500).json(err);
             }

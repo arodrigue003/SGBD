@@ -7,6 +7,12 @@ var config = {
     password: 'reader'
 };
 
+var sync = require('synchronize');
+var fiber = sync.fiber;
+var await = sync.await;
+var defer = sync.defer;
+var defers = sync.defers;
+
 module.exports = {
     get_from_id: function (id, cb) {
         var pool = new pg.Pool(config);
@@ -148,122 +154,80 @@ module.exports = {
         })
     },
 
-    add_comment: function (pseudonyme, text, cb) {
-        var pool = new pg.Pool(config);
-        var id;
+    add_comment: function (pseudonyme, text, id, cb) {
 
+        fiber(function () {
 
-        pool.connect(function (err, client, done) {
-            if (err) {
-                return cb(err);
-            }
-            client.query('SELECT internaute.id_internaute AS id_internaute FROM internaute WHERE pseudonyme = $1;', [pseudonyme], function (err2, result) {
-                done();
+            try {
+                console.log(pseudonyme);
 
-                console.log(result.rows);
-                if (err2) {
-                    return cb(err2);
-                }
+                var pool = new pg.Pool(config);
+                var id_internaute;
 
-                // if user doesn't exist create it
-                if (result.rows[0] == undefined) {
-                    console.log('No such user : create it')
-                    pool.connect(function (err, client, done) {
-                        if (err) {
-                            return cb(err);
-                        }
-                        client.query('INSERT INTO internaute(pseudonyme, mot_de_passe) VALUES($1::text, \'\');', [pseudonyme], function (err2, result) {
-                            done();
+                var connect = await(pool.connect(defers('client', 'done')));
+                var results = await(connect.client.query('SELECT internaute.id_internaute AS id_internaute FROM internaute WHERE pseudonyme = $1;', [pseudonyme], defer()));
+                connect.done();
 
+                // if user doesn't exists create it and get his id else we are fine
+                if (results.rows[0] == undefined) {
+                    console.log('No such user : create it');
 
-                            if (err2) {
-                                return cb(err2);
+                    //add it
+                    connect = await(pool.connect(defers('client', 'done')));
+                    await(connect.client.query('INSERT INTO internaute(pseudonyme, mot_de_passe) VALUES($1::text, \'\');', [pseudonyme], defer()));
+                    connect.done();
+
+                    //get it's id
+                    connect = await(pool.connect(defers('client', 'done')));
+                    results = await(connect.client.query('SELECT internaute.id_internaute AS id_internaute FROM internaute WHERE pseudonyme = $1;', [pseudonyme], defer()));
+                    connect.done();
+
+                    //check if user was correctly added
+                    if (results.rows[0] == undefined) {
+                        throw new Error({
+                            error: {
+                                status: 500,
+                                stack: 'Can\'t add comment for some unknowed reasons'
                             }
-
-                            //pool.end();
-                            return get_user_id()
                         });
-                    });
-                }
-                else {
-                    id = result.rows[0].id_internaute;
-                    //pool.end();
-                    return add_it();
-                }
-            });
-
-            // retrieve user's id
-            function get_user_id() {
-
-                pool.connect(function (err, client, done) {
-                    if (err) {
-                        return cb(err);
+                    } else {
+                        id_internaute = results.rows[0].id_internaute;
                     }
-                    client.query('SELECT internaute.id_internaute AS id_internaute FROM internaute WHERE pseudonyme = $1;', [pseudonyme], function (err2, result) {
-                        done();
+                } else {
+                    id_internaute = results.rows[0].id_internaute;
+                }
 
-                        if (err2) {
-                            return cb(err2);
-                        }
-                        console.log(result.rows);
+                //add the comment
+                connect = await(pool.connect(defers('client', 'done')));
+                // TODO : Pour l'instant ajout à la recette 2 pour tester. A finir
+                await(connect.client.query('INSERT INTO commentaire(id_internaute, id_recette, texte_commentaire, date_creation_commentaire) \
+                                            VALUES ($1::int, $2::int, $3::text, now());', [id_internaute, id, text],defer()));
+                connect.done();
 
-                        if (result.rows[0] == undefined) {
-                            return cb({
-                                error: {
-                                    status: 500,
-                                    stack: 'Can\'t add comment for some unknowed reasons'
-                                }
-                            });
-                        }
-                        else {
-                            id = result.rows[0].id_internaute;
-                            add_it()
-                        }
-                    });
+                console.log('success');
+                pool.end();
+                cb(null, {
+                    text: text,
+                    id: id_internaute,
+                    pseudonyme: pseudonyme
                 });
+
+                pool.on('error', function (err, client) {
+                    // if an error is encountered by a client while it sits idle in the pool
+                    // the pool itself will emit an error event with both the error and
+                    // the client which emitted the original error
+                    // this is a rare occurrence but can happen if there is a network partition
+                    // between your application and the database, the database restarts, etc.
+                    // and so you might want to handle it and at least log it out
+                    console.error('idle client error', err.message, err.stack)
+                });
+
+            } catch (err) {
+                console.log(err);
+                cb(err);
             }
 
-            function add_it() {
-                //pool = new pg.Pool(config);
-
-                console.log(id);
-
-
-                pool.connect(function (err, client, done) {
-                    if (err) {
-                        return cb(err);
-                    }
-                    // TODO : Pour l'instant ajout à la recette 2 pour tester. A finir
-                    client.query('INSERT INTO commentaire(id_internaute, id_recette, texte_commentaire, date_creation_commentaire) \
-                            VALUES ($1::int, 2, $2::text, now());', [id, text], function (err2, result) {
-                        done();
-
-                        if (err2) {
-                            return cb(err2);
-                        }
-
-                        console.log("Success");
-
-                        pool.end();
-                        cb(null, {
-                            text: text,
-                            id: id,
-                            pseudonyme: pseudonyme
-                        });
-                    });
-                });
-            }
-
-
-            pool.on('error', function (err, client) {
-                // if an error is encountered by a client while it sits idle in the pool
-                // the pool itself will emit an error event with both the error and
-                // the client which emitted the original error
-                // this is a rare occurrence but can happen if there is a network partition
-                // between your application and the database, the database restarts, etc.
-                // and so you might want to handle it and at least log it out
-                console.error('idle client error', err.message, err.stack)
-            })
         });
     }
+
 };

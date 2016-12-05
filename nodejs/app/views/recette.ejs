@@ -89,7 +89,7 @@
         <div class="col-md-9">
             <div class="well">
 
-                <form action="/recette/add_comment" method="post">
+                <form action="/recette/add_comment/<%= recette.id_recette %>" method="post">
                     <label for="textarea"> Laisser un commentaire : </label>
                     <textarea id="textarea" name="comment" class="form-control" rows="3"></textarea>
                     <p class="help-block">Vous pouvez agrandir la fenêtre</p>
