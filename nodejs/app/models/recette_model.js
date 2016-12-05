@@ -174,28 +174,11 @@ module.exports = {
 
                     //add it
                     connect = await(pool.connect(defers('client', 'done')));
-                    await(connect.client.query('INSERT INTO internaute(pseudonyme, mot_de_passe) VALUES($1::text, \'\');', [pseudonyme], defer()));
+                    results = await(connect.client.query('INSERT INTO internaute(pseudonyme, mot_de_passe, id_internaute) VALUES($1::text, \'\', DEFAULT) RETURNING id_internaute;', [pseudonyme], defer()));
                     connect.done();
-
-                    //get it's id
-                    connect = await(pool.connect(defers('client', 'done')));
-                    results = await(connect.client.query('SELECT internaute.id_internaute AS id_internaute FROM internaute WHERE pseudonyme = $1;', [pseudonyme], defer()));
-                    connect.done();
-
-                    //check if user was correctly added
-                    if (results.rows[0] == undefined) {
-                        throw new Error({
-                            error: {
-                                status: 500,
-                                stack: 'Can\'t add comment for some unknowed reasons'
-                            }
-                        });
-                    } else {
-                        id_internaute = results.rows[0].id_internaute;
-                    }
-                } else {
-                    id_internaute = results.rows[0].id_internaute;
                 }
+
+                id_internaute = results.rows[0].id_internaute;
 
                 //add the comment
                 connect = await(pool.connect(defers('client', 'done')));
