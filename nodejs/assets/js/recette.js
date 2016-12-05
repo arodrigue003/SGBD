@@ -32,7 +32,21 @@ $("#form-content").on("submit", function( event ) {
             $(object).after(res);
         },
         error : function(resultat, statut, erreur){
-            alert('error');
+
+            $.notify({
+                icon: 'glyphicon glyphicon-warning-sign',
+                message: 'Impossible de rajouter le commentaire',
+            }, {
+                type: 'danger',
+                delay: 1500,
+                placement: {
+                    from: 'bottom'
+                },
+                animate: {
+                    enter: 'animated fadeInUp',
+                    exit: 'animated fadeOutDown'
+                }
+            });
         }
     });
 
