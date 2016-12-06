@@ -5,7 +5,6 @@ var logger       = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser   = require('body-parser');
 // used to create, sign, and verify tokens
-var jwt          = require('jsonwebtoken');
 
 var config = {
     secret: 'I love hentai',

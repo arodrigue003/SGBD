@@ -1,7 +1,5 @@
 var recette_model = require('../models/recette_model');
 
-
-
 module.exports = {
     /** VIEWS **/
     index_view: function (req, res) {

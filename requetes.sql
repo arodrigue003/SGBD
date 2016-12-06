@@ -137,3 +137,14 @@ SELECT * FROM recette ORDER BY random() LIMIT 3;
 
 /* get user's id */
 SELECT internaute.id_internaute FROM internaute WHERE pseudonyme = 'Mouustik';
+
+/* insert user it doesn't exist */
+INSERT INTO internaute (pseudonyme, mot_de_passe)
+SELECT 'mo2i', 'coucou2'
+WHERE
+  NOT EXISTS (
+    SELECT *
+    from internaute
+    WHERE pseudonyme='moi2'
+)
+RETURNING id_internaute;
