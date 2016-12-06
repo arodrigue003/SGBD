@@ -13,6 +13,13 @@ function load_token() {
             }
         });
     }
+    else {
+        $.ajaxSetup({
+            headers: {
+                'x-access-token': null
+            }
+        });
+    }
 }
 
 function create_notification(icon, type, message) {
@@ -50,6 +57,13 @@ $("#form-content").on("submit", function (event) {
         }
     });
 
+});
+
+$("#disconnect").click(function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    window.localStorage.removeItem('token');
+    load_token();
 });
 
 
@@ -92,11 +106,10 @@ $(function () {
                     success: function (res, status) {
                         window.localStorage.setItem('token', JSON.parse(res).token);
                         load_token();
-                        create_notification('glyphicon glyphicon-ok', 'success', 'Commentaire rajouté avec succès');
+                        msgChange($('#div-login-msg'), $('#icon-login-msg'), $('#text-login-msg'), "success", "glyphicon-ok", "Login successfuly");
                     },
                     error: function (resultat, statut, erreur) {
-                        create_notification('glyphicon glyphicon-warning-sign', 'danger', 'Impossible de rajouter le commentaire')
-
+                        msgChange($('#div-login-msg'), $('#icon-login-msg'), $('#text-login-msg'), "error", "glyphicon-remove", "Login error");
                     }
                 });
                 return false;

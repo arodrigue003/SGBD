@@ -37,6 +37,17 @@ module.exports = {
             res.json(data);
         })
     },
+
+    register: function (req, res) {
+        var login = req.body.register_username;
+        var password = req.body.register_password;
+        users_model.register(login, password, req.app.settings.config, function (err, data) {
+            if (err) {
+                return res.status(500).json(err);
+            }
+            res.json(data);
+        })
+    },
     
     validate_token: function (req, res, next) {
         //Check header or url parameters or post parameters for token
