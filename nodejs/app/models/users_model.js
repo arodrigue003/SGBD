@@ -96,7 +96,7 @@ module.exports = {
                 // create a token
                 var token = jwt.sign({login: login}, config.superSecret, {
                     algorithm: 'HS256',
-                    expiresIn: "2 days" // expires in 24 hours
+                    expiresIn: "1 days" // expires in 24 hours
                 });
 
                 // return the information including token as JSON
@@ -134,6 +134,8 @@ module.exports = {
             jwt.verify(token, config.superSecret, function (err, decoded) {
                 if (err) {
                     return cb(null, {success: false, message: 'Failed to authenticate token.'});
+                } else if (decoded.exp <= Date.now()/1000) {
+                    return cb(null, {success: false, message: 'Access token has expired'});
                 } else {
                     return cb(null, null, true);
                 }
