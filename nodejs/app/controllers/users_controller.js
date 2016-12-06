@@ -30,11 +30,32 @@ module.exports = {
     authenticate: function (req, res) {
         var login = req.body.login_username;
         var password = req.body.login_password;
-        users_model.authenticate(login, password, function (err, data) {
+        users_model.authenticate(login, password, req.app.settings.config, function (err, data) {
             if (err) {
                 return res.status(500).json(err);
             }
             res.json(data);
+        })
+    },
+    
+    validate_token: function (req, res, next) {
+        //Check header or url parameters or post parameters for token
+        var token = req.body.token || req.query.token || req.headers['x-access-token'];
+        console.log(token);
+
+        //decode then
+        users_model.validate_token(token, req.app.settings.config, function (err, data, decoded) {
+            if (err) {
+                return res.status(500).json(err);
+            }
+            if (data) {
+                return res.status(403).json(data);
+            }
+            if (decoded) {
+                // if everything is good, save to request for use in other routes
+                req.decoded = decoded;
+                next();
+            }
         })
     }
 };

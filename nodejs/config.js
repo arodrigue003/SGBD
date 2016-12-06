@@ -7,7 +7,7 @@ var bodyParser   = require('body-parser');
 // used to create, sign, and verify tokens
 
 var config = {
-    secret: 'I love hentai',
+    superSecret: 'I love hentai',
     config: {
         user: 'reader',
         database: 'cuisine',
@@ -22,7 +22,7 @@ var app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'app/views'));
 app.set('view engine', 'ejs');
-app.set('superSecret', config.secret);
+app.set('config', config);
 
 // uncomment after placing your favicon in /assets
 //app.use(favicon(path.join(__dirname, 'assets', 'favicon.ico')));

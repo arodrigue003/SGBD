@@ -68,13 +68,14 @@ module.exports = {
         });
     },
 
-    authenticate: function (login, password, cb) {
+    authenticate: function (login, password, config, cb) {
 
+        console.log(config);
         fiber(function () {
 
             try {
 
-                var pool = new pg.Pool(config);
+                var pool = new pg.Pool(config.config);
                 var id_internaute;
 
                 var connect = await(pool.connect(defers('client', 'done')));
@@ -93,7 +94,7 @@ module.exports = {
 
                 // if user is found and password is right
                 // create a token
-                var token = jwt.sign({login: login}, superSecret, {
+                var token = jwt.sign({login: login}, config.superSecret, {
                     algorithm: 'HS256',
                     expiresIn: "2 days" // expires in 24 hours
                 });
@@ -122,5 +123,31 @@ module.exports = {
             }
 
         });
+    },
+
+    validate_token: function (token, config, cb) {
+
+        // decode token
+        if (token) {
+
+            // verifies secret and checks exp
+            jwt.verify(token, config.superSecret, function (err, decoded) {
+                if (err) {
+                    return cb(null, {success: false, message: 'Failed to authenticate token.'});
+                } else {
+                    return cb(null, null, true);
+                }
+            });
+
+        } else {
+
+            // if there is no token
+            // return an error
+            return cb({
+                success: false,
+                message: 'No token provided.'
+            });
+
+        }
     }
 };
