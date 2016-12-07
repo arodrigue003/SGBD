@@ -76,6 +76,7 @@ module.exports = {
             try {
 
                 var pool = new pg.Pool(config.config);
+                pool.on('error', function (err, client) {console.error('idle client error', err.message, err.stack)});
                 var id_internaute;
 
                 var connect = await(pool.connect(defers('client', 'done')));
@@ -100,21 +101,11 @@ module.exports = {
                 });
 
                 // return the information including token as JSON
-                cb(null, {
-                    success: true,
-                    message: 'Enjoy your token!',
-                    token: token
-                });
                 pool.end();
-
-                pool.on('error', function (err, client) {
-                    // if an error is encountered by a client while it sits idle in the pool
-                    // the pool itself will emit an error event with both the error and
-                    // the client which emitted the original error
-                    // this is a rare occurrence but can happen if there is a network partition
-                    // between your application and the database, the database restarts, etc.
-                    // and so you might want to handle it and at least log it out
-                    console.error('idle client error', err.message, err.stack)
+                return cb(null, {
+                    success: true,
+                    message: 'Login success',
+                    token: token
                 });
 
             } catch (err) {
@@ -122,6 +113,48 @@ module.exports = {
                 cb(err);
             }
 
+        });
+    },
+
+    register: function (login, password1, password2, config, cb) {
+        var pseudo_reg = new RegExp("^\\w*$");
+
+        if (login.length < 3) {
+            return cb({success: false, message: 'Login too short.'});
+        } else if (!pseudo_reg.test(login)) {
+            return cb({success: false, message: 'Incorrect syntax (letters and numbers only).'});
+        } else if (password1.length < 3) {
+            return cb({success: false, message: 'password too short.'});
+        } else if (password1 != password2) {
+            return cb({success: false, message: 'passwords don\'t match.'});
+        }
+
+        fiber(function () {
+            try {
+                var pool = new pg.Pool(config.config);
+
+                var connect = await(pool.connect(defers('client', 'done')));
+                var results = await(connect.client.query('SELECT internaute.id_internaute AS id_internaute FROM internaute WHERE pseudonyme = $1;', [login], defer()));
+                connect.done();
+
+                // if user already exists don't allow register
+                if (results.rows[0] != undefined) {
+                    return cb({success: false, message: 'User already exists.'});
+                }
+
+                var connect = await(pool.connect(defers('client', 'done')));
+                var results = await(connect.client.query('INSERT INTO internaute (pseudonyme, mot_de_passe) \
+                                    VALUES($1::text, $2::text)', [login, password1], defer()));
+                connect.done();
+
+                return cb(null, {
+                    success: true,
+                    message: 'Register success'
+                });
+
+            } catch (err) {
+                return cb(err);
+            }
         });
     },
 
@@ -145,7 +178,7 @@ module.exports = {
 
             // if there is no token
             // return an error
-            return cb({
+            return cb(null, {
                 success: false,
                 message: 'No token provided.'
             });

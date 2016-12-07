@@ -98,9 +98,10 @@ $(function () {
     var $divForms = $('#div-forms');
     var $modalAnimateTime = 300;
     var $msgAnimateTime = 150;
-    var $msgShowTime = 2000;
+    var $msgShowTime = 1000;
 
-    $("form").submit(function () {
+    $("form").submit(function (e) {
+        e.preventDefault();
         switch (this.id) {
             case "login-form":
                 var object = this;
@@ -113,10 +114,10 @@ $(function () {
                         window.localStorage.setItem('token', JSON.parse(res).token);
                         load_token();
                         set_modal_button();
-                        msgChange($('#div-login-msg'), $('#icon-login-msg'), $('#text-login-msg'), "success", "glyphicon-ok", "Login successfuly");
+                        msgChange($('#div-login-msg'), $('#icon-login-msg'), $('#text-login-msg'), "success", "glyphicon-ok", JSON.parse(res).message, 1);
                     },
-                    error: function (resultat, statut, erreur) {
-                        msgChange($('#div-login-msg'), $('#icon-login-msg'), $('#text-login-msg'), "error", "glyphicon-remove", "Login error");
+                    error: function (res, statut, erreur) {
+                        msgChange($('#div-login-msg'), $('#icon-login-msg'), $('#text-login-msg'), "error", "glyphicon-remove", JSON.parse(res.responseText).message, 0);
                     }
                 });
                 return false;
@@ -124,21 +125,27 @@ $(function () {
             case "lost-form":
                 var $ls_email = $('#lost_email').val();
                 if ($ls_email == "ERROR") {
-                    msgChange($('#div-lost-msg'), $('#icon-lost-msg'), $('#text-lost-msg'), "error", "glyphicon-remove", "Send error");
+                    msgChange($('#div-lost-msg'), $('#icon-lost-msg'), $('#text-lost-msg'), "error", "glyphicon-remove", JSON.parse(res).message, 0);
                 } else {
-                    msgChange($('#div-lost-msg'), $('#icon-lost-msg'), $('#text-lost-msg'), "success", "glyphicon-ok", "Send OK");
+                    msgChange($('#div-lost-msg'), $('#icon-lost-msg'), $('#text-lost-msg'), "success", "glyphicon-ok", JSON.parse(res).message, 1);
                 }
                 return false;
                 break;
             case "register-form":
-                var $rg_username = $('#register_username').val();
-                var $rg_email = $('#register_email').val();
-                var $rg_password = $('#register_password').val();
-                if ($rg_username == "ERROR") {
-                    msgChange($('#div-register-msg'), $('#icon-register-msg'), $('#text-register-msg'), "error", "glyphicon-remove", "Register error");
-                } else {
-                    msgChange($('#div-register-msg'), $('#icon-register-msg'), $('#text-register-msg'), "success", "glyphicon-ok", "Register OK");
-                }
+                var object = this;
+                $.ajax({
+                    url: object.action,
+                    dataType: 'html',
+                    data: $(this).serialize(),
+                    type: 'post',
+                    success: function (res, status) {
+                        msgChange($('#div-register-msg'), $('#icon-register-msg'), $('#text-register-msg'), "success", "glyphicon-ok", JSON.parse(res).message, 2);
+                    },
+                    error: function (res, statut, erreur) {
+                        console.log(res);
+                        msgChange($('#div-register-msg'), $('#icon-register-msg'), $('#text-register-msg'), "error", "glyphicon-remove", JSON.parse(res.responseText).message, 0);
+                    }
+                });
                 return false;
                 break;
             default:
@@ -177,20 +184,28 @@ $(function () {
         });
     }
 
-    function msgFade($msgId, $msgText) {
+    function msgFade($msgId, $msgText, $hide) {
         $msgId.fadeOut($msgAnimateTime, function () {
             $(this).text($msgText).fadeIn($msgAnimateTime);
+            switch ($hide) {
+                case 1:
+                    $("#login-modal").modal('hide');
+                    break;
+                case 2:
+                    modalAnimate($formRegister, $formLogin);
+                    break;
+            }
         });
     }
 
-    function msgChange($divTag, $iconTag, $textTag, $divClass, $iconClass, $msgText) {
+    function msgChange($divTag, $iconTag, $textTag, $divClass, $iconClass, $msgText, $hide) {
         var $msgOld = $divTag.text();
         msgFade($textTag, $msgText);
         $divTag.addClass($divClass);
         $iconTag.removeClass("glyphicon-chevron-right");
         $iconTag.addClass($iconClass + " " + $divClass);
         setTimeout(function () {
-            msgFade($textTag, $msgOld);
+            msgFade($textTag, $msgOld, $hide);
             $divTag.removeClass($divClass);
             $iconTag.addClass("glyphicon-chevron-right");
             $iconTag.removeClass($iconClass + " " + $divClass);
