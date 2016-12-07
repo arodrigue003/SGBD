@@ -16,6 +16,7 @@ var defers = sync.defers;
 module.exports = {
     get_from_id: function (id, cb) {
         var pool = new pg.Pool(config);
+        pool.on('error', function (err, client) { console.error('idle client error', err.message, err.stack) });
         var return_data = {};
 
         async.parallel([
@@ -129,29 +130,6 @@ module.exports = {
             cb(null, return_data);
         });
 
-        /*client.connect(function (err) {
-         if (err) {
-         return cb(err);
-         }
-
-         client.query('SELECT * FROM recette WHERE id_recette = $1::int;', [id], function (err2, result) {
-         if (err2) {
-         return cb(err2);
-         }
-
-         cb(null, result.rows[0]);
-         });
-         });*/
-
-        pool.on('error', function (err, client) {
-            // if an error is encountered by a client while it sits idle in the pool
-            // the pool itself will emit an error event with both the error and
-            // the client which emitted the original error
-            // this is a rare occurrence but can happen if there is a network partition
-            // between your application and the database, the database restarts, etc.
-            // and so you might want to handle it and at least log it out
-            console.error('idle client error', err.message, err.stack)
-        })
     },
 
     add_comment: function (id_internaute, text, id_recette, cb) {
@@ -183,11 +161,9 @@ module.exports = {
                                 WHERE commentaire.id_recette = $1::int \
                                 ORDER BY date_creation DESC LIMIT 1;', [id_recette], defer()));
                 connect.done();
-                console.log(results.rows[0]);
-
 
                 pool.end();
-                return cb(null, {comments : results.rows});
+                return cb(null, {success: true, comments : results.rows});
 
 
             } catch (err) {

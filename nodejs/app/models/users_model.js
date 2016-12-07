@@ -9,20 +9,13 @@ var await = sync.await;
 var defer = sync.defer;
 var defers = sync.defers;
 
-var superSecret = 'I love tentacles';
-var config = {
-    user: 'reader',
-    database: 'cuisine',
-    password: 'reader'
-};
-
 module.exports = {
-    setup: function (cb) {
+    setup: function (config, cb) {
         var user = {
             pseudo: 'setup',
             password: 'coucou'
         };
-        var pool = new pg.Pool(config);
+        var pool = new pg.Pool(config.config);
         pool.connect(function (err, client, done) {
             if (err) {
                 return cb(err);
@@ -49,8 +42,8 @@ module.exports = {
         });
     },
 
-    get_all_users: function (cb) {
-        var pool = new pg.Pool(config);
+    get_all_users: function (config, cb) {
+        var pool = new pg.Pool(config.config);
         pool.connect(function (err, client, done) {
             if (err) {
                 return cb(err);
@@ -69,8 +62,6 @@ module.exports = {
     },
 
     authenticate: function (login, password, config, cb) {
-
-        console.log(config);
         fiber(function () {
 
             try {
@@ -132,6 +123,7 @@ module.exports = {
         fiber(function () {
             try {
                 var pool = new pg.Pool(config.config);
+                pool.on('error', function (err, client) { console.error('idle client error', err.message, err.stack) });
 
                 var connect = await(pool.connect(defers('client', 'done')));
                 var results = await(connect.client.query('SELECT internaute.id_internaute AS id_internaute FROM internaute WHERE pseudonyme = $1;', [login], defer()));
@@ -147,6 +139,7 @@ module.exports = {
                                                 VALUES($1::text, $2::text)', [login, password1], defer()));
                 connect.done();
 
+                pool.end();
                 return cb(null, {
                     success: true,
                     message: 'Register success'
@@ -190,9 +183,7 @@ module.exports = {
         fiber(function () {
             try {
                 var pool = new pg.Pool(config.config);
-                pool.on('error', function (err, client) {
-                    console.error('idle client error', err.message, err.stack)
-                });
+                pool.on('error', function (err, client) { console.error('idle client error', err.message, err.stack) });
 
                 var decoded = jwt.verify(token, config.superSecret);
                 console.log(decoded);

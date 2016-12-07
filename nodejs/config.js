@@ -7,7 +7,7 @@ var bodyParser   = require('body-parser');
 // used to create, sign, and verify tokens
 
 var config = {
-    superSecret: 'I love hentai',
+    superSecret: 'I love tentacles',
     config: {
         user: 'reader',
         database: 'cuisine',
