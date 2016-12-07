@@ -154,43 +154,24 @@ module.exports = {
         })
     },
 
-    add_comment: function (pseudonyme, text, id, cb) {
+    add_comment: function (id_internaute, text, id_recette, cb) {
 
         fiber(function () {
 
             try {
-                console.log(pseudonyme);
 
                 var pool = new pg.Pool(config);
-                var id_internaute;
-
-                var connect = await(pool.connect(defers('client', 'done')));
-                var results = await(connect.client.query('SELECT internaute.id_internaute AS id_internaute FROM internaute WHERE pseudonyme = $1;', [pseudonyme], defer()));
-                connect.done();
-
-                // if user doesn't exists create it and get his id else we are fine
-                if (results.rows[0] == undefined) {
-                    console.log('No such user : create it');
-
-                    //add it
-                    connect = await(pool.connect(defers('client', 'done')));
-                    results = await(connect.client.query('INSERT INTO internaute(pseudonyme, mot_de_passe, id_internaute) VALUES($1::text, \'\', DEFAULT) RETURNING id_internaute;', [pseudonyme], defer()));
-                    connect.done();
-                }
-
-                id_internaute = results.rows[0].id_internaute;
+                pool.on('error', function (err, client) { console.error('idle client error', err.message, err.stack)});
 
                 //add the comment
-                connect = await(pool.connect(defers('client', 'done')));
+                var connect = await(pool.connect(defers('client', 'done')));
                 await(connect.client.query('INSERT INTO commentaire(id_internaute, id_recette, texte_commentaire, date_creation_commentaire) \
-                                            VALUES ($1::int, $2::int, $3::text, now());', [id_internaute, id, text],defer()));
+                                            VALUES ($1::int, $2::int, $3::text, now());', [id_internaute, id_recette, text],defer()));
                 connect.done();
-
-                console.log('success');
 
                 //return the comment in order to view it
                 connect = await(pool.connect(defers('client', 'done')));
-                results = await(connect.client.query('SELECT commentaire.date_creation_commentaire AS date_creation, \
+                var results = await(connect.client.query('SELECT commentaire.date_creation_commentaire AS date_creation, \
                                     commentaire.id_recette AS id_recette, \
                                     commentaire.texte_commentaire AS text, \
                                     internaute.pseudonyme AS pseudo, \
@@ -200,23 +181,14 @@ module.exports = {
                                 LEFT JOIN note ON note.id_recette = commentaire.id_recette AND \
                                     internaute.id_internaute = note.id_internaute \
                                 WHERE commentaire.id_recette = $1::int \
-                                ORDER BY date_creation DESC LIMIT 1;', [id], defer()));
+                                ORDER BY date_creation DESC LIMIT 1;', [id_recette], defer()));
                 connect.done();
                 console.log(results.rows[0]);
 
 
                 pool.end();
-                cb(null, {comments : results.rows});
+                return cb(null, {comments : results.rows});
 
-                pool.on('error', function (err, client) {
-                    // if an error is encountered by a client while it sits idle in the pool
-                    // the pool itself will emit an error event with both the error and
-                    // the client which emitted the original error
-                    // this is a rare occurrence but can happen if there is a network partition
-                    // between your application and the database, the database restarts, etc.
-                    // and so you might want to handle it and at least log it out
-                    console.error('idle client error', err.message, err.stack)
-                });
 
             } catch (err) {
                 console.log(err);

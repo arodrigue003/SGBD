@@ -142,9 +142,9 @@ module.exports = {
                     return cb({success: false, message: 'User already exists.'});
                 }
 
-                var connect = await(pool.connect(defers('client', 'done')));
-                var results = await(connect.client.query('INSERT INTO internaute (pseudonyme, mot_de_passe) \
-                                    VALUES($1::text, $2::text)', [login, password1], defer()));
+                connect = await(pool.connect(defers('client', 'done')));
+                await(connect.client.query('INSERT INTO internaute (pseudonyme, mot_de_passe) \
+                                                VALUES($1::text, $2::text)', [login, password1], defer()));
                 connect.done();
 
                 return cb(null, {
@@ -170,7 +170,7 @@ module.exports = {
                 } else if (decoded.exp <= Date.now()/1000) {
                     return cb(null, {success: false, message: 'Access token has expired'});
                 } else {
-                    return cb(null, null, true);
+                    return cb(null, null, decoded);
                 }
             });
 
@@ -184,5 +184,28 @@ module.exports = {
             });
 
         }
+    },
+
+    get_id_from_token: function (token, config, cb) {
+        fiber(function () {
+            try {
+                var pool = new pg.Pool(config.config);
+                pool.on('error', function (err, client) {
+                    console.error('idle client error', err.message, err.stack)
+                });
+
+                var decoded = jwt.verify(token, config.superSecret);
+                console.log(decoded);
+                var connect = await(pool.connect(defers('client', 'done')));
+                var result = await(connect.client.query('SELECT internaute.id_internaute AS id_internaute FROM internaute WHERE pseudonyme = $1;', [decoded.login], defer()));
+                connect.done();
+
+                pool.end();
+                return cb(null, result.rows[0].id_internaute);
+
+            } catch (err) {
+                return cb(err);
+            }
+        });
     }
 };
