@@ -36,7 +36,6 @@ module.exports = {
                 }
 
                 pool.end();
-                console.log(result.rows[0]);
                 cb(null, {id: result.rows[0]});
             });
         });
@@ -100,7 +99,6 @@ module.exports = {
                 });
 
             } catch (err) {
-                console.log(err);
                 cb(err);
             }
 
@@ -186,7 +184,6 @@ module.exports = {
                 pool.on('error', function (err, client) { console.error('idle client error', err.message, err.stack) });
 
                 var decoded = jwt.verify(token, config.superSecret);
-                console.log(decoded);
                 var connect = await(pool.connect(defers('client', 'done')));
                 var result = await(connect.client.query('SELECT internaute.id_internaute AS id_internaute FROM internaute WHERE pseudonyme = $1;', [decoded.login], defer()));
                 connect.done();

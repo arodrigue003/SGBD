@@ -40,7 +40,6 @@ module.exports = {
     validate_token: function (req, res, next) {
         //Check header or url parameters or post parameters for token
         var token = req.body.token || req.query.token || req.headers['x-access-token'];
-        console.log(token);
 
         //decode then
         users_model.validate_token(token, req.app.settings.config, function (err, data, decoded) {

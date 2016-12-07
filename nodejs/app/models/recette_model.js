@@ -32,7 +32,6 @@ module.exports = {
                             return cb(err2);
                         }
                         return_data.recette = result.rows[0];
-                        console.log(result.rows[0]);
                         parallel_done();
                     });
                 });
@@ -49,7 +48,6 @@ module.exports = {
                             return parallel_done(err2);
                         }
                         return_data.note = result.rows[0];
-                        console.log(result.rows[0]);
                         parallel_done();
                     });
                 });
@@ -76,7 +74,6 @@ module.exports = {
                             return parallel_done(err2);
                         }
                         return_data.comments = result.rows;
-                        console.log(result.rows);
                         parallel_done();
                     });
                 });
@@ -96,7 +93,6 @@ module.exports = {
                             return parallel_done(err2);
                         }
                         return_data.ingredients = result.rows;
-                        console.log(result.rows);
                         parallel_done();
                     });
                 });
@@ -119,7 +115,6 @@ module.exports = {
                             return parallel_done(err2);
                         }
                         return_data.categories = result.rows;
-                        console.log(result.rows);
                         parallel_done();
                     });
                 });
@@ -167,7 +162,6 @@ module.exports = {
 
 
             } catch (err) {
-                console.log(err);
                 cb(err);
             }
 

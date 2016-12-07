@@ -25,7 +25,6 @@ module.exports = {
                             return cb(err2);
                         }
                         return_data.recettes = result.rows;
-                        console.log(result.rows);
                         parallel_done();
                     });
                 });
