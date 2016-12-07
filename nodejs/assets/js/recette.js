@@ -22,6 +22,18 @@ function load_token() {
     }
 }
 
+$(set_modal_button());
+
+function set_modal_button() {
+    if (window.localStorage.getItem('token')) {
+        $("#disconnect").show();
+        $("#login-button").hide();
+    } else {
+        $("#disconnect").hide();
+        $("#login-button").show();
+    }
+};
+
 function create_notification(icon, type, message) {
     $.notify({
         icon: icon,
@@ -64,6 +76,7 @@ $("#disconnect").click(function (e) {
     e.stopPropagation();
     window.localStorage.removeItem('token');
     load_token();
+    set_modal_button();
 });
 
 
@@ -90,13 +103,6 @@ $(function () {
     $("form").submit(function () {
         switch (this.id) {
             case "login-form":
-                var $lg_username = $('#login_username').val();
-                var $lg_password = $('#login_password').val();
-                if ($lg_username == "ERROR") {
-                    msgChange($('#div-login-msg'), $('#icon-login-msg'), $('#text-login-msg'), "error", "glyphicon-remove", "Login error");
-                } else {
-                    msgChange($('#div-login-msg'), $('#icon-login-msg'), $('#text-login-msg'), "success", "glyphicon-ok", "Login OK");
-                }
                 var object = this;
                 $.ajax({
                     url: object.action,
@@ -106,6 +112,7 @@ $(function () {
                     success: function (res, status) {
                         window.localStorage.setItem('token', JSON.parse(res).token);
                         load_token();
+                        set_modal_button();
                         msgChange($('#div-login-msg'), $('#icon-login-msg'), $('#text-login-msg'), "success", "glyphicon-ok", "Login successfuly");
                     },
                     error: function (resultat, statut, erreur) {

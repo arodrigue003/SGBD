@@ -26,7 +26,7 @@
                     <a href="#">Contact</a>
                 </li>
                 <li>
-                    <a href="#" data-toggle="modal" data-target="#login-modal">Open Login Modal </a>
+                    <a href="#" id="login-button" data-toggle="modal" data-target="#login-modal">Login</a>
                 </li>
                 <li>
                     <a href="#" id="disconnect">Disconnect </a>
@@ -49,13 +49,11 @@
             <div align="center" class="modal-header">
                 <img class="img-circle" id="img_logo" src="http://bootsnipp.com/img/logo.jpg"> <button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true" class="glyphicon glyphicon-remove"></span></button>
             </div>
+
             <!-- Begin # DIV Form -->
-
-
             <div id="div-forms">
+
                 <!-- Begin # Login Form -->
-
-
                 <form id="login-form" name="login-form" method="post" action="/api/authenticate">
                     <div class="modal-body">
                         <div id="div-login-msg">
@@ -70,7 +68,6 @@
                             <label><input type="checkbox"> Remember me</label>
                         </div>
                     </div>
-
 
                     <div class="modal-footer">
                         <div>
@@ -96,7 +93,6 @@
                         </div>
                         <input class="form-control" id="lost_email" placeholder="E-Mail (type ERROR for error effect)" required="" type="text">
                     </div>
-
 
                     <div class="modal-footer">
                         <div>
@@ -124,21 +120,20 @@
                         <input class="form-control" id="register_password" placeholder="Password" required="" type="password" name="register_password">
                     </div>
 
-
                     <div class="modal-footer">
                         <div>
                             <button class="btn btn-primary btn-lg btn-block" type="submit">Register</button>
                         </div>
-
-
                         <div>
                             <button class="btn btn-link" id="register_login_btn" type="button">Log In</button> <button class="btn btn-link" id="register_lost_btn" type="button">Lost Password?</button>
                         </div>
                     </div>
                 </form>
                 <!-- End | Register Form -->
+
             </div>
             <!-- End # DIV Form -->
+
         </div>
     </div>
 </div>
