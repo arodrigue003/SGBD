@@ -3,7 +3,7 @@ var users_model   = require('../models/users_model');
 
 module.exports = {
     /** VIEWS **/
-    index_view: function (req, res) {
+    item_view: function (req, res) {
         var id = req.params.id || 0;
         recette_model.get_from_id(id, function (err, recette) {
             if (err) {
@@ -20,6 +20,10 @@ module.exports = {
             }
             res.render('recette', recette);
         });
+    },
+
+    search_view: function (req, res) {
+        res.render('recette_search');
     },
 
     /** OPERATIONS **/
