@@ -20,5 +20,19 @@ module.exports = {
 
     search_view: function (req, res) {
         res.render('ingredient_search');
+    },
+
+    /** OPERATIONS **/
+
+    get_noms: function (req, res) {
+        ingredient_model.get_noms(function (err, ingredients) {
+            if (err) {
+                return res.status(500).json(err);
+            }
+
+            res.json({
+                ingredients: ingredients
+            });
+        });
     }
 };

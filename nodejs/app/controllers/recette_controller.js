@@ -1,5 +1,8 @@
+var categorie_model = require('../models/categorie_model');
+var ingredient_model = require('../models/ingredient_model');
 var recette_model = require('../models/recette_model');
 var users_model   = require('../models/users_model');
+var async = require('async');
 
 module.exports = {
     /** VIEWS **/
@@ -23,7 +26,38 @@ module.exports = {
     },
 
     search_view: function (req, res) {
-        res.render('recette_search');
+        var categories, ingredients;
+
+        async.parallel([
+            function (parallel_done) {
+                categorie_model.get_noms(function (err, result) {
+                    if (err) {
+                        return res.status(500).json(err);
+                    }
+
+                    categories = result;
+                    parallel_done();
+                });
+            },
+            function (parallel_done) {
+                ingredient_model.get_noms(function (err, result) {
+                    if (err) {
+                        return res.status(500).json(err);
+                    }
+
+                    ingredients = result;
+                    parallel_done();
+                });
+            }
+        ], function (err) {
+            if (err) {
+                return res.status(500).json(err);
+            }
+            res.render('recette_search', {
+                categories: categories,
+                ingredients: ingredients
+            });
+        });
     },
 
     /** OPERATIONS **/

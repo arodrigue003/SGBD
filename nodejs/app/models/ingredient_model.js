@@ -30,5 +30,30 @@ module.exports = {
         pool.on('error', function(err, client) {
             console.error('idle client error', err.message, err.stack);
         });
+    },
+
+    get_noms: function(cb) {
+        var pool = new pg.Pool(db.get_config());
+
+        pool.connect(function(err, client, done) {
+            if (err) {
+                return cb(err);
+            }
+            client.query(
+                "SELECT id_ingredient, nom_ingredient FROM INGREDIENT ORDER BY nom_ingredient",
+                function (err1, result) {
+                    if (err1) {
+                        return cb(err1);
+                    }
+
+                    done();
+                    cb(null, result.rows);
+                });
+        });
+
+
+        pool.on('error', function(err, client) {
+            cb(err);
+        });
     }
 };
