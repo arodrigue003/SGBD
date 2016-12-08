@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <% title = 'Classement des ingrédients' %>
+    <% include header.ejs %>
+    <body>
+        <% include navigation.ejs %>
+
+        <!-- Page Content -->
+        <div class="container">
+
+            <div class="row">
+                <div class="col-md-9">
+                <p>Vous faites un régime et vous souhaitez connaître les ingrédients les plus caloriques utilisés dans les meilleures recettes ? Cette page vous le présente en utilisant une formule de statistiques très poussées !</p>
+                    <table class="table table-bordered table-striped table-condensed table-responsive">
+                        <caption>
+                            <h3>Classement des ingrédients</h3>
+                        </caption>
+                        <thead>
+                            <tr>
+                                <th>Nom de l'ingrédient</th>
+                                <th>Score</th>
+                            </tr>
+                            <tbody>
+                            <% for (var i in ingredient_ranking) { %>
+                            <tr>
+                                    <td>
+                                        <a href="/ingredient/<%= ingredient_ranking[i].id_ingredient%>"> <%= ingredient_ranking[i].nom_ingredient%></a>
+                                    </td>
+                                    <td>
+                                        <%= ingredient_ranking[i].score_classement %>
+                                    </td>
+                            </tr>
+                            <% } %>
+                            </tbody>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <% include footer.ejs%>
+
+    </body>
+</html>
