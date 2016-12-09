@@ -26,10 +26,6 @@ drop index IF EXISTS MODIFIER_FK;
 
 drop index IF EXISTS CREER_FK;
 
-drop index IF EXISTS RECETTE_MODIFIE2_FK;
-
-drop index IF EXISTS RECETTE_MODIFIE_FK;
-
 drop index IF EXISTS NOTER_RECETTE2_FK;
 
 drop index IF EXISTS NOTER_RECETTE_FK;
@@ -95,7 +91,7 @@ ID_MENU                          INT4                 not null,
 ID_RECETTE                       INT4                 not null,
 ID_CATEGORIE                     INT4                 not null,
 DATE_CREATION_APPARTENIR_MENU    DATE                 not null default current_date,
-constraint PK_APPARTENIR primary key (ID_MENU, ID_RECETTE, ID_CATEGORIE)
+constraint PK_APPARTENIR primary key (ID_MENU, ID_RECETTE)
 );
 
 /*==============================================================*/
@@ -124,7 +120,7 @@ ID_CATEGORIE
 /*==============================================================*/
 create table CARAC_NUTRITIONNELLE (
 ID_CARAC_NUTRITIONNELLE    SERIAL               not null,
-NOM_CARACTERISTIQUE   VARCHAR(255)            not null,
+NOM_CARACTERISTIQUE        VARCHAR(255)         not null,
 constraint PK_CARACTERISTIQUE_NUTRITIONNE primary key (ID_CARAC_NUTRITIONNELLE)
 );
 

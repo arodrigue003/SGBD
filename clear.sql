@@ -20,10 +20,6 @@ drop index IF EXISTS MODIFIER_FK;
 
 drop index IF EXISTS CREER_FK;
 
-drop index IF EXISTS RECETTE_MODIFIE2_FK;
-
-drop index IF EXISTS RECETTE_MODIFIE_FK;
-
 drop index IF EXISTS NOTER_RECETTE2_FK;
 
 drop index IF EXISTS NOTER_RECETTE_FK;
@@ -63,3 +59,5 @@ drop TYPE IF EXISTS unite_nutrition;
 DROP TYPE IF EXISTS unite;
 
 drop FUNCTION IF EXISTS date_commentaire();
+
+drop FUNCTION IF EXISTS date_modification();

@@ -148,8 +148,9 @@ module.exports = {
 
     validate_token: function (token, config, cb) {
 
+        console.log(token);
         // decode token
-        if (token) {
+        if (token && token != "null") {
             // verifies secret and checks exp
             jwt.verify(token, config.superSecret, function (err, decoded) {
                 if (err) {
