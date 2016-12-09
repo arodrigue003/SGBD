@@ -1,10 +1,9 @@
 var pg = require('pg');
 
-var db = require("./db");
-
 module.exports = {
-    get_noms: function (cb) {
-        var pool = new pg.Pool(db.get_config());
+    get_noms: function (config, cb) {
+        var pool = new pg.Pool(config);
+        pool.on('error', function(err, client) {console.error('idle client error', err.message, err.stack)});
 
         pool.connect(function(err, client, done) {
             if (err) {
@@ -20,11 +19,6 @@ module.exports = {
                     done();
                     cb(null, result.rows);
                 });
-        });
-
-
-        pool.on('error', function(err, client) {
-            cb(err);
         });
     }
 };

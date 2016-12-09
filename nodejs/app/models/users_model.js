@@ -67,7 +67,6 @@ module.exports = {
 
                 var pool = new pg.Pool(config.config);
                 pool.on('error', function (err, client) {console.error('idle client error', err.message, err.stack)});
-                var id_internaute;
 
                 var connect = await(pool.connect(defers('client', 'done')));
                 var results = await(connect.client.query('SELECT * FROM internaute WHERE pseudonyme = $1;', [login], defer()));
@@ -75,17 +74,17 @@ module.exports = {
 
                 // if user doesn't exists create it and get his id else we are fine
                 if (results.rows[0] == undefined) {
-                    return cb({ success: false, message: 'Authentication failed. User not found.' });
+                    return cb({ message: 'Authentication failed. User not found.', status: 403 });
                 }
 
                 // check if password matches
                 else if (results.rows[0].mot_de_passe != password) {
-                    return cb({ success: false, message: 'Authentication failed. Wrong password.' });
+                    return cb({ message: 'Authentication failed. Wrong password.', status: 403 });
                 }
 
                 // if user is found and password is right
                 // create a token
-                var token = jwt.sign({login: login}, config.superSecret, {
+                var token = jwt.sign({login: login, id:results.rows[0].id_internaute}, config.superSecret, {
                     algorithm: 'HS256',
                     expiresIn: "1 days" // expires in 24 hours
                 });
@@ -93,7 +92,6 @@ module.exports = {
                 // return the information including token as JSON
                 pool.end();
                 return cb(null, {
-                    success: true,
                     message: 'Login success',
                     token: token
                 });
@@ -109,13 +107,13 @@ module.exports = {
         var pseudo_reg = new RegExp("^\\w*$");
 
         if (login.length < 3) {
-            return cb({success: false, message: 'Login too short.'});
+            return cb({message: 'Login too short.', status: 400});
         } else if (!pseudo_reg.test(login)) {
-            return cb({success: false, message: 'Incorrect syntax (letters and numbers only).'});
+            return cb({message: 'Incorrect syntax (letters and numbers only).', status: 400});
         } else if (password1.length < 3) {
-            return cb({success: false, message: 'password too short.'});
+            return cb({message: 'password too short.', status: 400});
         } else if (password1 != password2) {
-            return cb({success: false, message: 'passwords don\'t match.'});
+            return cb({message: 'passwords don\'t match.', status: 400});
         }
 
         fiber(function () {
@@ -129,7 +127,7 @@ module.exports = {
 
                 // if user already exists don't allow register
                 if (results.rows[0] != undefined) {
-                    return cb({success: false, message: 'User already exists.'});
+                    return cb({message: 'User already exists.', status: 403});
                 }
 
                 connect = await(pool.connect(defers('client', 'done')));
@@ -139,7 +137,6 @@ module.exports = {
 
                 pool.end();
                 return cb(null, {
-                    success: true,
                     message: 'Register success'
                 });
 
@@ -153,47 +150,25 @@ module.exports = {
 
         // decode token
         if (token) {
-
             // verifies secret and checks exp
             jwt.verify(token, config.superSecret, function (err, decoded) {
                 if (err) {
-                    return cb(null, {success: false, message: 'Failed to authenticate token.'});
+                    return cb({message: 'Failed to authenticate token.', status: 403});
                 } else if (decoded.exp <= Date.now()/1000) {
-                    return cb(null, {success: false, message: 'Access token has expired'});
+                    return cb({message: 'Access token has expired', status: 403});
                 } else {
-                    return cb(null, null, decoded);
+                    return cb(null, decoded);
                 }
             });
-
         } else {
-
             // if there is no token
             // return an error
-            return cb(null, {
-                success: false,
-                message: 'No token provided.'
+            return cb({
+                message: 'No token provided.',
+                status: 400
             });
 
         }
-    },
-
-    get_id_from_token: function (token, config, cb) {
-        fiber(function () {
-            try {
-                var pool = new pg.Pool(config.config);
-                pool.on('error', function (err, client) { console.error('idle client error', err.message, err.stack) });
-
-                var decoded = jwt.verify(token, config.superSecret);
-                var connect = await(pool.connect(defers('client', 'done')));
-                var result = await(connect.client.query('SELECT internaute.id_internaute AS id_internaute FROM internaute WHERE pseudonyme = $1;', [decoded.login], defer()));
-                connect.done();
-
-                pool.end();
-                return cb(null, result.rows[0].id_internaute);
-
-            } catch (err) {
-                return cb(err);
-            }
-        });
     }
+
 };

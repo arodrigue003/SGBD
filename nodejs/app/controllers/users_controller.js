@@ -18,9 +18,7 @@ module.exports = {
         var login = req.body.login_username;
         var password = req.body.login_password;
         users_model.authenticate(login, password, req.app.settings.config, function (err, data) {
-            if (err) {
-                return res.status(403).json(err);
-            }
+            if (err) if (err.status != undefined) return res.status(err.status).json(err); else return res.status(err.status).json(err);
             res.json(data);
         })
     },
@@ -30,9 +28,7 @@ module.exports = {
         var password1 = req.body.register_password;
         var password2 = req.body.register_password_check;
         users_model.register(login, password1, password2, req.app.settings.config, function (err, data) {
-            if (err) {
-                return res.status(500).json(err);
-            }
+            if (err) if (err.status != undefined) return res.status(err.status).json(err); else return res.status(err.status).json(err);
             res.json(data);
         })
     },
@@ -42,18 +38,11 @@ module.exports = {
         var token = req.body.token || req.query.token || req.headers['x-access-token'];
 
         //decode then
-        users_model.validate_token(token, req.app.settings.config, function (err, data, decoded) {
-            if (err) {
-                return res.status(403).json(err);
-            }
-            if (data) {
-                return res.status(403).json(data);
-            }
-            if (decoded) {
-                // if everything is good, save to request for use in other routes
-                req.decoded = decoded;
-                next();
-            }
+        users_model.validate_token(token, req.app.settings.config, function (err, decoded) {
+            if (err) if (err.status != undefined) return res.status(err.status).json(err); else return res.status(err.status).json(err);
+            // if everything is good, save to request for use in other routes
+            req.decoded = decoded;
+            next();
         })
     }
 };

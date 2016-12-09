@@ -1,7 +1,7 @@
 var categorie_model = require('../models/categorie_model');
 var ingredient_model = require('../models/ingredient_model');
 var recette_model = require('../models/recette_model');
-var users_model   = require('../models/users_model');
+var users_model = require('../models/users_model');
 var async = require('async');
 
 module.exports = {
@@ -30,7 +30,7 @@ module.exports = {
 
         async.parallel([
             function (parallel_done) {
-                categorie_model.get_noms(function (err, result) {
+                categorie_model.get_noms(req.app.settings.config.config, function (err, result) {
                     if (err) {
                         return res.status(500).json(err);
                     }
@@ -62,23 +62,15 @@ module.exports = {
 
     /** OPERATIONS **/
     add_comment: function (req, res) {
-        //get token and user id correponding to it
-        var token = req.body.token || req.query.token || req.headers['x-access-token'];
-        var pseudo = req.body.pseudonyme;
         var text = req.body.comment;
         var id_recette = req.params.id || 0;
-        users_model.get_id_from_token(token, req.app.settings.config, function(err, id_internaute) {
+        recette_model.add_comment(req.decoded.id, text, id_recette, function (err, comment) {
             if (err) {
                 return res.status(500).json(err);
             }
-            console.log(id_internaute);
-            recette_model.add_comment(id_internaute, text, id_recette, function (err, comment) {
-                if (err) {
-                    return res.status(500).json(err);
-                }
-                res.render('comment_recette', comment);
-            });
+            res.render('comment_recette', comment);
         });
+
     },
 
     create: function (req, res) {
