@@ -13,6 +13,12 @@ CREATE OR REPLACE FUNCTION date_commentaire() RETURNS TRIGGER AS $commentaire$
 		  END IF;
     END LOOP;
 
+    FOR date_modif IN SELECT date_creation_commentaire FROM commentaire WHERE id_recette = new.id_recette LOOP
+      IF (NEW.date_creation_commentaire <= date_modif ) THEN
+			  RAISE EXCEPTION 'Commentaire creation date date canno''t be past to other commentaires';
+		  END IF;
+    END LOOP;
+
 		RETURN NEW;
 	END;
 $commentaire$ LANGUAGE plpgsql;
