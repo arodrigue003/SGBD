@@ -205,10 +205,10 @@ caption h3 {
 .checkbox {
     margin-bottom: 0px;
 }
-
+/*
 .btn {
     border-radius: 0px;
-}
+}*/
 
 .btn:focus,
 .btn:active:focus,
@@ -236,7 +236,7 @@ caption h3 {
 .glyphicon {
     top: 0px;
 }
-
+/*
 .form-control {
     border-radius: 0px;
-}
+}*/

@@ -128,9 +128,7 @@ module.exports = {
     },
 
     add_comment: function (id_internaute, text, id_recette, cb) {
-
         fiber(function () {
-
             try {
 
                 var pool = new pg.Pool(config);
@@ -164,7 +162,6 @@ module.exports = {
             } catch (err) {
                 cb(err);
             }
-
         });
     }
 
