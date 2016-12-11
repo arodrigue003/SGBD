@@ -125,8 +125,7 @@ $(function () {
     var $msgAnimateTime = 150;
     var $msgShowTime = 1000;
 
-    $("form").submit(function (e) {
-        e.preventDefault();
+    $(".login-form").submit(function (e) {
         switch (this.id) {
             case "login-form":
                 var object = this;

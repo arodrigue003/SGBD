@@ -15,5 +15,8 @@ router.use('/contact', function (req, res) {
 router.use('/troll', function (req, res) {
     return res.render('troll')
 });
+router.use('/test', function (req, res) {
+    return res.render('test')
+});
 
 module.exports = router;

@@ -7,13 +7,26 @@
 
     <!-- Page Content -->
     <div class="container">
-
+        <form method="post" action="/lol">
+            <textarea name="content" style="width:100%">
+            </textarea>
+            <button type="submit"> Valider</button>
+        </form>
     </div>
     <!-- /.container -->
 
 <% include footer.ejs%>
 
-<script
+<script src="/js/tinymce/tinymce.min.js"></script>
+<script type="text/javascript">
+    tinyMCE.init({
+        // General options
+        mode : "textareas",
+        theme : "modern",
+        plugins : "pagebreak,layer,table,save,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,template",
+    });
+</script>
+
 
 </body>
 </html>
