@@ -5,7 +5,7 @@ SELECT COUNT(id_recette)
 FROM recette
 NATURAL JOIN appartenir_categorie
 WHERE appartenir_categorie.id_categorie = 5--$param
-  AND date_part('year', date_creation) = date_part('year', CURRENT_DATE);
+  AND date_part('year', date_creation_recette) = date_part('year', CURRENT_DATE);
 
 
 --le classement des recettes selon les notes données par les internautes
