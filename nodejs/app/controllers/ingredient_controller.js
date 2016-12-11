@@ -50,6 +50,9 @@ module.exports = {
                         return parallel_done(err);
                     }
 
+                    if (result == undefined) {
+                        return parallel_done({status: 404});
+                    }
                     ingredient.nom = result.nom_ingredient;
                     parallel_done();
                 });
@@ -60,6 +63,9 @@ module.exports = {
                         return parallel_done(err);
                     }
 
+                    if (result == undefined) {
+                        return parallel_done({status: 404});
+                    }
                     ingredient.ranking = result.score_classement;
                     parallel_done();
                 });
@@ -70,6 +76,9 @@ module.exports = {
                         return parallel_done(err);
                     }
 
+                    if (result == undefined) {
+                        return parallel_done({status: 404});
+                    }
                     recettes = result;
                     parallel_done();
                 });
@@ -80,6 +89,9 @@ module.exports = {
                         return parallel_done(err);
                     }
 
+                    if (result == undefined) {
+                        return parallel_done({status: 404});
+                    }
                     caracs_nutrition = result;
                     parallel_done();
                 });
@@ -87,7 +99,11 @@ module.exports = {
 
         ], function (err) {
             if (err) {
-                return res.status(500).json(err);
+                if (err.status != undefined && err.status == 404) {
+                    return res.status(404).render('404');
+                } else {
+                    return res.status(500).json(err);
+                }
             }
             console.log("DEBUG");
             console.log(ingredient);

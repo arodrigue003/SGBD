@@ -18,12 +18,7 @@ module.exports = {
             }
 
             if (recette.recette == undefined || recette.note == undefined) {
-                return res.status(404).render('404', {
-                    error: {
-                        status: 404,
-                        stack: 'Some informations about recette ' + id + ' couldn\'t be find'
-                    }
-                });
+                return res.status(404).render('404');
             }
             res.render('recette', recette);
         });
