@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <% title = ingredient.nom %>
+    <% include header.ejs %>
+    <body>
+        <% include navigation.ejs %>
+        <!-- Page Content -->
+        <div class="container">
+            <h2><% ingredient.nom %></h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <table class="table table-bordered table-striped table-condensed table-responsive">
+                        <caption>
+                            <h3>Caractéristiques nutritionnelles</h3>
+                        </caption>
+                        <thead>
+                            <tr>
+                                <th>Nom de la caractéristique</th>
+                                <th>Quantité nutritionnelle</th>
+                                <th>Unité</th>
+                            </tr>
+                            <tbody>
+                            <% for (var i in caracs_nutrition) { %>
+                            <tr>
+                                <td>
+                                    <% caracs_nutrition[i].nom_caracteristique %>
+                                </td>
+                                <td>
+                                    <%= caracs_nutrition[i].quantite_nutrition %>
+                                </td>
+                                <td>
+                                    <%= caracs_nutrition[i].unite_nutrition %>
+                                </td>
+                            </tr>
+                            <% } %>
+                            </tbody>
+                        </thead>
+                    </table>
+                </div>
+                <div class="col-md-6">
+                    <div class="thumbnail">
+                        <div class="caption-full">
+                            <div class="pull right">Score au <a href="/ingredient/classement"/>classement</a> : <% ingredient.ranking %>
+                            </div>
+                            <div class="">
+                                <h4>Recettes utilisant cet ingrédient :</h4>
+                                <% for (var k in recettes) { %>
+                                <hr>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <a href="/recette/ <% recettes[k].id_recette %>"><%= recettes[k].nom_recette %></a>
+                                    </div>
+                                </div>
+                                <% } %>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+        <!-- /.container -->
+
+        <% include footer.ejs%>
+
+    </body>
+</html>

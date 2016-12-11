@@ -17,15 +17,6 @@ ORDER BY moyenne ASC;
 
 --pour les menus réalisés par un internaute, la moyenne des notes données pour les recettes qu’il comprend
 SELECT id_recette, AVG(note.valeur) as moyenne_notes
-FROM note
-WHERE id_recette IN
-(SELECT id_recette
- FROM menu
-   NATURAL JOIN recette
- WHERE menu.id_internaute = 0)
-GROUP BY id_recette;
-
-SELECT id_recette, AVG(note.valeur) as moyenne_notes
 FROM menu
   NATURAL JOIN appartenir_menu
   NATURAL JOIN recette
