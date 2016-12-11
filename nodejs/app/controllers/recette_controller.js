@@ -40,7 +40,7 @@ module.exports = {
                 });
             },
             function (parallel_done) {
-                ingredient_model.get_noms(function (err, result) {
+                ingredient_model.get_noms(req.app.settings.config.config, function (err, result) {
                     if (err) {
                         return parallel_done(err);
                     }

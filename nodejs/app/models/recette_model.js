@@ -128,6 +128,10 @@ module.exports = {
     },
 
     add_comment: function (id_internaute, text, id_recette, cb) {
+        if (text == '') {
+            return cb({message: 'Can\'t add a null length comment', status: 403});
+        }
+
         fiber(function () {
             try {
 
@@ -168,7 +172,6 @@ module.exports = {
     add_rating: function (id_internaute, rate, id_recette, cb) {
         fiber(function () {
             try {
-
                 var pool = new pg.Pool(config);
                 pool.on('error', function (err, client) { console.error('idle client error', err.message, err.stack)});
 

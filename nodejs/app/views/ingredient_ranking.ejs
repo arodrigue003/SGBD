@@ -25,13 +25,13 @@
                             <% for (var i in ingredient_ranking) { %>
                             <tr>
                                 <td>
-                                    <% i %>
+                                    <%= Number(i)+1 %>
                                 </td>
                                 <td>
                                     <a href="/ingredient/<%= ingredient_ranking[i].id_ingredient%>"> <%= ingredient_ranking[i].nom_ingredient%></a>
                                 </td>
                                 <td>
-                                    <%= ingredient_ranking[i].score_classement %>
+                                    <%= Number(ingredient_ranking[i].score_classement).toFixed(3)   %>
                                 </td>
                             </tr>
                             <% } %>

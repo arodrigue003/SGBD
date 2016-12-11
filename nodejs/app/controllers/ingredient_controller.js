@@ -26,7 +26,7 @@ module.exports = {
     },
     /** OPERATIONS **/
     get_noms: function (req, res) {
-        ingredient_model.get_noms(function (err, ingredients) {
+        ingredient_model.get_noms(req.app.settings.config.config, function (err, ingredients) {
             if (err) {
                 return res.status(500).json(err);
             }

@@ -85,6 +85,7 @@ module.exports = {
             );
         });
     },
+
     get_noms: function(config, cb) {
         var pool = new pg.Pool(config);
 

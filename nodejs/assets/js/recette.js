@@ -63,10 +63,10 @@ $("#send-comment").on("click", function (event) {
         type: 'post',
         success: function (res, status) {
             $(object).after(res);
-            create_notification('glyphicon glyphicon-ok', 'success', 'Note prise en compte avec succès');
+            create_notification('glyphicon glyphicon-ok', 'success', 'Commentaire rajouté avec succès');
         },
         error: function (resultat, statut, erreur) {
-            create_notification('glyphicon glyphicon-warning-sign', 'danger', 'Impossible de rajouter la note')
+            create_notification('glyphicon glyphicon-warning-sign', 'danger', 'Impossible de rajouter le commentaire')
         }
     });
 });
@@ -82,10 +82,10 @@ $("#rate-recette-form").on("submit", function (event) {
         type: 'post',
         success: function (res, status) {
             $("#rate-view").replaceWith(res);
-            create_notification('glyphicon glyphicon-ok', 'success', 'Commentaire rajouté avec succès');
+            create_notification('glyphicon glyphicon-ok', 'success', 'Note prise en compte avec succès');
         },
         error: function (resultat, statut, erreur) {
-            create_notification('glyphicon glyphicon-warning-sign', 'danger', 'Impossible de rajouter le commentaire')
+            create_notification('glyphicon glyphicon-warning-sign', 'danger', 'Impossible de rajouter la note')
 
         }
     });

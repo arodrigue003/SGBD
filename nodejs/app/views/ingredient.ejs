@@ -23,7 +23,7 @@
                             <% for (var i in caracs_nutrition) { %>
                             <tr>
                                 <td>
-                                    <% caracs_nutrition[i].nom_caracteristique %>
+                                    <%= caracs_nutrition[i].nom_caracteristique %>
                                 </td>
                                 <td>
                                     <%= caracs_nutrition[i].quantite_nutrition %>
@@ -49,7 +49,7 @@
 
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <a href="/recette/ <% recettes[k].id_recette %>"><%= recettes[k].nom_recette %></a>
+                                        <a href="/recette/ <%= recettes[k].id_recette %>"><%= recettes[k].nom_recette %></a>
                                     </div>
                                 </div>
                                 <% } %>
