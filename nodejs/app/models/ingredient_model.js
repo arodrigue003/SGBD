@@ -1,39 +1,90 @@
 var pg = require('pg');
 
-var db = require("./db");
-
 module.exports = {
-    get_ranking: function (cb) {
-        var pool = new pg.Pool(db.get_config());
-
-        console.log(db.get_config());
+    get_ranking: function (id, config, cb) {
+        var pool = new pg.Pool(config);
 
         pool.connect(function(err, client, done) {
             if (err) {
                 return console.error('error fetching client from pool', err);
             }
-            client.query(
-                "SELECT ingredient.id_ingredient, nom_ingredient,(moyenne_recette * ratio_calories * somme_commentaires) as score_classement FROM ingredient INNER JOIN (SELECT id_ingredient, AVG(note.valeur) as moyenne_recette FROM note NATURAL JOIN recette NATURAL JOIN composition_recette GROUP BY id_ingredient) AS moy_recette_tab ON moy_recette_tab.id_ingredient = ingredient.id_ingredient INNER JOIN (SELECT id_ingredient, (quantite_nutrition / (SELECT AVG(quantite_nutrition) as moyenne_ensemble_calories FROM posseder_carac INNER JOIN carac_nutritionnelle ON posseder_carac.id_carac_nutritionnelle = carac_nutritionnelle.id_carac_nutritionnelle WHERE nom_caracteristique = 'énergie') ) as ratio_calories FROM posseder_carac INNER JOIN carac_nutritionnelle ON posseder_carac.id_carac_nutritionnelle = carac_nutritionnelle.id_carac_nutritionnelle WHERE nom_caracteristique = 'énergie') AS ratio_cal_tab ON moy_recette_tab.id_ingredient = ratio_cal_tab.id_ingredient INNER JOIN (SELECT id_ingredient, SUM(coeff_commentaire) as somme_commentaires FROM (SELECT id_recette, CASE WHEN COUNT(id_commentaire) <= 3 THEN 1 WHEN COUNT(id_commentaire) >= 4 AND COUNT(id_commentaire) <= 10 THEN 2 WHEN COUNT(id_commentaire) > 10 THEN 3 END as coeff_commentaire FROM commentaire GROUP BY commentaire.id_recette) as coeff_comm_tab INNER JOIN composition_recette ON coeff_comm_tab.id_recette = composition_recette.id_recette GROUP BY id_ingredient) AS somm_comm_tab ON ratio_cal_tab.id_ingredient = somm_comm_tab.id_ingredient ORDER BY score_classement DESC",
-                function (err, result) {
-            
-            done();
+            var query;
+            if (id) {
+                client.query("SELECT \
+                            (moyenne_recette * ratio_calories * somme_commentaires) as score_classement\
+                            FROM MOYENNE_NOTES_RECETTES_INGREDIENTS\
+                                INNER JOIN MOYENNE_CALORIES_INGREDIENTS\
+                                    ON MOYENNE_NOTES_RECETTES_INGREDIENTS.id_ingredient = MOYENNE_CALORIES_INGREDIENTS.id_ingredient\
+                                INNER JOIN SOMME_COMMENTAIRES_INGREDIENTS\
+                                    ON MOYENNE_CALORIES_INGREDIENTS.id_ingredient = SOMME_COMMENTAIRES_INGREDIENTS.id_ingredient\
+                           WHERE MOYENNE_NOTES_RECETTES_INGREDIENTS.id_ingredient = $1::int",
+                            [id],
+                        function (err, result) {            
+                            done();
 
-            if(err) {
-                return console.error('error running ranking query', err);
+                            if(err) {
+                                console.error('error running ranking query', err);
+                                cb(err);
+                            }
+                            console.log(result.rows[0]);
+                            cb(null, result.rows[0]);
+                        }
+                );
             }
-            console.log(result.rows);
-            cb(result.rows);
-            });
-        });
+            else if (id == null) {
+                client.query("SELECT ingredient.id_ingredient, nom_ingredient, \
+                            (moyenne_recette * ratio_calories * somme_commentaires) as score_classement\
+                            FROM ingredient\
+                                INNER JOIN MOYENNE_NOTES_RECETTES_INGREDIENTS\
+                                    ON ingredient.id_ingredient = MOYENNE_NOTES_RECETTES_INGREDIENTS.id_ingredient\
+                                INNER JOIN MOYENNE_CALORIES_INGREDIENTS\
+                                    ON MOYENNE_NOTES_RECETTES_INGREDIENTS.id_ingredient = MOYENNE_CALORIES_INGREDIENTS.id_ingredient\
+                                INNER JOIN SOMME_COMMENTAIRES_INGREDIENTS\
+                                    ON MOYENNE_CALORIES_INGREDIENTS.id_ingredient = SOMME_COMMENTAIRES_INGREDIENTS.id_ingredient\
+                            ORDER BY score_classement DESC;",
+                        function (err1, result) {            
+                            done();
 
+                            if(err1) {
+                                console.error('error running ranking query', err);
+                                cb(err1);
+                            }
+                            console.log(result.rows);
+                            cb(null, result.rows);
+                        }
+                );
+            }
+            
+        });
   
         pool.on('error', function(err, client) {
             console.error('idle client error', err.message, err.stack);
         });
     },
+    get_nom_by_id: function(id, config, cb) {
+        var pool = new pg.Pool(config);
 
-    get_noms: function(cb) {
-        var pool = new pg.Pool(db.get_config());
+        pool.connect(function(err, client, done) {
+            if (err) {
+                return cb(err);
+            }
+            client.query(
+                "SELECT nom_ingredient FROM INGREDIENT WHERE id_ingredient = $1::int",
+                [id],
+                function (err1, result) {
+                    if (err1) {
+                        return cb(err1);
+                    }
+
+                    done();
+                    console.log(result.rows[0]);
+                    cb(null, result.rows[0]);
+                }
+            );
+        });
+    },
+    get_noms: function(config, cb) {
+        var pool = new pg.Pool(config);
 
         pool.connect(function(err, client, done) {
             if (err) {
@@ -47,6 +98,7 @@ module.exports = {
                     }
 
                     done();
+                    console.log(result.rows);
                     cb(null, result.rows);
                 });
         });
@@ -54,6 +106,64 @@ module.exports = {
 
         pool.on('error', function(err, client) {
             cb(err);
+        });
+    },
+    get_recettes_used_in: function(id, config, cb) {
+        var pool = new pg.Pool(config);
+
+        pool.connect(function(err, client, done) {
+            if (err) {
+                return cb(err);
+            }
+            client.query(
+                "SELECT recette.id_recette, nom_recette, date_creation_recette\
+                FROM recette\
+                  NATURAL JOIN ingredients_recette\
+                WHERE id_ingredient = $1::int",
+                [id],
+                function (err1, result) {
+                    if (err1) {
+                        return cb(err1);
+                    }
+
+                    done();
+                    console.log(result.rows);
+                    cb(null, result.rows);
+                });
+        });
+
+
+        pool.on('error', function(err, client) {
+            cb(err);
+        });
+    },
+    get_caracs_nutrition: function(id, config, cb) {
+        var pool = new pg.Pool(config);
+
+        pool.connect(function(err, client, done) {
+            if (err) {
+                return cb(err);
+            }
+            client.query(
+                "SELECT nom_caracteristique, quantite_nutrition, unite_nutrition\
+                FROM carac_nutritionnelle\
+                NATURAL JOIN posseder_carac\
+                WHERE id_ingredient = $1::int", 
+                [id],
+                function (err1, result) {
+                    if (err1) {
+                        return cb(err1);
+                    }
+
+                    done();
+                    console.log(result.rows);
+                    cb(null, result.rows);
+                });
+        });
+
+
+        pool.on('error', function(err, client) {
+            return cb(err);
         });
     }
 };

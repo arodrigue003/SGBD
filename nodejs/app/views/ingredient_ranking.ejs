@@ -17,18 +17,22 @@
                         </caption>
                         <thead>
                             <tr>
+                                <th>Rang</th>
                                 <th>Nom de l'ingrédient</th>
                                 <th>Score</th>
                             </tr>
                             <tbody>
                             <% for (var i in ingredient_ranking) { %>
                             <tr>
-                                    <td>
-                                        <a href="/ingredient/<%= ingredient_ranking[i].id_ingredient%>"> <%= ingredient_ranking[i].nom_ingredient%></a>
-                                    </td>
-                                    <td>
-                                        <%= ingredient_ranking[i].score_classement %>
-                                    </td>
+                                <td>
+                                    <% i %>
+                                </td>
+                                <td>
+                                    <a href="/ingredient/<%= ingredient_ranking[i].id_ingredient%>"> <%= ingredient_ranking[i].nom_ingredient%></a>
+                                </td>
+                                <td>
+                                    <%= ingredient_ranking[i].score_classement %>
+                                </td>
                             </tr>
                             <% } %>
                             </tbody>

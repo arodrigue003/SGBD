@@ -1,5 +1,4 @@
 --Statistiques :
---/!\vérifier suivant les changements noms 
 -- le nombre de recettes d’une catégorie créée depuis le début de l’année
 SELECT COUNT(id_recette)
 FROM recette
@@ -18,15 +17,6 @@ ORDER BY moyenne ASC;
 
 --pour les menus réalisés par un internaute, la moyenne des notes données pour les recettes qu’il comprend
 SELECT id_recette, AVG(note.valeur) as moyenne_notes
-FROM note
-WHERE id_recette IN
-(SELECT id_recette
- FROM menu
-   NATURAL JOIN recette
- WHERE menu.id_internaute = 0)
-GROUP BY id_recette;
-
-SELECT id_recette, AVG(note.valeur) as moyenne_notes
 FROM menu
   NATURAL JOIN appartenir_menu
   NATURAL JOIN recette
@@ -34,7 +24,19 @@ FROM menu
 WHERE menu.id_internaute = 0
 GROUP BY id_recette;
 
--- le classement des ingrédients (les sous-requêtes séparées à la suite pour plus de lisibilité)
+-- le classement des ingrédients -- avec les vues
+SELECT ingredient.id_ingredient, nom_ingredient, (moyenne_recette * ratio_calories * somme_commentaires) as score_classement
+FROM ingredient
+  INNER JOIN MOYENNE_NOTES_RECETTES_INGREDIENTS 
+    ON ingredient.id_ingredient = MOYENNE_NOTES_RECETTES_INGREDIENTS.id_ingredient
+  INNER JOIN MOYENNE_CALORIES_INGREDIENTS
+    ON MOYENNE_NOTES_RECETTES_INGREDIENTS.id_ingredient = MOYENNE_CALORIES_INGREDIENTS.id_ingredient
+  INNER JOIN SOMME_COMMENTAIRES_INGREDIENTS
+    ON MOYENNE_CALORIES_INGREDIENTS.id_ingredient = SOMME_COMMENTAIRES_INGREDIENTS.id_ingredient
+ORDER BY score_classement DESC;
+
+
+--sans utiliser les vues les sous-requêtes séparées à la suite pour plus de lisibilité)
 SELECT ingredient.id_ingredient, nom_ingredient, (moyenne_recette * ratio_calories * somme_commentaires) as score_classement
 FROM ingredient
   INNER JOIN
