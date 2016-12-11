@@ -37,7 +37,10 @@ module.exports = {
         });
     },
     item_view: function(req, res) {
-        var id = req.params.id || 0;
+        var id = parseInt(req.params.id, 10);
+        if (isNaN(id)) {
+            return res.render('404');
+        }
         var ingredient = {}, caracs_nutrition, recettes;
 
         async.parallel([

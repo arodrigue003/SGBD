@@ -23,13 +23,13 @@ module.exports = {
             function (parallel_done) {
                 pool.connect(function (err, client, done) {
                     if (err) {
-                        return cb(err);
+                        return parallel_done(err);
                     }
                     client.query('SELECT * FROM recette WHERE id_recette = $1::int;', [id], function (err2, result) {
                         done();
 
                         if (err2) {
-                            return cb(err2);
+                            return parallel_done(err2);
                         }
                         return_data.recette = result.rows[0];
                         parallel_done();
@@ -39,7 +39,7 @@ module.exports = {
             function (parallel_done) {
                 pool.connect(function (err, client, done) {
                     if (err) {
-                        return cb(err);
+                        return parallel_done(err);
                     }
                     client.query('SELECT AVG(valeur) AS moyenne FROM note WHERE id_recette = $1::int;', [id], function (err2, result) {
                         done();
@@ -55,7 +55,7 @@ module.exports = {
             function (parallel_done) {
                 pool.connect(function (err, client, done) {
                     if (err) {
-                        return cb(err);
+                        return parallel_done(err);
                     }
                     client.query('SELECT commentaire.date_creation_commentaire AS date_creation, \
                                     commentaire.id_recette AS id_recette, \
@@ -81,7 +81,7 @@ module.exports = {
             function (parallel_done) {
                 pool.connect(function (err, client, done) {
                     if (err) {
-                        return cb(err);
+                        return parallel_done(err);
                     }
                     client.query('SELECT quantite, unite, id_ingredient, ingredient \
                             FROM ingredients_recette \
@@ -100,7 +100,7 @@ module.exports = {
             function (parallel_done) {
                 pool.connect(function (err, client, done) {
                     if (err) {
-                        return cb(err);
+                        return parallel_done(err);
                     }
                     client.query('SELECT categorie.nom_categorie AS nom_categorie, \
                             categorie.id_categorie AS id_categorie \
@@ -121,7 +121,9 @@ module.exports = {
             }
         ], function (err) {
             pool.end();
-            if (err) return cb(err);
+            if (err) {
+                return cb(err);
+            }
             cb(null, return_data);
         });
 

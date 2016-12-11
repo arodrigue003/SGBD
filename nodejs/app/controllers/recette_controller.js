@@ -7,7 +7,11 @@ var async = require('async');
 module.exports = {
     /** VIEWS **/
     item_view: function (req, res) {
-        var id = req.params.id || 0;
+        var id = parseInt(req.params.id, 10);
+        if (isNaN(id)) {
+            return res.render('404');
+        }
+
         recette_model.get_from_id(id, function (err, recette) {
             if (err) {
                 return res.status(500).json(err);
@@ -63,7 +67,12 @@ module.exports = {
     /** OPERATIONS **/
     add_comment: function (req, res) {
         var text = req.body.comment;
-        var id_recette = req.params.id || 0;
+
+        var id_recette = parseInt(req.params.id, 10);
+        if (isNaN(id_recette)) {
+            return res.render('404');
+        }
+
         recette_model.add_comment(req.decoded.id, text, id_recette, function (err, comment) {
             if (err) {
                 return res.status(500).json(err);
@@ -75,7 +84,12 @@ module.exports = {
 
     add_rating: function (req, res) {
         var rate = req.body.rate;
-        var id_recette = req.params.id || 0;
+
+        var id_recette = parseInt(req.params.id, 10);
+        if (isNaN(id_recette)) {
+            return res.render('404');
+        }
+
         recette_model.add_rating(req.decoded.id, rate, id_recette, function (err, data) {
             if (err) {
                 return res.status(500).json(err);
