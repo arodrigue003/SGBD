@@ -3,7 +3,7 @@ var home_model = require('../models/home_model');
 module.exports = {
 
     index: function(req, res) {
-        home_model.get_random_recettes(function (err, recette) {
+        home_model.get_random_recettes(req.app.settings.config.config, function (err, recette) {
             if (err) {
                 return res.status(500).json(err);
             }
