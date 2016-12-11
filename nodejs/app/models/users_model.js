@@ -97,9 +97,8 @@ module.exports = {
                 });
 
             } catch (err) {
-                cb(err);
+                return cb({message: err.message, status: 500 });
             }
-
         });
     },
 
@@ -141,7 +140,7 @@ module.exports = {
                 });
 
             } catch (err) {
-                return cb(err);
+                return cb({message: err.message, status: 500 });
             }
         });
     },
