@@ -5,6 +5,7 @@ var recette_controller = require('../../controllers/recette_controller');
 
 router.post('/', recette_controller.create);
 router.post('/add_comment/:id', recette_controller.add_comment);
+router.post('/add_rating/:id', recette_controller.add_rating);
 router.get('/', recette_controller.retrieve_all);
 router.get('/:id', recette_controller.retrieve);
 router.put('/:id', recette_controller.update);

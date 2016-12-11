@@ -40,14 +40,25 @@
 
                         <div class="ratings">
                             <p class="pull-right"><%= comments.length %> commentaires</p>
-                            <p>
-                                <span class="glyphicon <%= (note.moyenne >= 1) ? "glyphicon-star" : "glyphicon-star-empty";%>"></span>
-                                <span class="glyphicon <%= (note.moyenne >= 2) ? "glyphicon-star" : "glyphicon-star-empty";%>"></span>
-                                <span class="glyphicon <%= (note.moyenne >= 3) ? "glyphicon-star" : "glyphicon-star-empty";%>"></span>
-                                <%= Number(note.moyenne).toFixed(2) %> étoiles
-                            </p>
+                            <% include note.ejs%>
                         </div>
                     </div>
+
+                        <form id="rate-recette-form" action="/api/recette/add_rating/<%= recette.id_recette %>" method="post">
+                            <table class="pull-right" style="margin-bottom: 20px">
+                                <tr>
+                                    <td>
+                                        <label for="rate-recette">Notez la recette!&nbsp; </label>
+                                    </td>
+                                    <td>
+                                        <input id="rate-recette" name="rate" class="rating-loading">
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-primary" type="submit"> Valider</button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </form>
 
                 </div>
 
@@ -90,16 +101,16 @@
                     <div class="well">
 
                         <form id="form-content" action="/api/recette/add_comment/<%= recette.id_recette %>" method="post">
-                            <label for="textarea"> Laisser un commentaire : </label>
-                            <textarea id="textarea" name="comment" class="form-control" rows="3"></textarea>
-                            <p class="help-block">Vous pouvez agrandir la fenêtre</p>
+                            <label for="comment"> Laisser un commentaire : </label>
                             <div class="input-group">
-                                <input placeholder="Pseudonyme" id="pseudonyme" name="pseudonyme" class="form-control"/>
-                                <span class="input-group-btn">
-                                    <button id="submit-comment" class="btn btn-primary" type="submit"> Envoyer</button>
-                                </span>
-                            </div>
+                                <textarea id="comment" name="comment" class="form-control" rows="3"></textarea>
+                                <span class="input-group-addon btn btn-primary" id="send-comment"> Envoyer
 
+                                </span>
+
+
+                            </div>
+                            <p class="help-block">Vous pouvez agrandir la fenêtre</p>
                         </form>
 
                         <% include comment_recette.ejs %>
@@ -113,6 +124,10 @@
         <!-- /.container -->
 
         <% include footer.ejs%>
+
+        <script src="/js/star-rating.min.js"></script>
+        <script src="/js/locales/fr.js"></script>
+        <script src="/js/recette-star.js"></script>
 
     </body>
 </html>

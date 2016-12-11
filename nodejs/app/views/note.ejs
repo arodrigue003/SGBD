@@ -1,0 +1,6 @@
+<p id="rate-view">
+    <span class="glyphicon <%= (note.moyenne >= 1) ? "glyphicon-star" : "glyphicon-star-empty";%>"></span>
+    <span class="glyphicon <%= (note.moyenne >= 2) ? "glyphicon-star" : "glyphicon-star-empty";%>"></span>
+    <span class="glyphicon <%= (note.moyenne >= 3) ? "glyphicon-star" : "glyphicon-star-empty";%>"></span>
+    <%= Number(note.moyenne).toFixed(2) %> étoiles
+</p>

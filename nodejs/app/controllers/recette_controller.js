@@ -73,6 +73,17 @@ module.exports = {
 
     },
 
+    add_rating: function (req, res) {
+        var rate = req.body.rate;
+        var id_recette = req.params.id || 0;
+        recette_model.add_rating(req.decoded.id, rate, id_recette, function (err, data) {
+            if (err) {
+                return res.status(500).json(err);
+            }
+            res.render('note', data);
+        });
+    },
+
     create: function (req, res) {
         res.status(201).end('CREATE');
     },
