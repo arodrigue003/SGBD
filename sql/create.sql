@@ -431,3 +431,35 @@ CREATE OR REPLACE VIEW CATEGORIES_RECETTE AS
       CATEGORIE.nom_categorie
    FROM ((recette NATURAL JOIN appartenir_categorie) NATURAL JOIN CATEGORIE)
    ORDER BY recette.id_recette, CATEGORIE.nom_categorie;
+
+--vues pour les statistiques
+CREATE OR REPLACE VIEW MOYENNE_NOTES_RECETTES_INGREDIENTS AS
+SELECT id_ingredient, AVG(note.valeur) as moyenne_recette
+    FROM note
+    NATURAL JOIN recette
+    NATURAL JOIN composition_recette
+    GROUP BY id_ingredient;
+
+CREATE OR REPLACE VIEW MOYENNE_CALORIES_INGREDIENTS AS
+   SELECT id_ingredient,
+         (quantite_nutrition / (SELECT AVG(quantite_nutrition) as moyenne_ensemble_calories
+                              FROM posseder_carac
+                              INNER JOIN carac_nutritionnelle ON posseder_carac.id_carac_nutritionnelle = carac_nutritionnelle.id_carac_nutritionnelle
+                              WHERE nom_caracteristique = 'énergie')
+         ) as ratio_calories
+   FROM posseder_carac
+   INNER JOIN carac_nutritionnelle ON posseder_carac.id_carac_nutritionnelle = carac_nutritionnelle.id_carac_nutritionnelle
+   WHERE nom_caracteristique = 'énergie';
+
+CREATE OR REPLACE VIEW SOMME_COMMENTAIRES_INGREDIENTS AS
+   SELECT id_ingredient, SUM(coeff_commentaire) as somme_commentaires
+   FROM (SELECT id_recette, CASE
+      WHEN COUNT(id_commentaire) <= 3 THEN 1
+      WHEN COUNT(id_commentaire) >= 4 AND COUNT(id_commentaire) <= 10 THEN 2
+      WHEN COUNT(id_commentaire) > 10 THEN 3
+      END as coeff_commentaire
+      FROM commentaire
+      GROUP BY commentaire.id_recette) as coeff_comm_tab
+   INNER JOIN recette ON coeff_comm_tab.id_recette = recette.id_recette
+   INNER JOIN composition_recette ON coeff_comm_tab.id_recette = composition_recette.id_recette
+   GROUP BY id_ingredient;
