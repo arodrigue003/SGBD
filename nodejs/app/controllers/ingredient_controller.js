@@ -7,6 +7,7 @@ module.exports = {
     ranking_view: function (req, res) {
         ingredient_model.get_ranking(
             null,
+            req.app.settings.config.config,
             function(err, ingredient_ranking) {
                 if (ingredient_ranking == undefined) {
                     return res.status(404).render('404', {
@@ -43,7 +44,7 @@ module.exports = {
             function (parallel_done) {
                 ingredient_model.get_nom_by_id(id, req.app.settings.config.config, function (err, result) {
                     if (err) {
-                        return res.status(500).json(err);
+                        return parallel_done(err);
                     }
 
                     ingredient.nom = result.nom_ingredient;
@@ -53,7 +54,7 @@ module.exports = {
             function (parallel_done) {
                 ingredient_model.get_ranking(id, req.app.settings.config.config, function (err, result) {
                     if (err) {
-                        return res.status(500).json(err);
+                        return parallel_done(err);
                     }
 
                     ingredient.ranking = result.score_classement;
@@ -63,7 +64,7 @@ module.exports = {
             function (parallel_done) {
                 ingredient_model.get_recettes_used_in(id, req.app.settings.config.config, function (err, result) {
                     if (err) {
-                        return res.status(500).json(err);
+                        return parallel_done(err);
                     }
 
                     recettes = result;
@@ -73,7 +74,7 @@ module.exports = {
             function (parallel_done) {
                 ingredient_model.get_caracs_nutrition(id, req.app.settings.config.config, function (err, result) {
                     if (err) {
-                        return res.status(500).json(err);
+                        return parallel_done(err);
                     }
 
                     caracs_nutrition = result;

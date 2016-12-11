@@ -32,7 +32,7 @@ module.exports = {
             function (parallel_done) {
                 categorie_model.get_noms(req.app.settings.config.config, function (err, result) {
                     if (err) {
-                        return res.status(500).json(err);
+                        return parallel_done(err);
                     }
 
                     categories = result;
@@ -42,7 +42,7 @@ module.exports = {
             function (parallel_done) {
                 ingredient_model.get_noms(function (err, result) {
                     if (err) {
-                        return res.status(500).json(err);
+                        return parallel_done(err);
                     }
 
                     ingredients = result;

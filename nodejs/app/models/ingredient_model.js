@@ -6,8 +6,10 @@ module.exports = {
 
         pool.connect(function(err, client, done) {
             if (err) {
-                return console.error('error fetching client from pool', err);
+                console.error('error fetching client from pool', err);
+                return cb(err);
             }
+
             var query;
             if (id) {
                 client.query("SELECT \
@@ -24,7 +26,7 @@ module.exports = {
 
                             if(err) {
                                 console.error('error running ranking query', err);
-                                cb(err);
+                                return cb(err);
                             }
                             console.log(result.rows[0]);
                             cb(null, result.rows[0]);
@@ -47,7 +49,7 @@ module.exports = {
 
                             if(err1) {
                                 console.error('error running ranking query', err);
-                                cb(err1);
+                                return cb(err1);
                             }
                             console.log(result.rows);
                             cb(null, result.rows);
