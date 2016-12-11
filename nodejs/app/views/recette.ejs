@@ -1,21 +1,22 @@
 <!DOCTYPE html>
 <html lang="fr">
-    <% title = recette.nom_recette %>
-    <% include header.ejs %>
-    <body>
-        <% include navigation.ejs %>
+<% title = recette.nom_recette %>
+<% include header.ejs %>
+<body>
+<% include navigation.ejs %>
 
-        <!-- Page Content -->
-        <div class="container">
+<!-- Page Content -->
+<div class="container">
 
-            <div class="row">
+    <div class="row">
 
-                <div class="col-md-9">
+        <div class="col-md-9">
 
-                    <div class="thumbnail">
-                        <img class="img-responsive img-thumbnail" src="/images/<%= recette.id_recette%>.jpg" alt="">
+            <div class="thumbnail">
+                <!-- recette -->
+                        <img class="img-responsive img-thumbnail" src="/images/<%= recette.id_recette %>.jpg" alt="">
                         <div class="caption-full">
-                            <p class="pull-right"> Crée le <%= recette.date_creation_recette%></p>
+                            <p class="pull-right"> Crée le <%= recette.date_creation_recette %></p>
                             <h4><a href="#"><%= recette.nom_recette %></a></h4>
                             <div class="row infos-recette">
                                 <div class="col-xs-3 col-xs-push-4 col-sm-2 col-sm-push-7">
@@ -38,96 +39,113 @@
                             <p><%= recette.texte_preparation %></p>
                         </div>
 
-                        <div class="ratings">
-                            <p class="pull-right"><%= comments.length %> commentaires</p>
-                            <% include note.ejs%>
-                        </div>
-                    </div>
-
-                        <form id="rate-recette-form" action="/api/recette/add_rating/<%= recette.id_recette %>" method="post">
-                            <table class="pull-right" style="margin-bottom: 20px">
-                                <tr>
-                                    <td>
-                                        <label for="rate-recette">Notez la recette!&nbsp; </label>
-                                    </td>
-                                    <td>
-                                        <input id="rate-recette" name="rate" class="rating-loading">
-                                    </td>
-                                    <td>
-                                        <button class="btn btn-primary" type="submit"> Valider</button>
-                                    </td>
-                                </tr>
-                            </table>
-                        </form>
-
+                        <!-- Notes -->
+                <div class="ratings">
+                    <p class="pull-right"><%= comments.length %> commentaires</p>
+                    <% include note.ejs %>
                 </div>
-
-                <div class="col-md-3 aside-recette">
-                    <table class="table table-bordered table-striped table-condensed table-responsive">
-                        <caption>
-                            <h3> Liste des ingrédients</h3>
-                        </caption>
-                        <thead>
-                            <tr>
-                                <th>Nom ingrédient</th>
-                                <th>Quantité</th>
-                                <th>Unité</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% for (var i in ingredients) { %>
-                            <tr>
-                                <td><a href="/ingredient/<%= ingredients[i].id_ingredient%>"> <%= ingredients[i].ingredient %> </a></td>
-                                <td><%= (ingredients[i].quantite != 0) ? ingredients[i].quantite : ""; %></td>
-                                <td><%= ingredients[i].unite %></td>
-                            </tr>
-                            <% } %>
-                        </tbody>
-                    </table>
-
-                    <h3> Catégories</h3>
-                    <div class="list-group">
-                        <% for (var j in categories) { %>
-                        <a href="/categorie/<%= categories[j].id_categorie %>" class="list-group-item"><%= categories[j].nom_categorie%></a>
-                        <% } %>
-                    </div>
-                </div>
-
             </div>
 
-            <div class="row">
+            <!-- Notation -->
+            <form id="rate-recette-form" action="/api/recette/add_rating/<%= recette.id_recette %>" method="post">
+                <table class="pull-right" style="margin-bottom: 20px">
+                    <tr>
+                        <td>
+                            <label for="rate-recette">Notez la recette!&nbsp; </label>
+                        </td>
+                        <td>
+                            <input id="rate-recette" name="rate" class="rating-loading">
+                        </td>
+                        <td>
+                            <button class="btn btn-primary" type="submit"> Valider</button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
 
-                <div class="col-md-9">
-                    <div class="well">
+        </div>
 
-                        <form id="form-content" action="/api/recette/add_comment/<%= recette.id_recette %>" method="post">
-                            <label for="comment"> Laisser un commentaire : </label>
-                            <div class="input-group">
-                                <textarea id="comment" name="comment" class="form-control" rows="3"></textarea>
-                                <span class="input-group-addon btn btn-primary" id="send-comment"> Envoyer
+        <div class="col-md-3 aside-recette">
+
+            <!-- Ingredients -->
+            <table class="table table-bordered table-striped table-condensed table-responsive">
+                <caption>
+                    <h3> Liste des ingrédients</h3>
+                </caption>
+                <thead>
+                <tr>
+                    <th>Nom ingrédient</th>
+                    <th>Quantité</th>
+                    <th>Unité</th>
+                </tr>
+                </thead>
+                <tbody>
+                <% for (var i in ingredients) { %>
+                <tr>
+                    <td><a href="/ingredient/<%= ingredients[i].id_ingredient %>"> <%= ingredients[i].ingredient %> </a>
+                    </td>
+                    <td><%= (ingredients[i].quantite != 0) ? ingredients[i].quantite : ""; %></td>
+                    <td><%= ingredients[i].unite %></td>
+                </tr>
+                <% } %>
+                </tbody>
+            </table>
+
+            <!-- Categories -->
+            <h3> Catégories</h3>
+            <div class="list-group">
+                <% for (var j in categories) { %>
+                <a href="/categorie/<%= categories[j].id_categorie %>"
+                   class="list-group-item"><%= categories[j].nom_categorie %></a>
+                <% } %>
+            </div>
+
+            <!-- Menus -->
+            <h3> Menus </h3>
+            <div class="list-group">
+                <% for (var k in menu) { %>
+                <a href="/menu/<%= menu[k].id_menu %>"
+                   class="list-group-item"><%= menu[k].nom_menu %></a>
+                <% } %>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-9">
+            <div class="well">
+
+                <form id="form-content" action="/api/recette/add_comment/<%= recette.id_recette %>" method="post">
+                    <label for="comment"> Laisser un commentaire : </label>
+                    <div class="input-group">
+                        <textarea id="comment" name="comment" class="form-control" rows="3"></textarea>
+                        <span class="input-group-addon btn btn-primary" id="send-comment"> Envoyer
 
                                 </span>
 
 
-                            </div>
-                            <p class="help-block">Vous pouvez agrandir la fenêtre</p>
-                        </form>
-
-                        <% include comment_recette.ejs %>
-
                     </div>
-                </div>
+                    <p class="help-block">Vous pouvez agrandir la fenêtre</p>
+                </form>
+
+                <% include comment_recette.ejs %>
 
             </div>
-
         </div>
-        <!-- /.container -->
 
-        <% include footer.ejs%>
+    </div>
 
-        <script src="/js/star-rating.min.js"></script>
-        <script src="/js/locales/fr.js"></script>
-        <script src="/js/recette-star.js"></script>
+</div>
+<!-- /.container -->
 
-    </body>
+<% include footer.ejs %>
+
+<script src="/js/star-rating.min.js"></script>
+<script src="/js/locales/fr.js"></script>
+<script src="/js/recette-star.js"></script>
+
+</body>
 </html>

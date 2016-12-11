@@ -41,6 +41,22 @@ module.exports = {
                     if (err) {
                         return parallel_done(err);
                     }
+                    client.query('SELECT * FROM menu NATURAL JOIN appartenir_menu WHERE id_recette = $1::int;', [id], function (err2, result) {
+                        done();
+
+                        if (err2) {
+                            return parallel_done(err2);
+                        }
+                        return_data.menu = result.rows;
+                        parallel_done();
+                    });
+                });
+            },
+            function (parallel_done) {
+                pool.connect(function (err, client, done) {
+                    if (err) {
+                        return parallel_done(err);
+                    }
                     client.query('SELECT AVG(valeur) AS moyenne FROM note WHERE id_recette = $1::int;', [id], function (err2, result) {
                         done();
 
