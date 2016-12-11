@@ -51,7 +51,28 @@ function create_notification(icon, type, message) {
     });
 }
 
-$("#form-content").on("submit", function (event) {
+// comment form
+$("#send-comment").on("click", function (event) {
+    event.preventDefault();
+    var object = $(this).closest("form");
+
+    $.ajax({
+        url: object.attr('action'),
+        dataType: 'html',
+        data: object.serialize(),
+        type: 'post',
+        success: function (res, status) {
+            $(object).after(res);
+            create_notification('glyphicon glyphicon-ok', 'success', 'Note prise en compte avec succès');
+        },
+        error: function (resultat, statut, erreur) {
+            create_notification('glyphicon glyphicon-warning-sign', 'danger', 'Impossible de rajouter la note')
+        }
+    });
+});
+
+// note form
+$("#rate-recette-form").on("submit", function (event) {
     event.preventDefault();
     var object = this;
     $.ajax({
@@ -60,7 +81,7 @@ $("#form-content").on("submit", function (event) {
         data: $(this).serialize(),
         type: 'post',
         success: function (res, status) {
-            $(object).after(res);
+            $("#rate-view").replaceWith(res);
             create_notification('glyphicon glyphicon-ok', 'success', 'Commentaire rajouté avec succès');
         },
         error: function (resultat, statut, erreur) {
@@ -68,16 +89,20 @@ $("#form-content").on("submit", function (event) {
 
         }
     });
-
 });
 
-$("#disconnect").click(function (e) {
-    e.preventDefault();
-    e.stopPropagation();
-    window.localStorage.removeItem('token');
-    load_token();
-    set_modal_button();
-});
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /* #####################################################################
@@ -211,4 +236,12 @@ $(function () {
             $iconTag.removeClass($iconClass + " " + $divClass);
         }, $msgShowTime);
     }
+});
+
+$("#disconnect").click(function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    window.localStorage.removeItem('token');
+    load_token();
+    set_modal_button();
 });

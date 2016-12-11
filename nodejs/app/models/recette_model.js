@@ -163,6 +163,47 @@ module.exports = {
                 cb(err);
             }
         });
+    },
+
+    add_rating: function (id_internaute, rate, id_recette, cb) {
+        fiber(function () {
+            try {
+
+                var pool = new pg.Pool(config);
+                pool.on('error', function (err, client) { console.error('idle client error', err.message, err.stack)});
+
+                //check if user already already noted the recette
+                var connect = await(pool.connect(defers('client', 'done')));
+                var result = await(connect.client.query('SELECT * FROM note WHERE id_recette = $1::int AND id_internaute = $2::int;', [id_recette, id_internaute],defer()));
+                connect.done();
+                if (result.rows[0] == undefined) {
+                    //add
+                    console.log('add-rate');
+                    connect = await(pool.connect(defers('client', 'done')));
+                    await(connect.client.query('INSERT INTO note (id_recette, id_internaute, valeur) VALUES($1::int, $2::int, $3::int);', [id_recette, id_internaute, rate],defer()));
+                    connect.done();
+                } else {
+                    //update
+                    console.log('edit-rate');
+                    connect = await(pool.connect(defers('client', 'done')));
+                    await(connect.client.query('UPDATE note SET valeur=$1::int WHERE id_recette=$2::int AND id_internaute=$3::int;', [rate, id_recette, id_internaute],defer()));
+                    connect.done();
+
+                }
+
+                //return new rate of the recette
+                connect = await(pool.connect(defers('client', 'done')));
+                result = await(connect.client.query('SELECT AVG(valeur) AS moyenne FROM note WHERE id_recette = $1::int;', [id_recette],defer()));
+                connect.done();
+
+                pool.end();
+                return cb(null, {success: true, note:{moyenne : result.rows[0].moyenne}});
+
+
+            } catch (err) {
+                cb(err);
+            }
+        });
     }
 
 };
