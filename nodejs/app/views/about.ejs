@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="fr">
+<% title = "A propos" %>
+<% include header.ejs %>
+<body>
+<% include navigation.ejs %>
+
+    <!-- Page Content -->
+    <div class="container">
+
+        <!-- Page Heading/Breadcrumbs -->
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">A propos
+                </h1>
+                <ol class="breadcrumb">
+                    <li><a href="/">Acceuil</a>
+                    </li>
+                    <li class="active">about</li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.row -->
+
+        <div class="row">
+
+            <div class="col-lg-12">
+                <div class="jumbotron">
+                    <p class="text-justify">
+                        Ce site est le résultat du projet de base de données réalise pendant notre deuxième année lors de notre enseignement à l'ENSEIRB-MATMECA.</p> <hr/>
+                    <p class="text-justify">
+                        L'objectif du projet est la création d'une base de données collaborative permettant la création, l'édition et la modification de recettes de cuisine par des internautes, dont voici un résumé des spécifications. <br/>
+
+                        Une recette possède un nom, une date de création, pour combien de personnes est-elle destinée, un temps de préparation et de cuisson, ainsi que les étapes de préparation. Elles peuvent être assemblées en un menu et appartenir à une ou plusieurs catégories (ex : apéritif, entrée, plat, dessert, ...). Comme les recettes sont collaboratives, n'importe qui peut modifier le détail de la préparation, mais il est nécessaire d'en garder un historique. À chaque modification, une date de début et de fin de la validité sont associées.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+    <!-- /.container -->
+
+<% include footer.ejs%>
+
+</body>
+</html>

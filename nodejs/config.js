@@ -54,12 +54,12 @@ app.use(function (err, req, res, next) {
     res.locals.error = req.app.get('env') === 'development' ? err : {};
 
     if (err.status == 404) {
-        res.status(404).render('404');
+        return res.status(404).render('404');
     }
 
     // render the error page
     res.status(err.status || 500);
-    res.render('error');
+    return res.render('error');
 });
 
 module.exports = app;
