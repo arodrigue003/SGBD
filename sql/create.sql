@@ -463,3 +463,25 @@ CREATE OR REPLACE VIEW SOMME_COMMENTAIRES_INGREDIENTS AS
    INNER JOIN recette ON coeff_comm_tab.id_recette = recette.id_recette
    INNER JOIN composition_recette ON coeff_comm_tab.id_recette = composition_recette.id_recette
    GROUP BY id_ingredient;
+
+CREATE OR REPLACE VIEW INFO_RECETTE AS
+  SELECT
+    id_recette,
+    nom_recette,
+    nombre_personnes,
+    note_moyenne,
+    id_ingredient,
+    COUNT(id_commentaire) AS nombre_commentaires
+  FROM
+    (SELECT
+       recette.id_recette,
+       recette.nom_recette,
+       recette.nombre_personnes,
+       commentaire.id_commentaire,
+       AVG(note.valeur) AS note_moyenne
+     FROM recette
+       INNER JOIN note ON recette.id_recette = note.id_recette
+       INNER JOIN commentaire ON recette.id_recette = commentaire.id_recette
+     GROUP BY recette.id_recette, recette.nom_recette, recette.nombre_personnes, commentaire.id_commentaire) AS T
+    NATURAL JOIN ingredients_recette
+  GROUP BY T.id_recette, T.nom_recette, T.nombre_personnes, T.note_moyenne, id_ingredient;

@@ -13,6 +13,37 @@ var await = sync.await;
 var defer = sync.defer;
 var defers = sync.defers;
 
+function escape(unsafe) {
+    return unsafe
+        .replace(/[\0\x08\x09\x1a\n\r"'\\\%]/g, function (char) {
+            switch (char) {
+                case "\0":
+                    return "\\0";
+                case "\x08":
+                    return "\\b";
+                case "\x09":
+                    return "\\t";
+                case "\x1a":
+                    return "\\z";
+                case "\n":
+                    return "\\n";
+                case "\r":
+                    return "\\r";
+                case "\"":
+                case "'":
+                case "\\":
+                case "%":
+                    return "\\"+char; // prepends a backslash to backslash, percent,
+                                      // and double/single quotes
+            }
+        })
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
 module.exports = {
     get_from_id: function (id, cb) {
         var pool = new pg.Pool(config);
@@ -227,6 +258,90 @@ module.exports = {
                 return cb(null, {success: true, note: {moyenne: result.rows[0].moyenne}});
 
 
+            } catch (err) {
+                cb(err);
+            }
+        });
+    },
+
+    search: function (name, category, personCountMin, ratingMin, ingredients, cb) {
+        fiber(function () {
+            try {
+                if (ingredients == undefined) {
+                    ingredients = [];
+                }
+
+                var pool = new pg.Pool(config);
+                pool.on('error', function (err, client) { console.error('idle client error', err.message, err.stack) });
+
+                var queryParams = [];
+                var params = [];
+
+                if (name) {
+                    queryParams.push('nom_recette LIKE \'%' + escape(name) + '%\'');
+                }
+
+                if (personCountMin) {
+                    queryParams.push('nombre_personnes >= ' + personCountMin);
+                }
+
+                if (ratingMin) {
+                    queryParams.push('note_moyenne >= ' + ratingMin);
+                }
+
+                queryParams = queryParams.join(' AND ');
+
+                var ingredients_list = ingredients.join(', ');
+                if (ingredients_list != '') {
+                    ingredients_list = 'id_ingredient IN (' + ingredients_list + ')';
+                }
+
+                var whereClause = '';
+                if (queryParams == '' && ingredients_list != '') {
+                    whereClause = 'WHERE ' + ingredients_list;
+                } else if (queryParams != '' && ingredients_list == '') {
+                    whereClause = 'WHERE ' + queryParams;
+                } else if (queryParams != '' && ingredients_list != '') {
+                    whereClause = 'WHERE ' + queryParams + ' AND ' + ingredients_list;
+                }
+
+                var query = 'SELECT DISTINCT id_recette, nom_recette, nombre_personnes, \
+                    note_moyenne, nombre_commentaires FROM info_recette ' + whereClause +
+                    ' ORDER BY note_moyenne DESC, nombre_personnes DESC;';
+
+                var connect = await(pool.connect(defers('client', 'done')));
+                var recettes = await(connect.client.query(query, params, defer())).rows;
+
+                if (recettes.length == 0) {
+                    return cb(null, recettes);
+                }
+
+                var recettes_id_list = recettes.map(function (recette) {
+                    return recette.id_recette;
+                }).join(', ');
+
+                var categories = await(connect.client.query('SELECT * FROM categories_recette WHERE id_recette IN (' +
+                    recettes_id_list + ')', [], defer())).rows;
+
+                connect.done();
+                pool.end();
+
+                recettes.map(function (recette) {
+                    recette.categories = [];
+                    return recette;
+                });
+
+                categories.forEach(function (category) {
+                    recettes = recettes.map(function (recette) {
+                        if (recette.id_recette == category.id_recette) {
+                            recette.categories.push(category.nom_categorie);
+                            return recette;
+                        }
+                        return recette;
+                    });
+                });
+
+                cb(null, recettes);
             } catch (err) {
                 cb(err);
             }
