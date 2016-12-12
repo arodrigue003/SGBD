@@ -5,6 +5,34 @@
 <body>
 <% include navigation.ejs %>
 
+<!-- Edit modal -->
+<div aria-hidden="true" aria-labelledby="myModalLabel" class="modal fade" id="edit-modal" role="dialog"
+     style="display: none;" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form role="form">
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title">Edition d'une recette</h4>
+                </div>
+
+                <div id="edit-content">
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" type="submit">Save changes</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+
 <!-- Page Content -->
 <div class="container">
 
@@ -14,32 +42,35 @@
 
             <div class="thumbnail">
                 <!-- recette -->
-                        <img class="img-responsive img-thumbnail" src="/images/<%= recette.id_recette %>.jpg" alt="">
-                        <div class="caption-full">
-                            <p class="pull-right"> Crée le <%= recette.date_creation_recette %></p>
-                            <h4><a href="#"><%= recette.nom_recette %></a></h4>
-                            <div class="row infos-recette">
-                                <div class="col-xs-3 col-xs-push-4 col-sm-2 col-sm-push-7">
-                                    <p class="pull-right">
-                                        <span class="glyphicon glyphicon-time"></span> <%= recette.temps_preparation %>
-                                    </p>
-                                </div>
-                                <div class="col-xs-3 col-xs-push-4 col-sm-2 col-sm-push-7">
-                                    <p class="pull-right">
-                                        <span class="glyphicon glyphicon-fire"></span> <%= recette.temps_cuisson %>
-                                    </p>
-                                </div>
-                                <div class="col-xs-2 col-xs-push-4 col-sm-1 col-sm-push-7">
-                                    <p class="pull-right">
-                                        <span class="glyphicon glyphicon-user"></span> <%= recette.nombre_personnes %>
-                                    </p>
-                                </div>
-                            </div>
-
-                            <p><%= recette.texte_preparation %></p>
+                <img class="img-responsive img-thumbnail" src="/images/<%= recette.id_recette %>.jpg" alt="">
+                <div class="caption-full">
+                    <p class="pull-right"> Crée le <%= recette.date_creation_recette %></p>
+                    <h4><a href="#"><%= recette.nom_recette %></a></h4>
+                    <div class="row infos-recette">
+                        <div class="col-xs-3 col-xs-push-4 col-sm-2 col-sm-push-7">
+                            <p class="pull-right">
+                                <span class="glyphicon glyphicon-time"></span> <span
+                                        id="temps-preparation"><%= recette.temps_preparation %></span>
+                            </p>
                         </div>
+                        <div class="col-xs-3 col-xs-push-4 col-sm-2 col-sm-push-7">
+                            <p class="pull-right">
+                                <span class="glyphicon glyphicon-fire"></span> <span
+                                        id="temps-cuisson"><%= recette.temps_cuisson %></span>
+                            </p>
+                        </div>
+                        <div class="col-xs-2 col-xs-push-4 col-sm-1 col-sm-push-7">
+                            <p class="pull-right">
+                                <span class="glyphicon glyphicon-user"></span> <span
+                                        id="nombre-personne"> <%= recette.nombre_personnes %></span>
+                            </p>
+                        </div>
+                    </div>
 
-                        <!-- Notes -->
+                    <p><%= recette.texte_preparation %></p>
+                </div>
+
+                <!-- Notes -->
                 <div class="ratings">
                     <p class="pull-right"><%= comments.length %> commentaires</p>
                     <% include note.ejs %>
@@ -48,6 +79,9 @@
 
             <!-- Notation -->
             <form id="rate-recette-form" action="/api/recette/add_rating/<%= recette.id_recette %>" method="post">
+                <a href="#" id="edit-recette" data-target="#edit-modal" data-id="<%= recette.id_recette %>">Modifier la
+                    recette</a>
+
                 <table class="pull-right" style="margin-bottom: 20px">
                     <tr>
                         <td>
@@ -93,9 +127,9 @@
 
             <!-- Categories -->
             <h3> Catégories</h3>
-            <div class="list-group">
+            <div class="list-group" id="categorie-list">
                 <% for (var j in categories) { %>
-                <a href="/categorie/<%= categories[j].id_categorie %>"
+                <a data-cat="<%= categories[j].id_categorie%>" href="/categorie/<%= categories[j].id_categorie %>"
                    class="list-group-item"><%= categories[j].nom_categorie %></a>
                 <% } %>
             </div>
@@ -146,6 +180,7 @@
 <script src="/js/star-rating.min.js"></script>
 <script src="/js/locales/fr.js"></script>
 <script src="/js/recette-star.js"></script>
+<script src="/js/tinymce/tinymce.min.js"></script>
 
 </body>
 </html>

@@ -59,6 +59,41 @@ module.exports = {
         });
     },
 
+    edit_recette_view: function (req, res) {
+        var categories, ingredients;
+
+        async.parallel([
+            function (parallel_done) {
+                categorie_model.get_noms(req.app.settings.config.config, function (err, result) {
+                    if (err) {
+                        return parallel_done(err);
+                    }
+
+                    categories = result;
+                    parallel_done();
+                });
+            },
+            function (parallel_done) {
+                ingredient_model.get_noms(req.app.settings.config.config, function (err, result) {
+                    if (err) {
+                        return parallel_done(err);
+                    }
+
+                    ingredients = result;
+                    parallel_done();
+                });
+            }
+        ], function (err) {
+            if (err) {
+                return res.status(500).json(err);
+            }
+            res.render('edit_recette', {
+                categories: categories,
+                ingredients: ingredients
+            });
+        });
+    },
+
     /** OPERATIONS **/
     add_comment: function (req, res) {
         var text = req.body.comment;
