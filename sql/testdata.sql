@@ -26,66 +26,66 @@ DELETE FROM RECETTE;
 
 INSERT INTO RECETTE (ID_RECETTE, NOM_RECETTE, DATE_CREATION_RECETTE, TEMPS_PREPARATION, TEMPS_CUISSON, NOMBRE_PERSONNES, TEXTE_PREPARATION)
 VALUES
-  (0, 'Gigot d''agneau aux épices', '2015-11-20', '0:25:00', '0:45:00', 8, 'ÉTAPE 1
-		Pelez l''ail et coupez-le en fines lamelles.
-		ÉTAPE 2
-		Faites des entailles dans la chair du gigot pour y glisser les lamelles d''ail.
-		ÉTAPE 3
-		Pilez légèrement les clous de girofle et la badiane.
-		ÉTAPE 4
-		Hachez les piments, mélangez-les avec la badiane et les clous de girofle, ainsi que la cannelle émiettée, le piment doux et le miel.
-		ÉTAPE 5
-		Salez et poivrez légèrement.
-		ÉTAPE 6
-		Tartinez le gigot de cette préparation et laissez mariner 12 heures en le retournant plusieurs fois pour ne pas qu''il sèche.
-		ÉTAPE 7
-		Préchauffez le four th.8 (240°C).
-		ÉTAPE 8
-		Déposez le gigot dans un grand pat à four, côté bombé vers le bas. Enfournez pour 20 min, retournez-le et prolongez la cuisson de 25 min th.7 (210°C) pour obtenir une viande rosée.
-		ÉTAPE 9
-		À mi-cuisson, ajoutez quelques cuillerées d''eau chaude et arrosez fréquemment du jus formé pour rendre la viande bien tendre.
-		ÉTAPE 10
-		Laissez reposer 10 min le gigot à four éteint, déglacez le plat de quelques cuillerées à soupe d''eau bouillante en grattant les sucs de cuisson.
-		ÉTAPE 11
-		Découpez-le gigot.
-		ÉTAPE 12
-		Servez votre gigot d''agneau aux épices nappé de sa sauce.'),
-  (1, 'Foie gras au confit d''oignons', '2014-12-20', '0:15:00', '0:50:00', 4, 'ÉTAPE 1
-		Préparez le confit d''oignons :
-		ÉTAPE 2
-		Pelez et coupez en tranches les oignons en prenant bien soin de séparer séparer les anneaux.
-		ÉTAPE 3
-		Dans une casserole à fond épais, faites fondre le beurre et ajoutez les oignons et le sucre. Remuez, couvrez et laissez cuire pendant 30 minutes à feu doux tout en continuant de remuer de temps en temps.
-		ÉTAPE 4
-		Lorsque les oignons sont bien tendres, ajoutez le vinaigre balsamique et laissez mijoter 20 minutes sans couvrir jusqu’à ce que le vinaigre soit entièrement absorbé et les oignons bien confits. Salez et poivrez.
-		ÉTAPE 5
-		Retirez du feu et versez le confit dans un pot à confiture. Laissez refroidir et conservez au frais.
-		ÉTAPE 6
-		Préparez le foie gras de canard et dressez
-		ÉTAPE 7
-		Coupez le foie gras en cubes.
-		ÉTAPE 8
-		Disposez un peu de confit d''oignons dans des cuillères apéritives et déposez par-dessus un cube de foie gras.
-		ÉTAPE 9
-		Servez bien frais.'),
-  (2, 'petits choux fourrés aux crevettes, saumon et avocat', '2012-08-05', '0:20:00', '0:25:00', 6, 'ÉTAPE 1
-		Préchauffez le four th.6 (180°C).
-		ÉTAPE 2
-		Dans une casserole, faites fondre le beurre coupé en morceaux avec le sel.
-		ÉTAPE 3
-		Retirez du feu et ajoutez la farine en une fois. Mélangez avec une cuillère jusqu’à ce que la pâte se décolle des parois.
-		ÉTAPE 4
-		Ajoutez les œufs l’un après l’autre, en mélangeant bien, puis déposez des petits tas de pâte avec une cuillère ou une poche à douille sur une plaque de four recouverte de papier de cuisson.
-		ÉTAPE 5
-		Répétez jusqu’à épuisement de la pâte et enfournez pour 20 min, puis laissez refroidir.
-		ÉTAPE 6
-		Pendant ce temps, émincez le saumon en petits dés. Retirez la peau de l’avocat, dénoyautez-le et émincez-le en dés. Coupez les crevettes en morceaux.
-		ÉTAPE 7
-		Dans un saladier, mélangez le fromage fouetté avec la mayonnaise. Salez, poivrez.
-		ÉTAPE 8
-		Coupez le chapeau des choux. Fourrez avec une cuillère de crème, quelques dés de saumon, d’avocat et de crevettes, puis replacez le chapeau.
-		ÉTAPE 9
-		Servez vos petits choux fourrés aux crevettes, saumon et avocat !');
+  (0, 'Gigot d''agneau aux épices', '2015-11-20', '0:25:00', '0:45:00', 8, '<p><strong>&Eacute;TAPE 1</strong></p>
+      <p>Pelez l''ail et coupez-le en fines lamelles.</p>
+      <p><strong>&Eacute;TAPE 2</strong></p>
+      <p>Faites des entailles dans la chair du gigot pour y glisser les lamelles d''ail.</p>
+      <p><strong>&Eacute;TAPE 3</strong></p>
+      <p>Pilez l&eacute;g&egrave;rement les clous de girofle et la badiane.</p>
+      <p><strong>&Eacute;TAPE 4</strong></p>
+      <p>Hachez les piments, m&eacute;langez-les avec la badiane et les clous de girofle, ainsi que la cannelle &eacute;miett&eacute;e, le piment doux et le miel.</p>
+      <p><strong>&Eacute;TAPE 5</strong></p>
+      <p>Salez et poivrez l&eacute;g&egrave;rement.</p>
+      <p><strong>&Eacute;TAPE 6</strong></p>
+      <p>Tartinez le gigot de cette pr&eacute;paration et laissez mariner 12 heures en le retournant plusieurs fois pour ne pas qu''il s&egrave;che.</p>
+      <p><strong>&Eacute;TAPE 7</strong></p>
+      <p>Pr&eacute;chauffez le four th.8 (240&deg;C).</p>
+      <p><strong>&Eacute;TAPE 8</strong></p>
+      <p>D&eacute;posez le gigot dans un grand pat &agrave; four, c&ocirc;t&eacute; bomb&eacute; vers le bas. Enfournez pour 20 min, retournez-le et prolongez la cuisson de 25 min th.7 (210&deg;C) pour obtenir une viande ros&eacute;e.</p>
+      <p><strong>&Eacute;TAPE 9</strong></p>
+      <p>&Agrave; mi-cuisson, ajoutez quelques cuiller&eacute;es d''eau chaude et arrosez fr&eacute;quemment du jus form&eacute; pour rendre la viande bien tendre.</p>
+      <p><strong>&Eacute;TAPE 10</strong></p>
+      <p>Laissez reposer 10 min le gigot &agrave; four &eacute;teint, d&eacute;glacez le plat de quelques cuiller&eacute;es &agrave; soupe d''eau bouillante en grattant les sucs de cuisson.</p>
+      <p><strong>&Eacute;TAPE 11</strong></p>
+      <p>D&eacute;coupez-le gigot.</p>
+      <p><strong>&Eacute;TAPE 12</strong></p>
+      <p>Servez votre gigot d''agneau aux &eacute;pices napp&eacute; de sa sauce.</p>'),
+  (1, 'Foie gras au confit d''oignons', '2014-12-20', '0:15:00', '0:50:00', 4, '<p><strong>&Eacute;TAPE 1</strong></p>
+      <p>Pr&eacute;parez le confit d''oignons :</p>
+      <p><strong>&Eacute;TAPE 2</strong></p>
+      <p>Pelez et coupez en tranches les oignons en prenant bien soin de s&eacute;parer s&eacute;parer les anneaux.</p>
+      <p><strong>&Eacute;TAPE 3</strong></p>
+      <p>Dans une casserole &agrave; fond &eacute;pais, faites fondre le beurre et ajoutez les oignons et le sucre. Remuez, couvrez et laissez cuire pendant 30 minutes &agrave; feu doux tout en continuant de remuer de temps en temps.</p>
+      <p><strong>&Eacute;TAPE 4</strong></p>
+      <p>Lorsque les oignons sont bien tendres, ajoutez le vinaigre balsamique et laissez mijoter 20 minutes sans couvrir jusqu&rsquo;&agrave; ce que le vinaigre soit enti&egrave;rement absorb&eacute; et les oignons bien confits. Salez et poivrez.</p>
+      <p><strong>&Eacute;TAPE 5</strong></p>
+      <p>Retirez du feu et versez le confit dans un pot &agrave; confiture. Laissez refroidir et conservez au frais.</p>
+      <p><strong>&Eacute;TAPE 6</strong></p>
+      <p>Pr&eacute;parez le foie gras de canard et dressez</p>
+      <p><strong>&Eacute;TAPE 7</strong></p>
+      <p>Coupez le foie gras en cubes.</p>
+      <p><strong>&Eacute;TAPE 8</strong></p>
+      <p>Disposez un peu de confit d''oignons dans des cuill&egrave;res ap&eacute;ritives et d&eacute;posez par-dessus un cube de foie gras.</p>
+      <p><strong>&Eacute;TAPE 9</strong></p>
+      <p>Servez bien frais.</p>'),
+  (2, 'petits choux fourrés aux crevettes, saumon et avocat', '2012-08-05', '0:20:00', '0:25:00', 6, '<p><strong>&Eacute;TAPE 1</strong></p>
+    <p>Pr&eacute;chauffez le four th.6 (180&deg;C).</p>
+    <p><strong>&Eacute;TAPE 2</strong></p>
+    <p>Dans une casserole, faites fondre le beurre coup&eacute; en morceaux avec le sel.</p>
+    <p><strong>&Eacute;TAPE 3</strong></p>
+    <p>Retirez du feu et ajoutez la farine en une fois. M&eacute;langez avec une cuill&egrave;re jusqu&rsquo;&agrave; ce que la p&acirc;te se d&eacute;colle des parois.</p>
+    <p><strong>&Eacute;TAPE 4</strong></p>
+    <p>Ajoutez les &oelig;ufs l&rsquo;un apr&egrave;s l&rsquo;autre, en m&eacute;langeant bien, puis d&eacute;posez des petits tas de p&acirc;te avec une cuill&egrave;re ou une poche &agrave; douille sur une plaque de four recouverte de papier de cuisson.</p>
+    <p><strong>&Eacute;TAPE 5</strong></p>
+    <p>R&eacute;p&eacute;tez jusqu&rsquo;&agrave; &eacute;puisement de la p&acirc;te et enfournez pour 20 min, puis laissez refroidir.</p>
+    <p><strong> &Eacute;TAPE 6</strong></p>
+    <p>Pendant ce temps, &eacute;mincez le saumon en petits d&eacute;s. Retirez la peau de l&rsquo;avocat, d&eacute;noyautez-le et &eacute;mincez-le en d&eacute;s. Coupez les crevettes en morceaux.</p>
+    <p><strong>&Eacute;TAPE 7</strong></p>
+    <p>Dans un saladier, m&eacute;langez le fromage fouett&eacute; avec la mayonnaise. Salez, poivrez.</p>
+    <p><strong>&Eacute;TAPE 8</strong></p>
+    <p>Coupez le chapeau des choux. Fourrez avec une cuill&egrave;re de cr&egrave;me, quelques d&eacute;s de saumon, d&rsquo;avocat et de crevettes, puis replacez le chapeau.</p>
+    <p><strong>&Eacute;TAPE 9</strong></p>
+    <p>Servez vos petits choux fourr&eacute;s aux crevettes, saumon et avocat !</p>');
 
 
 ALTER SEQUENCE recette_id_recette_seq RESTART WITH 3;
