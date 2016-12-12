@@ -91,6 +91,38 @@ $("#rate-recette-form").on("submit", function (event) {
     });
 });
 
+// edit-recette form
+$("#edit-recette").on("click", function (event) {
+    event.preventDefault();
+    var object =$(this);
+    $.ajax({
+        url: '/api/recette/edit/' + $(this).data('id'),
+        dataType: 'html',
+        type: 'get',
+        success: function (res, status) {
+            $("#edit-content").html(res);
+            $('#timepicker1').timepicker({showMeridian: false, showSeconds: true, defaultTime: $('#temps-preparation').text()});
+            $('#timepicker2').timepicker({showMeridian: false, showSeconds: true, defaultTime: $('#temps-cuisson').text()});
+            bindCounter();
+            $('#input-nb-pers').val($('#nombre-personne').text());
+            tinyMCE.init({
+                // General options
+                mode : "exact",
+                elements : "text-recette",
+                theme : "modern",
+                plugins : "pagebreak,layer,table,save,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,template",
+            });
+            $('#categorie-list').children('a').each(function () {
+                $('#cat-checkbox' + $(this).data('cat')).prop('checked', true);
+            });
+            $('#edit-modal').modal('show');
+        },
+        error: function (resultat, statut, erreur) {
+            create_notification('glyphicon glyphicon-warning-sign', 'danger', 'Impossible de charger le formulaire d\'édition')
+
+        }
+    });
+});
 
 
 
