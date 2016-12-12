@@ -1,4 +1,10 @@
 <div class="form-group">
+
+    <div class="form-group">
+        <label for="recette-name">Nom de la recette</label>
+        <input class="form-control" name="recette-name" id="recette-name" type="text">
+    </div>
+
     <label for="contain">Catégories</label>
     <div class="panel panel-default" id="categories">
         <div class="panel-body">
@@ -6,7 +12,7 @@
                 <% categories.forEach(function (categorie) { %>
                 <div class="col-md-6">
                     <div class="checkbox abc-checkbox">
-                        <input name="categorie[]" type="checkbox" id="cat-checkbox<%= categorie.id_categorie %>">
+                        <input name="categorie<%= categorie.id_categorie %>" type="checkbox" id="cat-checkbox<%= categorie.id_categorie %>">
                         <label for="cat-checkbox<%= categorie.id_categorie %>">
                             <%= categorie.nom_categorie %>
                         </label>
@@ -89,4 +95,4 @@
 
 
 <label for="comment"> Texte de la préparation </label>
-<textarea id="text-recette" name="text-recette" class="form-control " rows="6" style="width:100%"></textarea>
+<textarea id="text-recette" name="text-recette" class="form-control" style="width:100%"></textarea>

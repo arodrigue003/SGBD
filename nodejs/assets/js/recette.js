@@ -101,6 +101,8 @@ $("#edit-recette").on("click", function (event) {
         type: 'get',
         success: function (res, status) {
             $("#edit-content").html(res);
+            $('#text-recette').val($('#text-prep').html());
+            $('#recette-name').val($('#nom-recette-get').data('name'));
             $('#timepicker1').timepicker({showMeridian: false, showSeconds: true, defaultTime: $('#temps-preparation').text()});
             $('#timepicker2').timepicker({showMeridian: false, showSeconds: true, defaultTime: $('#temps-cuisson').text()});
             bindCounter();
@@ -110,8 +112,14 @@ $("#edit-recette").on("click", function (event) {
                 mode : "exact",
                 elements : "text-recette",
                 theme : "modern",
+                height: 300,
+                autoresize_min_height: 300,
+                autoresize_max_height: 800,
                 plugins : "pagebreak,layer,table,insertdatetime,preview,media,searchreplace,contextmenu,paste,directionality,noneditable,visualchars,nonbreaking,template",
+                content_style: "p { padding: 0; margin: 2px 0;}"
             });
+
+            //tinymce.activeEditor.setContent('<strong>some</strong> html');
             $('#categorie-list').children('a').each(function () {
                 $('#cat-checkbox' + $(this).data('cat')).prop('checked', true);
             });
@@ -122,18 +130,34 @@ $("#edit-recette").on("click", function (event) {
                 $('#ingredient-unite' + id + ' option').filter(function() {
                     return $(this).text() == text1;
                 }).prop('selected', true);
-                //$('#cat-checkbox' + $(this).data('cat')).prop('checked', true);
             });
             $('#edit-modal').modal('show');
         },
         error: function (resultat, statut, erreur) {
             create_notification('glyphicon glyphicon-warning-sign', 'danger', 'Impossible de charger le formulaire d\'édition')
-
         }
     });
 });
 
+//edit recette form
+$("#edit-recette-form").on("submit", function (event) {
+    event.preventDefault();
+    tinymce.triggerSave();
+    var object = this;
+    $.ajax({
+        url: object.action,
+        dataType: 'html',
+        data: $(this).serialize(),
+        type: 'post',
+        success: function (res, status) {
+            location.reload();
+        },
+        error: function (resultat, statut, erreur) {
+            create_notification('glyphicon glyphicon-warning-sign', 'danger', 'Impossible de rajouter la note')
 
+        }
+    });
+});
 
 
 

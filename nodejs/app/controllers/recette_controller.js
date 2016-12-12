@@ -95,6 +95,24 @@ module.exports = {
     },
 
     /** OPERATIONS **/
+    edit_recette: function (req, res) {
+        var id_recette = parseInt(req.params.id, 10);
+        if (isNaN(id_recette)) {
+            return res.render('404');
+        }
+
+        console.log(req.body);
+
+        recette_model.edit_recette(req.decoded.id, req.body, id_recette, req.app.settings.config.config, function (err, data) {
+            if (err) {
+                return res.status(500).json(err);
+            }
+            res.json(data);
+        });
+
+    },
+
+
     add_comment: function (req, res) {
         var text = req.body.comment;
 
