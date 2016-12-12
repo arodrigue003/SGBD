@@ -4,7 +4,8 @@
 
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+            <button type="button" class="navbar-toggle" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1">
                 <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
@@ -26,7 +27,7 @@
                     <a href="#" id="login-button" data-toggle="modal" data-target="#login-modal">Connexion</a>
                 </li>
                 <li>
-                    <a href="#" id="disconnect" > Déconnexion</a>
+                    <a href="#" id="disconnect"> Déconnexion</a>
                 </li>
             </ul>
         </div>
@@ -38,11 +39,17 @@
 </nav>
 
 <!-- BEGIN # MODAL LOGIN -->
-<div aria-hidden="true" aria-labelledby="myModalLabel" class="modal fade" id="login-modal" role="dialog" style="display: none;" tabindex="-1">
+<div aria-hidden="true" aria-labelledby="myModalLabel" class="modal fade" id="login-modal" role="dialog"
+     style="display: none;" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div align="center" class="modal-header">
-                <img class="img-circle" id="img_logo" src="http://bootsnipp.com/img/logo.jpg"> <button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true" class="glyphicon glyphicon-remove"></span></button>
+            <div class="modal-header">
+                <button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true"
+                                                                                                  class="glyphicon glyphicon-remove"></span>
+                </button>
+                <div align="center">
+                    <img id="img_logo" src="/images/logo.png">
+                </div>
             </div>
 
             <!-- Begin # DIV Form -->
@@ -56,8 +63,11 @@
                             </div>
                             <span id="text-login-msg">Type your username and password.</span>
                         </div>
-                        <input class="form-control" id="login_username" placeholder="Username (type ERROR for error effect)" required="" type="text" name="login_username">
-                        <input class="form-control" id="login_password" placeholder="Password" required="" type="password" name="login_password">
+                        <input class="form-control" id="login_username"
+                               placeholder="Username (type ERROR for error effect)" required="" type="text"
+                               name="login_username">
+                        <input class="form-control" id="login_password" placeholder="Password" required=""
+                               type="password" name="login_password">
 
                         <div class="checkbox">
                             <label><input type="checkbox"> Remember me</label>
@@ -71,7 +81,8 @@
 
 
                         <div>
-                            <button class="btn btn-link" id="login_lost_btn" type="button" name="">Lost Password?</button>
+                            <button class="btn btn-link" id="login_lost_btn" type="button" name="">Lost Password?
+                            </button>
                             <button class="btn btn-link" id="login_register_btn" type="button">Register</button>
                         </div>
                     </div>
@@ -86,7 +97,8 @@
                             </div>
                             <span id="text-lost-msg">Type your e-mail.</span>
                         </div>
-                        <input class="form-control" id="lost_email" placeholder="E-Mail (type ERROR for error effect)" required="" type="text">
+                        <input class="form-control" id="lost_email" placeholder="E-Mail (type ERROR for error effect)"
+                               required="" type="text">
                     </div>
 
                     <div class="modal-footer">
@@ -96,23 +108,29 @@
 
 
                         <div>
-                            <button class="btn btn-link" id="lost_login_btn" type="button">Log In</button> <button class="btn btn-link" id="lost_register_btn" type="button">Register</button>
+                            <button class="btn btn-link" id="lost_login_btn" type="button">Log In</button>
+                            <button class="btn btn-link" id="lost_register_btn" type="button">Register</button>
                         </div>
                     </div>
                 </form>
                 <!-- End | Lost Password Form -->
 
                 <!-- Begin | Register Form -->
-                <form class="login-form" id="register-form" name="register-form" style="display:none;" action="/api/register">
+                <form class="login-form" id="register-form" name="register-form" style="display:none;"
+                      action="/api/register">
                     <div class="modal-body">
                         <div id="div-register-msg">
                             <div class="glyphicon glyphicon-chevron-right" id="icon-register-msg">
                             </div>
                             <span id="text-register-msg">Register an account.</span>
                         </div>
-                        <input class="form-control" id="register_username" placeholder="Username (type ERROR for error effect)" required="" type="text" name="register_username">
-                        <input class="form-control" id="register_password" placeholder="Password" required="" type="password" name="register_password">
-                        <input class="form-control" id="register_password_check" placeholder="Password Verification" required="" type="password" name="register_password_check">
+                        <input class="form-control" id="register_username"
+                               placeholder="Username (type ERROR for error effect)" required="" type="text"
+                               name="register_username">
+                        <input class="form-control" id="register_password" placeholder="Password" required=""
+                               type="password" name="register_password">
+                        <input class="form-control" id="register_password_check" placeholder="Password Verification"
+                               required="" type="password" name="register_password_check">
                     </div>
 
                     <div class="modal-footer">
@@ -120,7 +138,8 @@
                             <button class="btn btn-primary btn-lg btn-block" type="submit">Register</button>
                         </div>
                         <div>
-                            <button class="btn btn-link" id="register_login_btn" type="button">Log In</button> <button class="btn btn-link" id="register_lost_btn" type="button">Lost Password?</button>
+                            <button class="btn btn-link" id="register_login_btn" type="button">Log In</button>
+                            <button class="btn btn-link" id="register_lost_btn" type="button">Lost Password?</button>
                         </div>
                     </div>
                 </form>
@@ -135,7 +154,9 @@
 <!-- END # MODAL LOGIN -->
 
 <!--[if lt IE 9]>
-    <div class="ie-warning alert alert-danger alert-dismissable">
+<div class="ie-warning alert alert-danger alert-dismissable">
     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-    You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+    You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your
+    browser</a> to improve your experience.
+</div>
 <![endif]-->

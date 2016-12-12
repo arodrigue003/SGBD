@@ -110,10 +110,19 @@ $("#edit-recette").on("click", function (event) {
                 mode : "exact",
                 elements : "text-recette",
                 theme : "modern",
-                plugins : "pagebreak,layer,table,save,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,template",
+                plugins : "pagebreak,layer,table,insertdatetime,preview,media,searchreplace,contextmenu,paste,directionality,noneditable,visualchars,nonbreaking,template",
             });
             $('#categorie-list').children('a').each(function () {
                 $('#cat-checkbox' + $(this).data('cat')).prop('checked', true);
+            });
+            $('#ingredients-list').children('tr').each(function () {
+                var id = $(this).children('.id').data('id');
+                $('#ingredient' + id).val($(this).children('.quantity').text());
+                var text1 = $(this).children('.unite').text();
+                $('#ingredient-unite' + id + ' option').filter(function() {
+                    return $(this).text() == text1;
+                }).prop('selected', true);
+                //$('#cat-checkbox' + $(this).data('cat')).prop('checked', true);
             });
             $('#edit-modal').modal('show');
         },

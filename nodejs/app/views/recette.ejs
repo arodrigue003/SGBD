@@ -10,7 +10,7 @@
      style="display: none;" tabindex="-1">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <form role="form">
+            <form role="form" id="edit-recette-form">
 
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -81,7 +81,6 @@
             <form id="rate-recette-form" action="/api/recette/add_rating/<%= recette.id_recette %>" method="post">
                 <a href="#" id="edit-recette" data-target="#edit-modal" data-id="<%= recette.id_recette %>">Modifier la
                     recette</a>
-
                 <table class="pull-right" style="margin-bottom: 20px">
                     <tr>
                         <td>
@@ -113,13 +112,12 @@
                     <th>Unité</th>
                 </tr>
                 </thead>
-                <tbody>
+                <tbody id="ingredients-list">
                 <% for (var i in ingredients) { %>
                 <tr>
-                    <td><a href="/ingredient/<%= ingredients[i].id_ingredient %>"> <%= ingredients[i].ingredient %> </a>
-                    </td>
-                    <td><%= (ingredients[i].quantite != 0) ? ingredients[i].quantite : ""; %></td>
-                    <td><%= ingredients[i].unite %></td>
+                    <td class="id" data-id="<%= ingredients[i].id_ingredient %>"><a href="/ingredient/<%= ingredients[i].id_ingredient %>" > <%= ingredients[i].ingredient %> </a></td>
+                    <td class="quantity"><%= (ingredients[i].quantite != 0) ? ingredients[i].quantite : ""; %></td>
+                    <td class="unite"><%= ingredients[i].unite %></td>
                 </tr>
                 <% } %>
                 </tbody>

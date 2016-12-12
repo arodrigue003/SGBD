@@ -6,7 +6,7 @@
                 <% categories.forEach(function (categorie) { %>
                 <div class="col-md-6">
                     <div class="checkbox abc-checkbox">
-                        <input type="checkbox" id="cat-checkbox<%= categorie.id_categorie %>">
+                        <input name="categorie[]" type="checkbox" id="cat-checkbox<%= categorie.id_categorie %>">
                         <label for="cat-checkbox<%= categorie.id_categorie %>">
                             <%= categorie.nom_categorie %>
                         </label>
@@ -23,14 +23,28 @@
         <div class="panel-body">
             <div class="row">
                 <% ingredients.forEach(function (ingredient) { %>
-                <div class="col-md-6">
-                    <div class="checkbox abc-checkbox">
-                        <input type="checkbox" id="ing-checkbox<%= ingredient.id_ingredient %>">
-                        <label for="ing-checkbox<%= ingredient.id_ingredient %>">
-                            <%= ingredient.nom_ingredient %>
-                        </label>
+                <div class="col-md-12" style="padding-bottom: 10px">
+                    <label for="ingredient<%= ingredient.id_ingredient %>"> <%= ingredient.nom_ingredient %> </label>
+                    <div class="input-group" style="width: 100%">
+                        <input type="text" class="form-control" id="ingredient<%= ingredient.id_ingredient %>" name="ingredient<%= ingredient.id_ingredient %>" placeholder="Quantité" style="width: 80%">
+                        <select id="ingredient-unite<%= ingredient.id_ingredient %>" name="ingredient-unite<%= ingredient.id_ingredient %>" class="form-control" style="width: 20%">
+                            <option selected="selected"> &nbsp;</option>
+                            <option>c. à café</option>
+                            <option>c. à soupe</option>
+                            <option>L</option>
+                            <option>dL</option>
+                            <option>dL</option>
+                            <option>cL</option>
+                            <option>kg</option>
+                            <option>g</option>
+                            <option>pincée(s)</option>
+                            <option>gousse(s)</option>
+                        </select>
+
                     </div>
+                    <!-- /input-group -->
                 </div>
+
                 <% }); %>
             </div>
         </div>
@@ -41,15 +55,15 @@
     <div class="input-group">
                     <span class="input-group-btn">
                     <button type="button" class="btn btn-default btn-number"
-                            disabled="disabled" data-type="minus" data-field="quant[1]">
+                            disabled="disabled" data-type="minus" data-field="quant">
                     <span class="glyphicon glyphicon-minus"></span>
                     </button>
                     </span>
-        <input id="input-nb-pers" type="text" name="quant[1]" class="form-control input-number" value="1" min="1"
+        <input id="input-nb-pers" type="text" name="quant" class="form-control input-number" value="1" min="1"
                max="20">
         <span class="input-group-btn">
                     <button type="button" class="btn btn-default btn-number" data-type="plus"
-                            data-field="quant[1]">
+                            data-field="quant">
                     <span class="glyphicon glyphicon-plus"></span>
                     </button>
                     </span>
@@ -60,7 +74,7 @@
 <div class="form-group">
     <label for="timepicker1"> Temps de préparation</label>
     <div class="input-group bootstrap-timepicker timepicker">
-        <input id="timepicker1" type="text" class="form-control input-small">
+        <input name="temps-preparation" id="timepicker1" type="text" class="form-control input-small">
         <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
     </div>
 </div>
@@ -68,11 +82,11 @@
 <div class="form-group">
     <label for="timepicker2"> Temps de cuisson</label>
     <div class="input-group bootstrap-timepicker timepicker">
-        <input id="timepicker2" type="text" class="form-control input-small">
+        <input name="temps-cuisson" id="timepicker2" type="text" class="form-control input-small">
         <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
     </div>
 </div>
 
 
 <label for="comment"> Texte de la préparation </label>
-<textarea id="text-recette" name="text-recette" class="form-control " rows="3" style="width:100%"></textarea>
+<textarea id="text-recette" name="text-recette" class="form-control " rows="6" style="width:100%"></textarea>
