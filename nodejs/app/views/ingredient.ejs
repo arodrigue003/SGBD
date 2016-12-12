@@ -6,12 +6,12 @@
         <% include navigation.ejs %>
         <!-- Page Content -->
         <div class="container">
-            <h2><% ingredient.nom %></h2>
+            <h2><%= ingredient.nom %></h2>
             <div class="row">
                 <div class="col-md-6">
                     <table class="table table-bordered table-striped table-condensed table-responsive">
                         <caption>
-                            <h3>Caractéristiques nutritionnelles</h3>
+                            <h3>Caractéristiques nutritionnelles pour 100g</h3>
                         </caption>
                         <thead>
                             <tr>
@@ -40,7 +40,7 @@
                 <div class="col-md-6">
                     <div class="thumbnail">
                         <div class="caption-full">
-                            <div class="pull right">Score au <a href="/ingredient/classement"/>classement</a> : <% ingredient.ranking %>
+                            <div class="pull right">Score au <a href="/ingredient/classement"/>classement</a> : <%= Number(ingredient.ranking).toFixed(3) %>
                             </div>
                             <div class="">
                                 <h4>Recettes utilisant cet ingrédient :</h4>
@@ -48,9 +48,14 @@
                                 <hr>
 
                                 <div class="row">
-                                    <div class="col-md-12">
-                                        <a href="/recette/ <%= recettes[k].id_recette %>"><%= recettes[k].nom_recette %></a>
-                                    </div>
+                                    <a href="/recette/ <%= recettes[k].id_recette %>">
+                                        <div class="col-md-3">
+                                            <img class="img-responsive" src="/images/<%= recettes[k].id_recette %>.jpg" alt="<%= recettes[k].nom_recette %>">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <%= recettes[k].nom_recette %>
+                                        </div>
+                                    </a>
                                 </div>
                                 <% } %>
                             </div>
