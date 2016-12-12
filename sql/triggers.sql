@@ -80,3 +80,24 @@ DROP TRIGGER IF EXISTS appartenir_menu_cat ON appartenir_menu;
 
 CREATE TRIGGER appartenir_menu_cat BEFORE INSERT OR UPDATE ON appartenir_menu
 	FOR EACH ROW EXECUTE PROCEDURE appartenir_menu_cat();
+
+CREATE OR REPLACE FUNCTION quantite_carac_nutritions() RETURNS TRIGGER AS $quantite_carac$
+  DECLARE
+    total_quantite INT;
+  BEGIN
+    SELECT SUM(quantite_nutrition) INTO total_quantite
+        FROM posseder_carac
+          INNER JOIN carac_nutritionnelle
+            ON posseder_carac.id_carac_nutritionnelle = carac_nutritionnelle.id_carac_nutritionnelle
+          INNER JOIN ingredient
+            ON posseder_carac.id_ingredient = ingredient.id_ingredient
+    WHERE ingredient.id_ingredient = NEW.id_ingredient AND unite_nutrition='g';
+    IF (total_quantite > 100) THEN
+      RAISE EXCEPTION 'The total amount of nutrition values of an ingredient cannot exceed 100g';
+    END IF;
+    RETURN NEW;
+  END;
+$quantite_carac$ LANGUAGE plpgsql;
+
+CREATE TRIGGER quantite_carac_nutritions BEFORE INSERT OR UPDATE ON posseder_carac
+  FOR EACH ROW EXECUTE PROCEDURE quantite_carac_nutritions();
