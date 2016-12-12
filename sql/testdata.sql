@@ -252,7 +252,7 @@ INSERT INTO POSSEDER_CARAC (ID_CARAC_NUTRITIONNELLE, ID_INGREDIENT, QUANTITE_NUT
   (3, 7, 50, 'g'),
   (4, 7, 16, 'g'),
   (6, 7, 32, 'g'),
-  (1, 8, 400, 'kcal'),
+  (1, 8, 0, 'kcal'),
   (2, 8, 18, 'g'),
   (3, 8, 50, 'g'),
   (4, 8, 16, 'g'),
