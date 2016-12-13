@@ -362,47 +362,61 @@ module.exports = {
         client.query('BEGIN', function (err, result) {
             if (err) return rollback(client);
 
-            //backup preparation to history table
-            client.query('INSERT INTO historique_modif (id_internaute, id_recette, texte_concerne) VALUES ($1, $2, $3);', [id_internaute, id_recette, data['text-recette']], function (err, result) {
-                if (err) return rollback(client, err);
-
-                //update recette basics
-                client.query('UPDATE recette SET nom_recette=$1, temps_preparation=$2, temps_cuisson=$3, nombre_personnes=$4, texte_preparation=$5 \
-                    WHERE id_recette=$6', [data['recette-name'], data['temps-preparation'], data['temps-cuisson'], data['quant'], data['text-recette'], id_recette], function (err, result) {
+            if (id_recette != -1) {
+                //backup preparation to history table
+                client.query('INSERT INTO historique_modif (id_internaute, id_recette, texte_concerne) VALUES ($1, $2, $3);', [id_internaute, id_recette, data['text-recette']], function (err, result) {
                     if (err) return rollback(client, err);
 
-                    //update composition
-                    client.query('DELETE FROM composition_recette WHERE id_recette=$1;', [id_recette], function (err, result) {
-                        if (err) return rollback(client, err);
-
-                        var todo = false;
-                        var counter = 2;
-                        var array = [id_recette];
-                        var query = 'INSERT INTO composition_recette (id_ingredient, id_recette, quantite, unite) VALUES'
-                        for (var key in data) {
-                            if (/^ingredient[0-9]*$/.test(key)) {
-                                if (data[key] != '') {
-                                    todo = true;
-                                    var id_ingredient = key.match(/^ingredient([0-9]*)$/)[1];
-                                    query += '($' + counter + ', $1, $' + (counter + 1) + ', $' + (counter + 2) + '),';
-                                    counter += 3;
-                                    array.push(id_ingredient, data[key], data['ingredient-unite' + id_ingredient]);
-                                }
-                            }
-                        }
-                        query = query.substring(0, query.length - 1) + ';';
-                        console.log(query);
-                        console.log(array);
-
-                        if (todo == true) {
-                            client.query(query, array, after_ingredient);
-                        }
-                        else after_ingredient(null, null);
-                    });
+                    //update recette basics
+                    client.query('UPDATE recette SET nom_recette=$1, temps_preparation=$2, temps_cuisson=$3, nombre_personnes=$4, texte_preparation=$5 \
+                    WHERE id_recette=$6', [data['recette-name'], data['temps-preparation'], data['temps-cuisson'], data['quant'], data['text-recette'], id_recette], after_recette);
                 });
-            });
+            } else {
+
+                //create a new recette
+                client.query('INSERT INTO recette (nom_recette, temps_preparation, temps_cuisson, nombre_personnes, texte_preparation) VALUES  \
+                ($1, $2, $3, $4, $5) RETURNING id_recette', [data['recette-name'], data['temps-preparation'], data['temps-cuisson'], data['quant'], data['text-recette']], function (err,result) {
+                    if (err) return rollback(client, err);
+                    id_recette = result.rows[0]['id_recette'];
+                    after_recette(err, result)
+                });
+
+            }
         });
 
+
+        function after_recette(err, results) {
+            if (err) return rollback(client, err);
+
+            //update composition
+            client.query('DELETE FROM composition_recette WHERE id_recette=$1;', [id_recette], function (err, result) {
+                if (err) return rollback(client, err);
+
+                var todo = false;
+                var counter = 2;
+                var array = [id_recette];
+                var query = 'INSERT INTO composition_recette (id_ingredient, id_recette, quantite, unite) VALUES'
+                for (var key in data) {
+                    if (/^ingredient[0-9]*$/.test(key)) {
+                        if (data[key] != '') {
+                            todo = true;
+                            var id_ingredient = key.match(/^ingredient([0-9]*)$/)[1];
+                            query += '($' + counter + ', $1, $' + (counter + 1) + ', $' + (counter + 2) + '),';
+                            counter += 3;
+                            array.push(id_ingredient, data[key], data['ingredient-unite' + id_ingredient]);
+                        }
+                    }
+                }
+                query = query.substring(0, query.length - 1) + ';';
+                console.log(query);
+                console.log(array);
+
+                if (todo == true) {
+                    client.query(query, array, after_ingredient);
+                }
+                else after_ingredient(null, null);
+            });
+        };
 
 
         function after_ingredient(err, results) {

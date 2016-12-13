@@ -153,12 +153,64 @@ $("#edit-recette-form").on("submit", function (event) {
             location.reload();
         },
         error: function (resultat, statut, erreur) {
-            create_notification('glyphicon glyphicon-warning-sign', 'danger', 'Impossible de rajouter la note')
+            create_notification('glyphicon glyphicon-warning-sign', 'danger', 'Impossible de modifier la recette')
 
         }
     });
 });
 
+// add-recette form
+$("#add-recette").on("click", function (event) {
+    event.preventDefault();
+    var object =$(this);
+    $.ajax({
+        url: '/api/recette/edit/' + $(this).data('id'),
+        dataType: 'html',
+        type: 'get',
+        success: function (res, status) {
+            $("#add-content").html(res);
+            $('#timepicker1').timepicker({showMeridian: false, showSeconds: true, defaultTime: '00:00:00'});
+            $('#timepicker2').timepicker({showMeridian: false, showSeconds: true, defaultTime: '00:00:00'});
+            bindCounter();
+            tinyMCE.init({
+                // General options
+                mode : "exact",
+                elements : "text-recette",
+                theme : "modern",
+                height: 300,
+                autoresize_min_height: 300,
+                autoresize_max_height: 800,
+                plugins : "pagebreak,layer,table,insertdatetime,preview,media,searchreplace,contextmenu,paste,directionality,noneditable,visualchars,nonbreaking,template",
+                content_style: "p { padding: 0; margin: 2px 0;}"
+            });
+
+            $('#add-modal').modal('show');
+        },
+        error: function (resultat, statut, erreur) {
+            create_notification('glyphicon glyphicon-warning-sign', 'danger', 'Impossible de charger le formulaire d\'ajout. Veuillez vous connecter')
+        }
+    });
+});
+
+//edit recette form
+$("#add-recette-form").on("submit", function (event) {
+    event.preventDefault();
+    tinymce.triggerSave();
+    var object = this;
+    $.ajax({
+        url: object.action,
+        dataType: 'html',
+        data: $(this).serialize(),
+        type: 'post',
+        success: function (res, status) {
+            $("#add-modal").modal("hide");
+            create_notification('glyphicon glyphicon-ok', 'success','Recette rajouté avec succès');
+        },
+        error: function (resultat, statut, erreur) {
+            create_notification('glyphicon glyphicon-warning-sign', 'danger', 'Impossible de rajouter la recette');
+        }
+    });
+});
 
 
 
