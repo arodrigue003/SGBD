@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="fr">
+<% title = 'Liste des catégories' %>
+<% include header.ejs %>
+<body>
+<% include navigation.ejs %>
+<!-- Page Content -->
+<div class="container">
+    <h2>Liste des catégories</h2>
+    <div class="row">
+        <table class="table table-bordered table-striped table-condensed table-responsive">
+            <thead>
+            <tr>
+                <th>Nom de la catégorie</th>
+            </tr>
+            <tbody>
+            <% for (var k in categories) { %>
+            <tr>
+                <td>
+                    <a href="/categorie/<%= categories[k].id_categorie %>">
+                        <%= categories[k].nom_categorie %>
+                    </a>
+                </td>
+            </tr>
+            <% } %>
+            </tbody>
+            </thead>
+        </table>
+    </div>
+</div>
+<!-- /.container -->
+
+<% include footer.ejs%>
+
+</body>
+</html>
