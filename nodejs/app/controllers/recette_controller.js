@@ -95,6 +95,24 @@ module.exports = {
     },
 
     /** OPERATIONS **/
+    edit_recette: function (req, res) {
+        var id_recette = parseInt(req.params.id, 10);
+        if (isNaN(id_recette)) {
+            return res.render('404');
+        }
+
+        console.log(req.body);
+
+        recette_model.edit_recette(req.decoded.id, req.body, id_recette, req.app.settings.config.config, function (err, data) {
+            if (err) {
+                return res.status(500).json(err);
+            }
+            res.json(data);
+        });
+
+    },
+
+
     add_comment: function (req, res) {
         var text = req.body.comment;
 
@@ -128,6 +146,57 @@ module.exports = {
         });
     },
 
+    search: function (req, res) {
+        var name = req.query.nom;
+        var category = parseInt(req.query.category);
+        var personCountMin = parseInt(req.query.personCountMin);
+        var ratingMin = parseFloat(req.query.ratingMin);
+        var ingredients;
+
+        if (isNaN(category) || category == -1) {
+            category = undefined;
+        }
+
+        if (isNaN(personCountMin) || personCountMin < 1 || personCountMin > 10) {
+            personCountMin = undefined;
+        }
+
+        if (isNaN(ratingMin) || ratingMin < 0 || ratingMin > 3) {
+            ratingMin = undefined;
+        }
+
+        try {
+            ingredients = JSON.parse(req.query.ingredients);
+        } catch (e) {
+            ingredients = undefined;
+        }
+
+        if (!(ingredients instanceof Array)) {
+            ingredients = undefined;
+        } else {
+            var remove = [];
+            ingredients.forEach(function (elem, elemId) {
+                if (typeof elem !== 'number') {
+                    remove.push(elemId);
+                } else {
+                    ingredients[elemId] = Math.floor(elem);
+                }
+            });
+
+            remove.forEach(function (elem) {
+                ingredients.splice(elem, 1);
+            });
+        }
+
+        recette_model.search(name, undefined, personCountMin, ratingMin, ingredients, function (err, result) {
+            if (err) {
+                return res.status(500).json(err);
+            }
+
+            res.status(200).json(result);
+        });
+    },
+
     create: function (req, res) {
         res.status(201).end('CREATE');
     },
@@ -137,7 +206,7 @@ module.exports = {
     },
 
     retrieve: function (req, res) {
-        res.status(200).end('RETRIEVE: ' + req.params.id);
+
     },
 
     update: function (req, res) {
