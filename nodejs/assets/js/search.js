@@ -38,11 +38,23 @@ function success(result) {
         $(copy).find('.item-picture').attr('src', '/images/' + recette.id_recette + '.jpg');
         $(copy).find('.item-nom').empty().append(truncate.apply(recette.nom_recette, [37, true]));
         $(copy).find('.item-nombre-personnes').empty().append(recette.nombre_personnes);
+        $(copy).find('.item-rating').empty().append(
+            Math.round(recette.note_moyenne * 100) / 100 + ' ' +
+            ((Math.round(recette.note_moyenne * 100) / 100 > 1) ? 'étoiles' : 'étoile')
+        );
         $(copy).find('.item-nombre-commentaire').empty().append(
             recette.nombre_commentaires + ' ' +
             ((recette.nombre_commentaires > 1) ? 'commentaires' : 'commentaire')
         );
         $(copy).find('.item-categories').empty().append(recette.categories.join(', '));
+
+        var filledEtoileCount = Math.floor(recette.note_moyenne);
+        for (var i = filledEtoileCount; i < 3; i++) {
+            $(copy).find('.item-etoiles').prepend('<span class="glyphicon glyphicon-star-empty"></span>');
+        }
+        for (var i = 0; i < filledEtoileCount; i++) {
+            $(copy).find('.item-etoiles').prepend('<span class="glyphicon glyphicon-star"></span>');
+        }
 
         $(copy).appendTo(results_zone);
     });
