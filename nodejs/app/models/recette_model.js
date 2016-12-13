@@ -278,7 +278,7 @@ module.exports = {
                 var params = [];
 
                 if (name != undefined) {
-                    queryParams.push('nom_recette LIKE \'%' + escape(name) + '%\'');
+                    queryParams.push('nom_recette ILIKE \'%' + escape(name) + '%\'');
                 }
 
                 if (personCountMin != undefined) {
