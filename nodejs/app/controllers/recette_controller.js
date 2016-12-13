@@ -23,6 +23,28 @@ module.exports = {
             res.render('recette', recette);
         });
     },
+    history_view: function(req, res) {
+        var id = parseInt(req.params.id, 10);
+        if (isNaN(id)) {
+            return res.render('404');
+        }
+
+        recette_model.get_history_from_id(id, req.app.settings.config.config, function(err, result) {
+            if (err) {
+                return res.status(500).json(err);
+            }
+
+            if (result[0].id_historique_modif == undefined) {
+                return res.status(404).render('404');
+            }
+            var recette = {
+                id_recette: id,
+                nom_recette: result[0].nom_recette
+            };
+            console.log(result);
+            res.render('historique_modification', {recette:recette, historique:result});
+        });
+    },
 
     search_view: function (req, res) {
         var categories, ingredients;

@@ -177,6 +177,33 @@ module.exports = {
         });
 
     },
+    get_history_from_id: function(id, config, cb) {
+        var pool = new pg.Pool(config);
+        pool.connect(function (err, client, done) {
+            if (err) {
+                console.error('error fetching client from pool', err);
+                return cb(err);
+            }
+            client.query("SELECT id_historique_modif, nom_recette, texte_concerne, to_char(date_creation_historique_modif, 'DD/MM/YYYY HH:MI:SS'), pseudonyme\
+                         FROM recette\
+                         NATURAL JOIN historique_modif\
+                         NATURAL JOIN internaute\
+                         WHERE recette.id_recette = $1::int\
+                         ORDER BY date_creation_historique_modif DESC;", [id], 
+                         function (err2, result) {
+                            done();
+
+                            if (err2) {
+                                console.error('error running history query', err2);
+                                return cb(err2);
+                            }
+
+                            console.log
+                            return cb(null, result.rows);
+                        }
+            );
+        });
+    },
 
     add_comment: function (id_internaute, text, id_recette, cb) {
         if (text == '') {
@@ -439,6 +466,7 @@ module.exports = {
 
             });
         };
+
 
         function after_categorie(err, results) {
 

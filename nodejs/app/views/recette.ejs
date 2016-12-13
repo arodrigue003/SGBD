@@ -84,8 +84,12 @@
 
             <!-- Notation -->
             <form id="rate-recette-form" action="/api/recette/add_rating/<%= recette.id_recette %>" method="post">
-                <a href="#" id="edit-recette" data-target="#edit-modal" data-id="<%= recette.id_recette %>">Modifier la
-                    recette</a>
+                <div class="col-md-3">
+                    <a href="#" id="edit-recette" data-target="#edit-modal" data-id="<%= recette.id_recette %>">Modifier la recette</a>
+                </div>
+                <div class="col-md-3">
+                    <a href="<%=recette.id_recette%>/historique" id="historique-recette">Consulter l'historique</a>
+                </div>
                 <table class="pull-right" style="margin-bottom: 20px">
                     <tr>
                         <td>

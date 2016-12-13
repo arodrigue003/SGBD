@@ -29,7 +29,7 @@ module.exports = {
                                 return cb(err);
                             }
                             console.log(result.rows[0]);
-                            cb(null, result.rows[0]);
+                            return cb(null, result.rows[0]);
                         }
                 );
             }
@@ -52,7 +52,7 @@ module.exports = {
                                 return cb(err1);
                             }
                             console.log(result.rows);
-                            cb(null, result.rows);
+                            return cb(null, result.rows);
                         }
                 );
             }
@@ -80,7 +80,7 @@ module.exports = {
 
                     done();
                     console.log(result.rows[0]);
-                    cb(null, result.rows[0]);
+                    return cb(null, result.rows[0]);
                 }
             );
         });
@@ -102,13 +102,13 @@ module.exports = {
 
                     done();
                     console.log(result.rows);
-                    cb(null, result.rows);
+                    return cb(null, result.rows);
                 });
         });
 
 
         pool.on('error', function(err, client) {
-            cb(err);
+            return cb(err);
         });
     },
     get_recettes_used_in: function(id, config, cb) {
@@ -131,13 +131,13 @@ module.exports = {
 
                     done();
                     console.log(result.rows);
-                    cb(null, result.rows);
+                    return cb(null, result.rows);
                 });
         });
 
 
         pool.on('error', function(err, client) {
-            cb(err);
+            return cb(err);
         });
     },
     get_caracs_nutrition: function(id, config, cb) {
@@ -160,7 +160,7 @@ module.exports = {
 
                     done();
                     console.log(result.rows);
-                    cb(null, result.rows);
+                    return cb(null, result.rows);
                 });
         });
 
