@@ -192,7 +192,7 @@ $("#add-recette").on("click", function (event) {
     });
 });
 
-//edit recette form
+//add recette form
 $("#add-recette-form").on("submit", function (event) {
     event.preventDefault();
     tinymce.triggerSave();
@@ -204,6 +204,7 @@ $("#add-recette-form").on("submit", function (event) {
         type: 'post',
         success: function (res, status) {
             $("#add-modal").modal("hide");
+            $("#add-content").html('');
             create_notification('glyphicon glyphicon-ok', 'success','Recette rajouté avec succès');
         },
         error: function (resultat, statut, erreur) {
@@ -212,6 +213,9 @@ $("#add-recette-form").on("submit", function (event) {
     });
 });
 
+$('#add-modal').on('hidden.bs.modal', function (e) {
+    $("#add-content").html('');
+});
 
 
 
