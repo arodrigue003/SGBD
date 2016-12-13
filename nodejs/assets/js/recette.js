@@ -134,7 +134,7 @@ $("#edit-recette").on("click", function (event) {
             $('#edit-modal').modal('show');
         },
         error: function (resultat, statut, erreur) {
-            create_notification('glyphicon glyphicon-warning-sign', 'danger', 'Impossible de charger le formulaire d\'édition')
+            create_notification('glyphicon glyphicon-warning-sign', 'danger', 'Impossible de charger le formulaire d\'édition. Veuillez vous connecter')
         }
     });
 });
