@@ -3,7 +3,24 @@ function truncate( n, useWordBoundary ){
         s_ = isTooLong ? this.substr(0,n-1) : this;
     s_ = (useWordBoundary && isTooLong) ? s_.substr(0, Math.min(s_.lastIndexOf(' '), s_.lastIndexOf(',')), s_.lastIndexOf('.')) : s_;
     return  isTooLong ? s_ + '&hellip;' : s_;
-};
+}
+
+function create_notification(icon, type, message) {
+    $.notify({
+        icon: icon,
+        message: message,
+    }, {
+        type: type,
+        delay: 1500,
+        placement: {
+            from: 'bottom'
+        },
+        animate: {
+            enter: 'animated fadeInUp',
+            exit: 'animated fadeOutDown'
+        }
+    });
+}
 
 function success(result) {
     var results_zone = $('#search-results');
@@ -21,18 +38,32 @@ function success(result) {
         $(copy).find('.item-picture').attr('src', '/images/' + recette.id_recette + '.jpg');
         $(copy).find('.item-nom').empty().append(truncate.apply(recette.nom_recette, [37, true]));
         $(copy).find('.item-nombre-personnes').empty().append(recette.nombre_personnes);
+        $(copy).find('.item-rating').empty().append(
+            Math.round(recette.note_moyenne * 100) / 100 + ' ' +
+            ((Math.round(recette.note_moyenne * 100) / 100 > 1) ? 'étoiles' : 'étoile')
+        );
         $(copy).find('.item-nombre-commentaire').empty().append(
             recette.nombre_commentaires + ' ' +
             ((recette.nombre_commentaires > 1) ? 'commentaires' : 'commentaire')
         );
         $(copy).find('.item-categories').empty().append(recette.categories.join(', '));
 
+        var filledEtoileCount = Math.floor(recette.note_moyenne);
+        for (var i = filledEtoileCount; i < 3; i++) {
+            $(copy).find('.item-etoiles').prepend('<span class="glyphicon glyphicon-star-empty"></span>');
+        }
+        for (var i = 0; i < filledEtoileCount; i++) {
+            $(copy).find('.item-etoiles').prepend('<span class="glyphicon glyphicon-star"></span>');
+        }
+
         $(copy).appendTo(results_zone);
     });
 }
 
 function error(err) {
-    alert('ERROR: ' + err);
+    if (err.status >= 400 && err.status < 500) {
+        create_notification('glyphicon glyphicon-warning-sign', 'danger', 'Impossible de faire la recherche (Connectez-vous !)')
+    }
 }
 
 function onActivation() {
@@ -61,12 +92,14 @@ function onActivation() {
 
     var ratingMin = $('#form-rate-min').val();
     var personCountMin = $('#form-person-min').val();
+    var category = $('#form-categorie').val();
 
     $.ajax({
         method: 'GET',
         url: '/api/recette/search',
         data: {
             nom: name,
+            category: category,
             ratingMin: ratingMin,
             personCountMin: personCountMin,
             ingredients: JSON.stringify(ingredientsId),
@@ -87,3 +120,5 @@ $('#form-name')
     });
 
 $('#search-button').on('click', onActivation);
+
+onActivation();

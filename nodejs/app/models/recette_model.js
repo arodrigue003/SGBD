@@ -277,16 +277,20 @@ module.exports = {
                 var queryParams = [];
                 var params = [];
 
-                if (name) {
-                    queryParams.push('nom_recette LIKE \'%' + escape(name) + '%\'');
+                if (name != undefined) {
+                    queryParams.push('nom_recette ILIKE \'%' + escape(name) + '%\'');
                 }
 
-                if (personCountMin) {
+                if (personCountMin != undefined) {
                     queryParams.push('nombre_personnes >= ' + personCountMin);
                 }
 
-                if (ratingMin) {
+                if (ratingMin != undefined) {
                     queryParams.push('note_moyenne >= ' + ratingMin);
+                }
+
+                if (category != undefined) {
+                    queryParams.push('id_categorie = ' + category);
                 }
 
                 queryParams = queryParams.join(' AND ');
@@ -306,7 +310,8 @@ module.exports = {
                 }
 
                 var query = 'SELECT DISTINCT id_recette, nom_recette, nombre_personnes, \
-                    note_moyenne, nombre_commentaires FROM info_recette ' + whereClause +
+                    note_moyenne, nombre_commentaires FROM info_recette  \
+                    NATURAL JOIN categories_recette ' + whereClause +
                     ' ORDER BY note_moyenne DESC, nombre_personnes DESC;';
 
                 var connect = await(pool.connect(defers('client', 'done')));

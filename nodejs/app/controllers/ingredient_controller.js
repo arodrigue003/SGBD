@@ -105,10 +105,6 @@ module.exports = {
                     return res.status(500).json(err);
                 }
             }
-            console.log("DEBUG");
-            console.log(ingredient);
-            console.log(caracs_nutrition);
-            console.log(recettes);
             res.render('ingredient', {
                 ingredient: ingredient,
                 caracs_nutrition : caracs_nutrition,
