@@ -66,7 +66,7 @@ $("#send-comment").on("click", function (event) {
             create_notification('glyphicon glyphicon-ok', 'success', 'Commentaire rajouté avec succès');
         },
         error: function (resultat, statut, erreur) {
-            create_notification('glyphicon glyphicon-warning-sign', 'danger', 'Impossible de rajouter le commentaire')
+            create_notification('glyphicon glyphicon-warning-sign', 'danger', 'Impossible de rajouter le commentaire (Essayez de vous connecter !)')
         }
     });
 });

@@ -3,7 +3,24 @@ function truncate( n, useWordBoundary ){
         s_ = isTooLong ? this.substr(0,n-1) : this;
     s_ = (useWordBoundary && isTooLong) ? s_.substr(0, Math.min(s_.lastIndexOf(' '), s_.lastIndexOf(',')), s_.lastIndexOf('.')) : s_;
     return  isTooLong ? s_ + '&hellip;' : s_;
-};
+}
+
+function create_notification(icon, type, message) {
+    $.notify({
+        icon: icon,
+        message: message,
+    }, {
+        type: type,
+        delay: 1500,
+        placement: {
+            from: 'bottom'
+        },
+        animate: {
+            enter: 'animated fadeInUp',
+            exit: 'animated fadeOutDown'
+        }
+    });
+}
 
 function success(result) {
     var results_zone = $('#search-results');
@@ -32,7 +49,9 @@ function success(result) {
 }
 
 function error(err) {
-    alert('ERROR: ' + err);
+    if (err.status >= 400 && err.status < 500) {
+        create_notification('glyphicon glyphicon-warning-sign', 'danger', 'Impossible de faire la recherche (Connectez-vous !)')
+    }
 }
 
 function onActivation() {
@@ -89,3 +108,5 @@ $('#form-name')
     });
 
 $('#search-button').on('click', onActivation);
+
+onActivation();
