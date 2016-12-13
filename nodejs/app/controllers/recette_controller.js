@@ -34,7 +34,7 @@ module.exports = {
                 return res.status(500).json(err);
             }
 
-            if (result[0].id_historique_modif == undefined) {
+            if (result[0] == undefined) {
                 return res.status(404).render('404');
             }
             var recette = {
