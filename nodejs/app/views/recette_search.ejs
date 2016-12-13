@@ -20,8 +20,8 @@
                                 <form class="form-horizontal" role="form">
                                     <div class="form-group">
                                         <label for="filter">Catégorie</label>
-                                        <select class="form-control">
-                                            <option value="None" selected>Aucune</option>
+                                        <select id="form-categorie" class="form-control">
+                                            <option value="-1" selected>Aucune</option>
                                             <% categories.forEach(function (category) { %>
                                             <option value="<%= category.id_categorie %>"><%= category.nom_categorie %></option>
                                             <% }); %>

@@ -61,12 +61,14 @@ function onActivation() {
 
     var ratingMin = $('#form-rate-min').val();
     var personCountMin = $('#form-person-min').val();
+    var category = $('#form-categorie').val();
 
     $.ajax({
         method: 'GET',
         url: '/api/recette/search',
         data: {
             nom: name,
+            category: category,
             ratingMin: ratingMin,
             personCountMin: personCountMin,
             ingredients: JSON.stringify(ingredientsId),
