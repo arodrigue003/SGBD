@@ -5,6 +5,7 @@ var router = express.Router();
 router.use('/api', require('./api'));
 router.use('/', require('./home'));
 router.use('/recette', require('./recette_view'));
+router.use('/categorie', require('./categorie_view'));
 router.use('/ingredient', require('./ingredient_view'));
 router.use('/about', function (req, res) {
     return res.render('about')

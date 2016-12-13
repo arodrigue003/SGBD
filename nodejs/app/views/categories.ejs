@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fr">
+<% title = categorie.nom_categorie %>
+<% include header.ejs %>
+<body>
+<% include navigation.ejs %>
+<!-- Page Content -->
+<div class="container">
+    <h2><%= categorie.nom_categorie %></h2>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="thumbnail">
+                <div class="caption-full">
+                    <div class="">
+                        <h4>Recettes :</h4>
+                        <% for (var k in recettes) { %>
+                        <hr>
+
+                        <div class="row">
+                            <a href="/recette/<%= recettes[k].id_recette %>">
+                                <div class="col-md-3">
+                                    <img class="img-responsive" src="/images/<%= recettes[k].id_recette %>.jpg" alt="<%= recettes[k].nom_recette %>">
+                                </div>
+                                <div class="col-md-6">
+                                    <%= recettes[k].nom_recette %>
+                                </div>
+                            </a>
+                        </div>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /.container -->
+
+<% include footer.ejs%>
+
+</body>
+</html>

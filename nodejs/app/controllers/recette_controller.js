@@ -210,7 +210,7 @@ module.exports = {
             });
         }
 
-        recette_model.search(name, undefined, personCountMin, ratingMin, ingredients, function (err, result) {
+        recette_model.search(name, category, personCountMin, ratingMin, ingredients, function (err, result) {
             if (err) {
                 return res.status(500).json(err);
             }
